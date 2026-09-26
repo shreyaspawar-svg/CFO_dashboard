@@ -383,22 +383,83 @@ Phase 2 and 2.1 committed and tagged `phase-2`.**
 ---
 
 ### Phase 3 — Frontend shell & selectors
-**Goal:** polished app frame with working cascading dropdowns.
+**Goal:** polished app frame with working cascading dropdowns, built against
+the real Phase 1/2 API. Tab *contents* are placeholders -- Phase 4 fills
+them in, one tab at a time.
 
 Tasks
-1. Next.js + Tailwind + shadcn/ui; theme tokens (dark/light); Inter/Geist font; INR/crore formatters in `lib/format.ts`.
-2. **Cascading selectors:** Sector combobox → Company combobox filtered by sector (shows logo initial, name, symbol, live % change). Changing sector auto‑selects the largest company by mkt cap. Selection syncs to URL and Zustand.
-3. ⌘K global search (all 50 companies).
-4. Top bar: market status pill (Open / Closed / Pre‑open based on IST 09:15–15:30, Mon–Fri, NSE holidays list), last‑updated time, units toggle.
-5. Scrolling NIFTY 50 ticker tape (batch quotes).
-6. Company header with animated LTP flash, 52‑week range bar, sparkline.
-7. Skeletons, error boundary, empty states.
+
+**3.1 Setup.** Next.js 15 (App Router) + TypeScript (strict) + Tailwind CSS
++ shadcn/ui, per §0. TanStack Query for data fetching/caching/polling.
+Zustand for selection state (sector/company/period/unit). API types are
+generated from the backend's OpenAPI schema (FastAPI serves one at
+`/openapi.json` for free) via `openapi-typescript` into `types/api.ts`, run
+as a script (`npm run gen:api-types`) -- not hand-maintained, so the two
+sides of the stack can't silently drift apart.
+
+**3.2 Design system.** CSS custom properties for colour tokens, dark mode
+default with a light mode variant, both defined up front (not
+dark-only-then-retrofitted). Numbers that update in place (price, %change)
+must not reflow or shift layout -- fixed-width tabular figures. Every
+gain/loss shows a ▲/▼ glyph *and* colour, never colour alone (accessibility:
+colourblind users can't rely on green/red).
+
+**3.3 Indian formatting (`lib/format.ts`).** Digit grouping
+(`₹12,34,567`, not `₹1,234,567`); crore/lakh-crore unit conversion and
+suffixing (`₹ Cr`, `₹ L Cr`); FY labels (`FY24` for the year ending March
+2024, matching `backend`'s own convention exactly); every formatter takes
+`null`/`undefined` and renders `"—"`, never `0` or `NaN`.
+
+**3.4 Cascading selectors.** Sector combobox → company combobox filtered to
+that sector (row shows a logo-initial avatar, name, symbol, live %change).
+Changing sector auto-selects that sector's largest company by market cap.
+Selection is the source of truth in the URL (`?sector=...&symbol=...`) via
+Zustand kept in sync, not the other way around -- so a shared link
+reproduces the exact view.
+
+**3.5 ⌘K global search.** All 50 companies, fuzzy-matched on symbol, full
+name, *and* common/former names -- "Zomato" must find ETERNAL, "Tata
+Motors" must find TMPV (a small alias table, since neither is derivable
+from the API alone).
+
+**3.6 Top bar.** Market-status pill (Open/Closed/Pre-open; IST
+09:15-15:30, Mon-Fri -- an NSE holiday calendar is out of scope per Phase
+1's own note, so holidays show as "Closed" same as a weekend); units toggle
+(₹ Cr / ₹ L Cr, persisted); theme toggle; a scrolling, clickable NIFTY 50
+ticker tape (batch `/api/quotes`) that jumps to that company on click.
+
+**3.7 Company header + KPI row.** LTP with a brief flash/pulse on change
+(not a jarring repaint); 52-week range bar (low---LTP---high, positioned
+proportionally); template-aware KPI cards (§2 -- a bank's cards are not a
+general company's cards) each showing its value *and* the sector median
+from `/api/ratios`; a warning banner when `/api/financials`' `notes` is
+non-empty (TMPV, JIOFIN, HDFCBANK's pre-merger note) -- visible, not buried
+in a tooltip.
+
+**3.8 Placeholder tabs.** Overview / Income Statement / Balance Sheet /
+Cash Flow / Ratios / Valuation / Peers / Shareholding & Events as empty-state
+tab shells (title + "coming in Phase 4") -- routing and layout only.
+
+**3.9 Loading & error states.** Skeleton loaders sized to match their
+eventual content (no layout shift when data arrives); an error boundary per
+data-fetching region (one endpoint failing shouldn't blank the page);
+explicit empty states.
+
+**3.10 Responsive layout.** Desktop (3-column), tablet, and phone
+breakpoints for the shell (top bar, header, KPI row, tab bar) -- verified at
+1440px and 390px, not just designed for them.
 
 Acceptance
 - Choosing a sector updates the company list instantly; choosing a company updates URL and header with no full page reload.
+- ⌘K finds ETERNAL for "Zomato" and TMPV for "Tata Motors".
+- No `0`/`NaN` rendered anywhere data is missing -- `"—"` instead.
+- Vitest (formatters, store logic) and a Playwright smoke test (load → pick
+  sector → pick company → URL updates) both pass.
+- Screenshots at 1440px and 390px, dark and light, for TCS/HDFCBANK/TMPV
+  (12 total) reviewed before Phase 4 starts.
 - Lighthouse ≥90 on performance and accessibility for the shell.
 
-> **Prompt:** "Implement Phase 3 of PLAN.md (frontend shell only, §3 layout and UI standards). Use TanStack Query against the Phase 1/2 API. Don't build tabs yet beyond placeholders."
+> **Prompt:** "Implement Phase 3 of PLAN.md exactly as specified (tasks 3.1-3.10). Use TanStack Query against the real Phase 1/2 API. Don't build tab contents beyond placeholders."
 
 ---
 
