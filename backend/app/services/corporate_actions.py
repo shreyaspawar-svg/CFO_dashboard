@@ -26,8 +26,20 @@ def _load() -> dict[str, dict[str, Any]]:
 
 def get_action(symbol: str) -> dict[str, Any] | None:
     """The raw corporate-action record for a symbol (message + optional
-    cutoff_period_end), or None if it has none."""
+    cutoff_period_end + label), or None if it has none."""
     return _load().get(symbol.upper())
+
+
+def comparable_from(symbol: str) -> tuple[str | None, str | None]:
+    """(cutoff_period_end, label) for a symbol's corporate-action break, so
+    a chart can plot it without keeping its own copy of these dates
+    (PLAN.md "Phase 4.1 review" item 3 -- the frontend used to hand-mirror
+    this file in `lib/corporate-action-cutoffs.ts`, which would silently
+    drift the next time an action was added or corrected here)."""
+    action = get_action(symbol)
+    if action is None:
+        return None, None
+    return action.get("cutoff_period_end"), action.get("label")
 
 
 def notes_for_symbol(symbol: str, period_ends: list[str]) -> list[str]:

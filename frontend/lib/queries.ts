@@ -86,6 +86,15 @@ export function useValuation(symbol: string | null) {
   });
 }
 
+export function useOverview(symbol: string | null) {
+  return useQuery({
+    queryKey: ["overview", symbol],
+    queryFn: () => api.overview(symbol as string),
+    enabled: !!symbol,
+    staleTime: STALE_TIME.valuation,
+  });
+}
+
 export function useEvents(symbol: string | null) {
   return useQuery({
     queryKey: ["events", symbol],

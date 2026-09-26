@@ -26,6 +26,8 @@ class MarketDataSource(Protocol):
 
     async def get_key_statistics(self, yf_ticker: str) -> dict[str, float | None]: ...
 
+    async def get_analyst_target(self, yf_ticker: str) -> dict[str, float | str | None]: ...
+
     async def get_income_statement(
         self, yf_ticker: str, quarterly: bool = False
     ) -> list[dict[str, Any]]: ...
@@ -76,6 +78,11 @@ class YahooDataSource:
         from app.services import yahoo
 
         return await yahoo.fetch_key_statistics(yf_ticker)
+
+    async def get_analyst_target(self, yf_ticker: str) -> dict[str, float | str | None]:
+        from app.services import yahoo
+
+        return await yahoo.fetch_analyst_target(yf_ticker)
 
     async def get_income_statement(
         self, yf_ticker: str, quarterly: bool = False

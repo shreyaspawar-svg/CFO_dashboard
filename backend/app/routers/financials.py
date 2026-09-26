@@ -6,7 +6,7 @@ from fastapi import APIRouter, HTTPException, Query
 from app.config import get_settings
 from app.models.schemas import FinancialsResponse
 from app.services.cache import get_cache
-from app.services.corporate_actions import notes_for_symbol
+from app.services.corporate_actions import comparable_from, notes_for_symbol
 from app.services.datasource import get_data_source
 from app.services.normalize import (
     BALANCE_SHEET_MAP,
@@ -81,6 +81,7 @@ async def get_financials(
 
     period_ends = [p["period_end"] for p in income]
     notes = notes_for_symbol(company.symbol, period_ends)
+    cutoff_date, cutoff_label = comparable_from(company.symbol)
 
     response = FinancialsResponse(
         symbol=company.symbol,
@@ -92,6 +93,8 @@ async def get_financials(
         as_of=datetime.now(timezone.utc),
         warnings=warnings,
         notes=notes,
+        comparable_from=cutoff_date,
+        comparable_from_label=cutoff_label,
     )
     cache.set(cache_key, response.model_dump(mode="json"), settings.ttl_financials)
     return response

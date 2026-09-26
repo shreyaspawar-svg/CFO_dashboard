@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import get_settings
-from app.routers import events, financials, history, peers, quote, ratios, universe, valuation
+from app.routers import events, financials, history, overview, peers, quote, ratios, universe, valuation
 from app.services.cache import get_cache
 
 settings = get_settings()
@@ -27,6 +27,7 @@ app.include_router(ratios.router)
 app.include_router(peers.router)
 app.include_router(valuation.router)
 app.include_router(events.router)
+app.include_router(overview.router)
 
 
 @app.get("/api/health")

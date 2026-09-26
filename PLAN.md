@@ -533,6 +533,21 @@ calculation, so this should hold exactly, not approximately) -- and the
 plausibility check must pass for all 50 symbols. If not, stop and report
 before Phase 4 starts.
 
+**Gate result: passed.** HDFCBANK's KPI ROE is `method: "computed"` =
+8.9% (0pp gap from itself, by construction). Building the plausibility
+check surfaced two more real, non-HDFCBANK findings before it passed
+cleanly: INFY's own EPS is unit-inconsistent at the source in both its
+annual and quarterly Yahoo data (not just quarterly, as first suspected),
+and INDIGO's naive TTM-summed EPS (+56, +14, -66, -6) net out near zero,
+implying a P/E in the thousands even though each quarter's figure is
+individually correct. Both are now handled by the same general mechanism:
+an implausible-but-non-`None` own-value is treated like a missing one
+(falls back to Yahoo, or to `None`), never displayed as-is. Full
+writeup: `backend/docs/data-notes.md`. All 50 symbols pass the
+plausibility check; `data_coverage_report.md`'s divergence table is
+otherwise unchanged (HDFCBANK/HDFCLIFE's ROE and HDFCBANK/BSE's book value
+still show, by design, per item 3's `method` tagging).
+
 > **Prompt:** "Read PLAN.md → 'Phase 3 review', then Phase 4 §4.0/§4.1.
 > Step A: disable the dev indicator, update CLAUDE.md for Next.js 16, commit
 > Phase 3, tag phase-3. Step B (Phase 2.2): items 1-4, gated as above -- stop
@@ -586,6 +601,134 @@ Acceptance (per tab)
 - Switching companies re‑renders in <1 s from cache.
 
 > **Prompt (repeat per tab):** "Implement the <TAB NAME> tab from PLAN.md §3. Use ECharts. Make it template‑aware (§2). Test with TCS, HDFCBANK, BAJFINANCE, HDFCLIFE and BSE and screenshot each."
+
+---
+
+### Phase 4.1 review
+
+The Overview tab itself rendered correctly (charts, exports, break marker, template-aware
+snapshot all worked against live data), but two numbers were wrong, so it wasn't approved
+for commit yet.
+
+1. **HDFCBANK's ROE is consistent now, but consistently wrong.** Phase 2.2 made the KPI
+   card and its trend chart agree with each other (8.9% everywhere) -- but neither agrees
+   with Screener's 13.6%. The Phase 2.2 gate only checked internal agreement, so it passed
+   while missing the actual point: agreement with a wrong number is still wrong. Per
+   `docs/data-notes.md`, the root cause is that Yahoo's quarterly equity for HDFCBANK
+   alternates between two different reporting bases (~₹5L Cr and ~₹7.8L Cr) quarter to
+   quarter. Fix required (Phase 2.3 item 1, below): detect that alternation generically
+   across all 50 symbols (not a HDFCBANK-specific check), use annual-only figures with
+   profit and equity on the same basis for any symbol it's detected on, and if the number
+   still doesn't reconcile, show it with an amber "source data inconsistent" badge rather
+   than presenting it as clean.
+2. **The beta figures are almost certainly a bug.** Large NIFTY constituents typically run
+   0.6-1.3x; HDFCBANK (a tenth of the index by weight) coming in near 0.2x isn't
+   believable. `compute_beta`'s own unit tests pass, but they only ever fed it synthetic,
+   already-aligned arrays -- they never exercised the part of the pipeline that produces
+   the two return series from real bars. The likely cause: `daily_returns` strips dates
+   and returns a bare list of floats, and the two series (symbol vs `^NSEI`) get zipped
+   together by **list position** in `compute_beta`. If the two instruments' bar lists ever
+   have a different set of trading dates (a stock-specific halt, a gap the free feed drops
+   for one ticker but not the other), every return after that point is paired against the
+   wrong day -- which washes out real covariance without raising an error. The performance-
+   vs-NIFTY chart pairs its two series by array index the same way, so it's suspect too.
+   Fix required (Phase 2.3 item 2): pair returns by shared trading date, not position, on
+   both sides. Verify with a test built from **real** TCS + `^NSEI` daily bars (not
+   synthetic data), and a side-by-side table of our beta vs Yahoo's own reported beta for
+   HDFCBANK, RELIANCE, TCS, ICICIBANK and TMPV.
+3. **Minor: the frontend keeps its own copy of demerger/merger cutoff dates**
+   (`lib/corporate-action-cutoffs.ts`), duplicating `backend/data/corporate_actions.json`.
+   That copy will silently drift the next time a corporate action is added or a date is
+   corrected backend-side. Fix required (Phase 2.3 item 3): expose the cutoff as a
+   structured field on `/api/financials` (`comparable_from` date + a short
+   `comparable_from_label` for the chart) and have `price-chart.tsx` read it from there;
+   delete the local mirror file.
+
+#### Phase 2.3 — Fix the basis mismatch, the alignment bug, and the duplicated dates
+
+1. **Detect equity-basis oscillation generically, across all 50 symbols.** A new
+   `app/metrics/basis_consistency.py` flags a symbol whose quarterly `total_equity`
+   series shows alternating large-magnitude swings that revert (not a monotonic trend --
+   real organic equity growth doesn't zig-zag double digits quarter over quarter). For a
+   flagged symbol, compute ROE/ROA from **annual** net income over **annual** average
+   equity (both from the same filing, hence the same basis) instead of TTM-quarterly-summed
+   net income over annual average equity -- eliminating the numerator/denominator basis
+   mismatch that let a same-report-consistent-looking figure still be wrong. If, after
+   that fix, the result still diverges materially from Yahoo's independent key-statistics
+   cross-check (the existing >10% divergence mechanism from Phase 2 review item 4), tag the
+   ratio with a `data_quality: "inconsistent"` flag and a reason string instead of
+   presenting it as a clean number -- surfaced in the UI as an amber badge with the reason
+   in a tooltip, not silently swapped for a different value (that would reintroduce the
+   exact KPI-vs-chart disagreement Phase 2.2 was built to close).
+2. **Pair return series by trading date, not list position.** A new
+   `paired_daily_returns(symbol_bars, benchmark_bars)` in `metrics/beta.py` builds a
+   date -> close map for each series, intersects the dates, and computes both series'
+   day-over-day returns only over that common, sorted date set. `compute_beta` itself is
+   unchanged (the covariance/variance math was always correct) -- the fix is entirely in
+   how the two return series are produced before reaching it. The same date-keyed join
+   replaces the positional zip in `performance-chart.tsx`. A new test loads real captured
+   TCS + `^NSEI` 1-year daily bars (`tests/fixtures/beta/`) and asserts the resulting beta
+   falls in a plausible band, plus a regression assertion that the old positional pairing
+   on the same real data would have produced a materially different (lower) result --
+   proving the fix isn't a no-op on real data, not just on synthetic arrays.
+3. **`comparable_from` / `comparable_from_label` on `/api/financials`.** Sourced from
+   `corporate_actions.json`'s existing `cutoff_period_end`, plus a new short `label` field
+   per entry (e.g. "Demerger from Tata Motors") for the chart marker text.
+   `lib/corporate-action-cutoffs.ts` is deleted; `price-chart.tsx` reads the cutoff from
+   `useFinancials(symbol)` (already fetched elsewhere in the app, same cache) instead.
+
+**Gate:** HDFCBANK's ROE is within ~1.5pp of Screener's 13.6%, **or** amber-badged with a
+documented reason -- **and** the real-bar-data beta test passes (plausible value, and
+demonstrably different from the old positional-pairing result). If both hold, commit
+Phase 2.2 + 2.3 + 4.0/4.1 and tag `phase-4.1`. If not, stop and report before touching 4.2.
+
+---
+
+### 4.2 Income Statement tab
+
+Second tab built on the Phase 4.0 chart foundation, per §3 tab 2 and §2's template
+awareness -- same rigor as 4.1: real data, gaps not zeros, comparable-period exclusion,
+`method`-tagged figures wherever a metric can be computed two ways.
+
+- **Annual/Quarterly toggle**, backed by `/api/financials?period=annual|quarterly`
+  (already exists) -- switching doesn't refetch the other period if it's already cached.
+- **Revenue / EBITDA / PAT combo chart**: bars for the three absolute figures, a secondary
+  right-hand axis with EBITDA-margin and PAT-margin lines. Pre-corporate-action periods
+  (per `comparable_from`) are visually distinguished (the same break-marker convention
+  from 4.0), not silently included in a trend line they'd distort.
+- **YoY/QoQ growth bars** for revenue, EBITDA and PAT, computed only over comparable
+  periods (reuses the backend's existing `comparable_periods` filtering -- no new growth
+  math, just charting what `/api/ratios`' growth figures already are, plus a per-period
+  breakdown the KPI card doesn't show).
+- **Waterfall** (latest comparable annual period): Revenue → COGS → Opex → EBITDA → D&A →
+  Interest → Tax → PAT. Template-aware: a bank/NBFC/insurer template has no COGS/Opex
+  split in the way a `general` company does (§2) -- show NII/NIM-based line items instead
+  of forcing the general-company waterfall shape onto a business model it doesn't fit, and
+  label a step "—" (not 0) when the underlying line item is genuinely absent from the free
+  data source.
+- **Expandable table**: all mapped income-statement line items across every comparable
+  period, plus a CAGR column (using the same span-plausibility guard already in
+  `lib/technical.ts`'s `computeReturnsTable` -- don't imply a 5-year CAGR from 3 years of
+  data here either).
+- Every chart gets PNG/CSV export via the existing `ChartCard` (4.0); no new export
+  mechanism.
+
+Acceptance
+- Works for one company per template (TCS, HDFCBANK, BAJFINANCE, HDFCLIFE, BSE) plus a
+  corporate-action symbol (TMPV or HDFCBANK) to confirm the break marker/exclusion shows
+  correctly on a real discontinuity.
+- No fabricated growth/CAGR figures for spans the data doesn't support.
+- All tests green (backend pytest, frontend vitest, Playwright e2e).
+
+> **Prompt:** "Read PLAN.md → 'Phase 4.1 review' and section 4.2.
+> Step A (Phase 2.3): fix items 1-3, gated as above -- report the basis-oscillation hits
+> across all 50 symbols, the new HDFCBANK ROE with method/badge status, and a beta table
+> (ours vs Yahoo) for HDFCBANK, RELIANCE, TCS, ICICIBANK and TMPV. If the gate passes,
+> commit Phase 2.2 + 2.3 + 4.0/4.1 and tag phase-4.1. If not, stop and report.
+> Step B: build 4.2. Run all tests. Screenshot it at 1440px (dark) for TCS, HDFCBANK,
+> HDFCLIFE and INDIGO, and at 390px (light) for TCS. Copy those screenshots plus the 4.1
+> Overview ones for TCS and HDFCBANK into review/ at the repo root. Don't commit 4.2; stop
+> and summarise."
 
 ---
 

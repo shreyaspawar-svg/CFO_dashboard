@@ -90,17 +90,20 @@ def test_unknown_symbol_returns_empty_metrics_with_warning():
 
 
 # --------------------------------------------------------------------------
-# Phase 2.1 regression: HDFCBANK's book value diverged 36% from Screener.in
-# (Rs530/share vs Rs390) because Yahoo's StockholdersEquity, though already
-# minority-interest-excluded per its own schema, still overstated true
-# parent book value for this post-merger, partly-divested-subsidiary bank.
-# The fix is Yahoo's own crumb-gated key-statistics cross-check
-# (financialData.returnOnEquity, defaultKeyStatistics.bookValue/
-# trailingEps), preferred over our fundamentals-timeseries-derived figures
-# when available. These tests inject a fake key-statistics response (the
-# fixture-mocked network always reports the crumb as unavailable, so the
-# real override path is otherwise never exercised in the test suite) to
-# regression-guard the override wiring itself.
+# Phase 2.1 found that HDFCBANK's book value diverges from Screener.in
+# (Rs530/share vs Rs390) -- traced in Phase 2.2 (PLAN.md "Phase 3 review")
+# to HDFCBANK's own `StockholdersEquity` oscillating wildly between
+# quarters (Yahoo inconsistently sourcing standalone vs consolidated
+# statements for this post-merger conglomerate -- see
+# backend/docs/data-notes.md), not a bug in our code. Phase 2.1's fix
+# (silently overriding our own ROE/book-value with Yahoo's crumb-gated
+# key-statistics whenever available) created a worse problem: a KPI card
+# and a history/trend chart built from our own data would then disagree,
+# since Yahoo's figure is a single current snapshot a trend chart can't
+# reproduce. Phase 2.2 changed this to "prefer our own calculation always;
+# Yahoo's figure is a fallback ONLY when ours is None, and is tagged as
+# such via `method`" -- these tests cover both paths plus the still-useful
+# >10% divergence flag (item 4).
 # --------------------------------------------------------------------------
 
 
@@ -128,24 +131,95 @@ def _run_with_fake_key_stats(symbol: str, key_stats: dict) -> dict:
         set_data_source(None)
 
 
-def test_hdfcbank_roe_prefers_yahoo_key_stats_over_own_calculation():
-    # Real values pulled live during the Phase 2 review's investigation.
+def test_hdfcbank_roe_carries_data_quality_inconsistent_badge():
+    # PLAN.md "Phase 4.1 review" item 1 / Phase 2.3: the fixture's quarterly
+    # equity reproduces the real basis-oscillation pattern, so ROE/ROA must
+    # be flagged rather than presented as a clean 8.9% figure.
+    result = _run("HDFCBANK")
+    assert "roe" in result["data_quality"]
+    assert "roa" in result["data_quality"]
+    assert "basis" in result["data_quality"]["roe"].lower()
+
+
+def test_tcs_roe_has_no_data_quality_flag():
+    result = _run("TCS")
+    assert "roe" not in result["data_quality"]
+    assert result["data_quality"] == {}
+
+
+def test_hdfcbank_roe_prefers_own_calculation_even_when_yahoo_is_available():
+    # Real values pulled live during the Phase 2.1 investigation -- our own
+    # calculation succeeds for HDFCBANK (it has enough periods), so it must
+    # win even though a (fake, here) Yahoo figure is available and differs.
     result = _run_with_fake_key_stats(
         "HDFCBANK",
         {"roe_pct": 13.84, "roa_pct": 1.75, "book_value_per_share": 393.81, "trailing_eps": 45.75},
     )
-    assert result["metrics"]["roe"] == pytest.approx(13.84)
-    assert result["metrics"]["roa"] == pytest.approx(1.75)
+    assert result["metrics"]["roe"] != pytest.approx(13.84)
+    assert result["metrics"]["roe"] == pytest.approx(8.896498782179343)
+    assert result["method"]["roe"] == "computed"
+    assert result["method"]["roa"] == "computed"
 
 
-def test_hdfcbank_pb_and_pe_use_yahoo_book_value_and_eps():
+def test_hdfcbank_pb_and_pe_prefer_own_book_value_and_eps():
     result = _run_with_fake_key_stats(
         "HDFCBANK",
         {"roe_pct": None, "roa_pct": None, "book_value_per_share": 393.81, "trailing_eps": 45.75},
     )
     price = result["quote"].last_price
-    assert result["metrics"]["pb"] == pytest.approx(price / 393.81, rel=1e-6)
-    assert result["metrics"]["pe"] == pytest.approx(price / 45.75, rel=1e-6)
+    assert result["metrics"]["pb"] != pytest.approx(price / 393.81, rel=1e-6)
+    assert result["method"]["pb"] == "computed"
+    assert result["method"]["pe"] == "computed"
+
+
+def test_yahoo_fallback_used_only_when_own_calculation_is_none():
+    # Force our own ROE to be unavailable (no comparable balance-sheet
+    # periods) by using a symbol whose comparable_periods excludes almost
+    # everything -- simplest reliable way: directly exercise _prefer_own.
+    from app.services.metrics_engine import _prefer_own
+
+    method: dict[str, str] = {}
+    assert _prefer_own("roe", None, 13.84, method) == 13.84
+    assert method["roe"] == "yahoo_fallback"
+
+    method2: dict[str, str] = {}
+    assert _prefer_own("roe", 8.9, 13.84, method2) == 8.9
+    assert method2["roe"] == "computed"
+
+    method3: dict[str, str] = {}
+    assert _prefer_own("roe", None, None, method3) is None
+    assert method3["roe"] == "unavailable"
+
+
+def test_implausible_own_eps_falls_back_to_yahoo_even_though_not_none(monkeypatch):
+    """Regression for a real finding: summing 4 volatile quarterly EPS
+    values can net out near zero (INDIGO: +56, +14, -66, -6 -> -1.33),
+    implying a P/E in the thousands even though each quarter's figure is
+    individually correct -- and separately, INFY's own EPS is unit-
+    inconsistent at the source (docs/data-notes.md). Either way, a real
+    (non-None) but implausible own-value must be treated like a missing
+    one, not displayed as-is."""
+    import app.services.metrics_engine as engine
+
+    monkeypatch.setattr(engine, "_ttm_sum", lambda periods, key: 0.01 if key == "eps_diluted" else None)
+
+    result = _run_with_fake_key_stats(
+        "TCS", {"roe_pct": None, "roa_pct": None, "book_value_per_share": None, "trailing_eps": 136.01}
+    )
+    assert result["metrics"]["pe"] != pytest.approx(result["quote"].last_price / 0.01)
+    assert result["method"]["pe"] == "yahoo_fallback"
+
+
+def test_implausible_own_eps_with_no_yahoo_fallback_is_unavailable_not_garbage(monkeypatch):
+    import app.services.metrics_engine as engine
+
+    monkeypatch.setattr(engine, "_ttm_sum", lambda periods, key: 0.01 if key == "eps_diluted" else None)
+
+    result = _run_with_fake_key_stats(
+        "TCS", {"roe_pct": None, "roa_pct": None, "book_value_per_share": None, "trailing_eps": None}
+    )
+    assert result["metrics"]["pe"] is None
+    assert result["method"]["pe"] == "unavailable"
 
 
 def test_hdfcbank_book_value_divergence_flagged():

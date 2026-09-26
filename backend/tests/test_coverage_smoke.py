@@ -14,6 +14,11 @@ import asyncio
 import pytest
 
 from app.config import BASE_DIR
+from app.metrics.plausibility import (
+    book_value_per_share_is_plausible,
+    market_cap_matches_price_times_shares,
+    pe_is_plausible,
+)
 from app.services import yahoo
 from app.services.corporate_actions import notes_for_symbol
 from app.services.metrics_engine import compute_symbol_metrics
@@ -108,8 +113,48 @@ async def _check_symbol(symbol: str) -> dict:
         metrics_result = await compute_symbol_metrics(symbol)
         result["cross_check_divergences"] = metrics_result["cross_check_divergences"]
     except Exception as exc:  # noqa: BLE001
+        metrics_result = None
         result["cross_check_divergences"] = []
         result["cross_check_error"] = str(exc)
+
+    # Phase 2.2 item 4: unit-scale plausibility checks across all 50
+    # symbols -- catches a *future* crore/share-count/per-share mixing
+    # mistake even where there's no live cross-check to compare against
+    # (see app.metrics.plausibility's docstring). Checked against the
+    # DISPLAYED values (post method-fallback), not raw intermediate ones --
+    # INFY's own raw EPS is known unit-inconsistent (docs/data-notes.md),
+    # but its *displayed* P/E already correctly falls back to Yahoo's
+    # figure, so that's what should be judged plausible or not.
+    plausibility_failures: list[str] = []
+    if metrics_result is not None:
+        quote = metrics_result["quote"]
+        latest_balance = metrics_result["latest_balance"]
+        pb = metrics_result["metrics"].get("pb")
+        pe = metrics_result["metrics"].get("pe")
+
+        displayed_bvps = quote.last_price / pb if pb not in (None, 0) and quote.last_price else None
+        if not book_value_per_share_is_plausible(displayed_bvps):
+            plausibility_failures.append(f"book_value_per_share={displayed_bvps} (from displayed pb={pb})")
+
+        if not market_cap_matches_price_times_shares(
+            quote.market_cap, quote.last_price, latest_balance.get("shares_outstanding")
+        ):
+            plausibility_failures.append(
+                f"market_cap={quote.market_cap} vs price*shares implied"
+            )
+
+        if not pe_is_plausible(pe):
+            plausibility_failures.append(f"pe={pe}")
+
+    result["plausibility_failures"] = plausibility_failures
+
+    # Phase 2.3 item 1: equity-basis-oscillation detector, across all 50
+    # symbols -- reported here rather than just spot-checked on HDFCBANK, so
+    # a future symbol tripping the same free-data-source quirk is caught
+    # the same way HDFCBANK was.
+    result["data_quality_flags"] = (
+        dict(metrics_result["data_quality"]) if metrics_result is not None else {}
+    )
 
     return result
 
@@ -242,14 +287,14 @@ def _render_report(results: list[dict]) -> str:
         "bug HDFCBANK revealed (our figure diverging from a more-current",
         "or correctly-scoped source), not just that one company.",
         "",
-        "IMPORTANT: a row appearing here does NOT mean the displayed metric",
-        "is wrong -- `pb`/`pe`/`roe`/`roa` always prefer Yahoo's figure over",
-        "ours when both exist, so a row is either (a) the override doing",
-        "its job (ours differs, Yahoo's more-authoritative figure is what's",
-        "actually shown), or (b) neither side was overridden and our own",
-        "TTM-summed EPS differs from Yahoo's `trailingEps` methodology",
-        "(exceptional items, or -- confirmed for INFY -- a Yahoo data-scale",
-        "inconsistency in ITS OWN quarterly figures, not our calculation).",
+        "IMPORTANT (updated Phase 2.2): `pb`/`pe`/`roe`/`roa` always prefer",
+        "OUR OWN calculation now, never Yahoo's, as long as ours succeeded --",
+        "see backend/docs/data-notes.md. A row here means EITHER our own",
+        "figure is the one actually shown and it genuinely differs from",
+        "Yahoo's (HDFCBANK's ROE/book-value rows are exactly this, by",
+        "design -- see data-notes.md for why), OR our own calculation was",
+        "unavailable and Yahoo's crumb-gated figure filled in as a tagged",
+        "fallback (check the `method` field on the ratio in question).",
         "",
     ]
     divergence_rows = [
@@ -265,6 +310,47 @@ def _render_report(results: list[dict]) -> str:
             )
     else:
         lines.append("None -- every symbol with both figures available agrees within 10%.")
+
+    lines += [
+        "",
+        "## Unit-scale plausibility check (Phase 2.2 item 4)",
+        "",
+        "Sanity bands on book value/share, market-cap-vs-price-times-shares,",
+        "and EPS-vs-price -- catches a *future* crore/share-count/per-share",
+        "unit mistake (the class of bug that produced the Phase 2.1 book-value",
+        "and Phase 1.5 market-cap regressions) even in a symbol with no live",
+        "cross-check to compare against.",
+        "",
+    ]
+    failing_symbols = [r for r in results if r.get("plausibility_failures")]
+    if failing_symbols:
+        lines += ["| Symbol | Failure |", "|---|---|"]
+        for r in sorted(failing_symbols, key=lambda x: x["symbol"]):
+            for failure in r["plausibility_failures"]:
+                lines.append(f"| {r['symbol']} | {failure} |")
+    else:
+        lines.append("None -- all 50 symbols pass every plausibility check.")
+
+    lines += [
+        "",
+        "## Equity-basis oscillation check (Phase 2.3 item 1)",
+        "",
+        "Symbols whose quarterly equity alternates between two reporting",
+        "bases (see `app.metrics.basis_consistency` and",
+        "backend/docs/data-notes.md) -- their ROE/ROA are computed from",
+        "annual, same-basis figures and carry `data_quality: \"inconsistent\"`",
+        "on `/api/ratios` (an amber badge in the UI) rather than being shown",
+        "as a clean number.",
+        "",
+    ]
+    quality_rows = [(r["symbol"], r["data_quality_flags"]) for r in results if r.get("data_quality_flags")]
+    if quality_rows:
+        lines += ["| Symbol | Metric | Reason |", "|---|---|---|"]
+        for symbol, flags in sorted(quality_rows, key=lambda x: x[0]):
+            for metric, reason in sorted(flags.items()):
+                lines.append(f"| {symbol} | {metric} | {reason} |")
+    else:
+        lines.append("None -- no symbol's equity shows a basis-oscillation pattern.")
 
     lines.append("")
     return "\n".join(lines)
@@ -298,3 +384,49 @@ def test_coverage_report_all_symbols():
 
     no_market_cap = [r["symbol"] for r in results if r["market_cap"] is None]
     assert not no_market_cap, f"Symbols with no market cap by any method: {no_market_cap}"
+
+    # Phase 2.2 gate: the plausibility check must pass for all 50 symbols.
+    implausible = {r["symbol"]: r["plausibility_failures"] for r in results if r["plausibility_failures"]}
+    assert not implausible, f"Symbols failing a plausibility check: {implausible}"
+
+
+@pytest.mark.smoke
+def test_hdfcbank_kpi_roe_matches_own_computation_not_yahoos():
+    """Phase 2.2 gate: HDFCBANK's KPI ROE must be OUR OWN computed figure
+    (method='computed'), not a Yahoo fallback -- since Phase 4 will build an
+    ROE-over-time chart from the same computation, and the two must always
+    agree by construction (same function, same data), not by luck."""
+    result = asyncio.run(compute_symbol_metrics("HDFCBANK"))
+    assert result["method"]["roe"] == "computed"
+    assert result["metrics"]["roe"] is not None
+
+
+@pytest.mark.smoke
+def test_hdfcbank_roe_is_badged_inconsistent_not_silently_wrong():
+    """Phase 2.3 gate: HDFCBANK's ROE still doesn't reconcile with Screener
+    within 1.5pp after the annual-basis fix (the annual filings themselves
+    sit on the wrong basis, not just a numerator/denominator mismatch within
+    our own calculation -- see backend/docs/data-notes.md). The gate's other
+    branch applies instead: it must be tagged `data_quality: "inconsistent"`
+    with a documented reason, not presented as a clean figure."""
+    result = asyncio.run(compute_symbol_metrics("HDFCBANK"))
+    assert "roe" in result["data_quality"]
+    assert result["data_quality"]["roe"]  # non-empty reason string
+
+
+@pytest.mark.smoke
+def test_equity_basis_oscillation_only_flags_symbols_with_real_evidence():
+    """Guards against the detector becoming noisy over time: as of this
+    run, only HDFCBANK's real quarterly equity shows the basis-switching
+    signature (see data_coverage_report.md's "Equity-basis oscillation
+    check" section for the full 50-symbol scan). A newly-flagged symbol
+    here is worth investigating (a genuine new instance of the bug, or the
+    detector's threshold needs revisiting), not silently accepted."""
+    symbols = all_symbols()
+
+    async def _run():
+        return await asyncio.gather(*(compute_symbol_metrics(s) for s in symbols))
+
+    results = asyncio.run(_run())
+    flagged = {r["company"].symbol for r in results if r["data_quality"]}
+    assert flagged == {"HDFCBANK"}

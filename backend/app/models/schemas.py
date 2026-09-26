@@ -86,6 +86,12 @@ class FinancialsResponse(BaseModel):
     # demerger") -- distinct from `warnings`, which flags missing/absent
     # data. Never empty-vs-populated based on data completeness.
     notes: list[str] = Field(default_factory=list)
+    # Structured form of the same corporate-action break (PLAN.md "Phase
+    # 4.1 review" item 3): a chart needs an actual date and a short label,
+    # not just a free-text note to parse. Both null when the symbol has no
+    # recorded corporate action.
+    comparable_from: str | None = None
+    comparable_from_label: str | None = None
 
 
 PeerBasis = Literal["sector", "template", "none"]
@@ -95,6 +101,19 @@ class RatioValue(BaseModel):
     value: float | None
     peer_median: float | None
     percentile: float | None
+    # "computed" (our own calculation), "yahoo_fallback" (ours was None, a
+    # crumb-gated Yahoo figure filled in -- a snapshot, not something a
+    # history chart can replicate), or "unavailable". See PLAN.md "Phase 3
+    # review" / Phase 2.2 item 3.
+    method: Literal["computed", "yahoo_fallback", "unavailable"] = "unavailable"
+    # Set when the value is real (non-None) but built on source data we've
+    # positively detected as unreliable (e.g. HDFCBANK's equity-basis
+    # oscillation, PLAN.md "Phase 4.1 review" item 1) -- the UI renders this
+    # as an amber "source data inconsistent" badge with `data_quality_reason`
+    # in a tooltip, rather than presenting the number as clean. `"ok"` (the
+    # common case) means no such issue was detected.
+    data_quality: Literal["ok", "inconsistent"] = "ok"
+    data_quality_reason: str | None = None
 
 
 class AxisComponent(BaseModel):
@@ -162,6 +181,24 @@ class SplitEvent(BaseModel):
     date: str
     numerator: float
     denominator: float
+
+
+class OverviewResponse(BaseModel):
+    symbol: str
+    beta: float | None = None
+    analyst_target_mean: float | None = None
+    analyst_target_high: float | None = None
+    analyst_target_low: float | None = None
+    analyst_count: float | None = None
+    analyst_recommendation: str | None = None
+    # 1-year total return, symbol minus benchmark/sector-peer-average, in
+    # percentage points -- positive means the symbol outperformed.
+    relative_performance_vs_nifty50_pp: float | None = None
+    relative_performance_vs_sector_pp: float | None = None
+    sector_peer_count: int = 0
+    source: str
+    as_of: datetime
+    warnings: list[str] = Field(default_factory=list)
 
 
 class EventsResponse(BaseModel):

@@ -33,7 +33,7 @@ export function DashboardShell() {
               <KpiRow symbol={currentCompany.symbol} template={currentCompany.template} />
             </ErrorBoundary>
             <ErrorBoundary region="tabs">
-              <TabsShell />
+              <TabsShell symbol={currentCompany.symbol} template={currentCompany.template} />
             </ErrorBoundary>
           </>
         )}

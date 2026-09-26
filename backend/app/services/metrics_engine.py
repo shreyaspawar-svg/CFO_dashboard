@@ -14,12 +14,44 @@ from datetime import date, datetime, timezone
 from typing import Any
 
 from app.metrics import ratios as r
+from app.metrics.basis_consistency import equity_basis_oscillation_detected
 from app.metrics.comparability import comparable_periods
-from app.services import normalize
+from app.metrics.plausibility import book_value_per_share_is_plausible, pe_is_plausible
+from app.metrics.units import Crore, Shares, per_share_value
 from app.services.datasource import get_data_source
 from app.services.universe import get_company
 
 _TTM_DIVIDEND_WINDOW_DAYS = 365
+
+# Method provenance values (PLAN.md "Phase 3 review" / Phase 2.2 item 3).
+# "computed": our own fundamentals-timeseries-derived calculation succeeded
+# -- the common case, and the ONLY one a history/trend chart can be built
+# from consistently. "yahoo_fallback": our own calculation returned None
+# (e.g. too few periods), so Yahoo's crumb-gated key-statistics figure
+# filled in -- a single-point snapshot, not something a trend chart can
+# replicate, so it's tagged distinctly rather than presented as equivalent.
+# "unavailable": neither worked.
+METHOD_COMPUTED = "computed"
+METHOD_YAHOO_FALLBACK = "yahoo_fallback"
+METHOD_UNAVAILABLE = "unavailable"
+
+
+def _prefer_own(
+    key: str, own_value: float | None, fallback_value: float | None, method: dict[str, str]
+) -> float | None:
+    """Use `own_value` when available; only reach for `fallback_value` (and
+    tag it as such) when our own calculation came back None. Never silently
+    prefer the fallback over a value we were able to compute ourselves --
+    that's exactly the "KPI card says 13.8%, its trend chart says 9%"
+    inconsistency Phase 2.2 exists to close."""
+    if own_value is not None:
+        method[key] = METHOD_COMPUTED
+        return own_value
+    if fallback_value is not None:
+        method[key] = METHOD_YAHOO_FALLBACK
+        return fallback_value
+    method[key] = METHOD_UNAVAILABLE
+    return None
 
 
 def _years_between(start_iso: str, end_iso: str) -> float:
@@ -113,11 +145,23 @@ async def compute_symbol_metrics(symbol: str) -> dict[str, Any]:
         quarterly_financials = await get_financials(symbol, period="quarterly")
         quarterly_income_raw = [p.model_dump() for p in quarterly_financials.income_statement]
         quarterly_income_periods, _ = comparable_periods(symbol, quarterly_income_raw)
+        quarterly_equity = [
+            p.line_items.get("total_equity") for p in quarterly_financials.balance_sheet
+        ]
     except Exception as exc:  # noqa: BLE001
         quarterly_income_periods = []
+        quarterly_equity = []
         warnings.append(f"Quarterly income statement fetch failed (TTM unavailable): {exc}")
 
     metrics: dict[str, float | None] = {}
+    method: dict[str, str] = {}
+    # Metric key -> human-readable reason, for a metric whose own-calculated
+    # value is real (non-None) but built on data we've positively detected
+    # as unreliable -- surfaced as an amber "source data inconsistent" badge
+    # rather than presented as a clean number (PLAN.md "Phase 4.1 review"
+    # item 1). Distinct from `method`: a badged metric can still be
+    # "computed", just computed from data flagged as shaky.
+    data_quality: dict[str, str] = {}
     comparable_annual_years = 0
 
     if not income_periods:
@@ -125,6 +169,8 @@ async def compute_symbol_metrics(symbol: str) -> dict[str, Any]:
             "company": company,
             "quote": quote,
             "metrics": metrics,
+            "method": method,
+            "data_quality": data_quality,
             "latest_income": {},
             "latest_balance": {},
             "latest_cashflow": {},
@@ -188,15 +234,44 @@ async def compute_symbol_metrics(symbol: str) -> dict[str, Any]:
     metrics["ebit_margin"] = r.margin(latest_income.get("ebit"), latest_income.get("revenue"))
     metrics["pat_margin"] = r.margin(latest_income.get("net_income"), latest_income.get("revenue"))
 
-    # --- Returns (TTM earnings over the latest annual balance sheet;
-    # overridden by Yahoo's own ROE/ROA when its crumb-gated cross-check is
-    # available, since it reflects a more current trailing window than our
-    # own annual-balance-sheet-anchored figure ever can -- see the
-    # key_stats fetch above) --------------------------------------------
-    own_roe = r.return_on_equity(ttm_net_income, avg_equity)
-    own_roa = r.return_on_assets(ttm_net_income, avg_assets)
-    metrics["roe"] = key_stats["roe_pct"] if key_stats["roe_pct"] is not None else own_roe
-    metrics["roa"] = key_stats["roa_pct"] if key_stats["roa_pct"] is not None else own_roa
+    # --- Returns (TTM earnings over the latest annual balance sheet -- our
+    # own calculation is authoritative whenever it succeeds, so a KPI card
+    # and an ROE-over-time chart are guaranteed to agree at the latest
+    # point: they're the same function, just over different periods. Yahoo's
+    # key-statistics ROE/ROA is a fallback for when ours is None, tagged as
+    # such, and always checked for a >10% divergence either way -- see
+    # PLAN.md "Phase 3 review" / docs/data-notes.md for why HDFCBANK's own
+    # figure legitimately differs from Screener's rather than being a bug.
+    # A symbol whose quarterly equity oscillates between reporting bases
+    # (PLAN.md "Phase 4.1 review" item 1 -- see docs/data-notes.md for
+    # HDFCBANK's writeup) can't safely use TTM net income (summed from
+    # quarters that may themselves span both bases) over an annual average
+    # equity: numerator and denominator can end up measured on different
+    # bases even though each individually looks clean. For a flagged
+    # symbol, fall back to annual net income -- same filing, same basis as
+    # the annual equity already used for avg_equity/avg_assets -- and flag
+    # the result as data-quality-inconsistent rather than presenting it as
+    # a normal "computed" figure, since even the basis-matched number may
+    # still not be trustworthy (the underlying source data disagreement is
+    # the real problem, not just which periods get averaged).
+    basis_oscillating = equity_basis_oscillation_detected(quarterly_equity)
+    net_income_for_returns = ttm_net_income
+    if basis_oscillating:
+        net_income_for_returns = latest_income.get("net_income")
+        reason = (
+            "Quarterly equity shows a basis-switching pattern (alternating figures "
+            "inconsistent with organic growth) -- ROE/ROA computed from annual, "
+            "same-basis net income instead of TTM-summed-quarterly. See "
+            "backend/docs/data-notes.md."
+        )
+        warnings.append(reason)
+        data_quality["roe"] = reason
+        data_quality["roa"] = reason
+
+    own_roe = r.return_on_equity(net_income_for_returns, avg_equity)
+    own_roa = r.return_on_assets(net_income_for_returns, avg_assets)
+    metrics["roe"] = _prefer_own("roe", own_roe, key_stats["roe_pct"], method)
+    metrics["roa"] = _prefer_own("roa", own_roa, key_stats["roa_pct"], method)
 
     roe_divergence = r.relative_divergence(own_roe, key_stats["roe_pct"])
     if roe_divergence is not None and roe_divergence > 10:
@@ -255,25 +330,23 @@ async def compute_symbol_metrics(symbol: str) -> dict[str, Any]:
     metrics["capex_intensity"] = r.capex_intensity(latest_cashflow.get("capex"), latest_income.get("revenue"))
 
     # --- Valuation (needs live price/market cap from the quote; trailing
-    # multiples use TTM EPS, per PLAN.md "Phase 1 review" item 4; book
-    # value and EPS prefer Yahoo's own cross-check, per "Phase 2 review"
-    # item 4, with a >10% divergence flagged either way) --------------------
+    # multiples use TTM EPS, per PLAN.md "Phase 1 review" item 4; our own
+    # book value and EPS are authoritative, with Yahoo's cross-check only
+    # as a fallback when ours is None -- same reasoning as ROE/ROA above) --
     price = quote.last_price
     market_cap = quote.market_cap
 
-    # total_equity is stored in Rs crore (this app's internal currency
-    # convention -- see normalize.py); shares_outstanding is a raw count.
-    # book_value_per_share needs both in the same (raw-rupee) unit before
-    # dividing, or the result comes out ~1e7x too small (caught by this
-    # same cross-check flagging it as a spurious "100% divergence" on
-    # basically every symbol during the Phase 2.1 rollout).
-    total_equity_raw = (
-        latest_balance["total_equity"] * normalize.CRORE
+    # total_equity is Crore (this app's internal currency convention);
+    # shares_outstanding is a raw Shares count. per_share_value is the ONE
+    # place this conversion happens -- see metrics/units.py's docstring for
+    # the ~1e7x bug that ad-hoc `* CRORE` call sites caused before it existed.
+    own_book_value_per_share = (
+        per_share_value(
+            Crore(latest_balance["total_equity"]), Shares(latest_balance["shares_outstanding"])
+        )
         if latest_balance.get("total_equity") is not None
+        and latest_balance.get("shares_outstanding") is not None
         else None
-    )
-    own_book_value_per_share = r.book_value_per_share(
-        total_equity_raw, latest_balance.get("shares_outstanding")
     )
     bvps_divergence = r.relative_divergence(own_book_value_per_share, key_stats["book_value_per_share"])
     if bvps_divergence is not None and bvps_divergence > 10:
@@ -285,10 +358,19 @@ async def compute_symbol_metrics(symbol: str) -> dict[str, Any]:
                 "divergence_pct": bvps_divergence,
             }
         )
-    book_value_per_share = (
-        key_stats["book_value_per_share"]
-        if key_stats["book_value_per_share"] is not None
-        else own_book_value_per_share
+    # A plausibility gate, not just a None check: our own calculation can
+    # come back a real (non-None) number that's still nonsensical -- either
+    # because the underlying Yahoo data is unit-inconsistent for this
+    # symbol (INFY: see docs/data-notes.md) or because summing 4 volatile
+    # quarterly EPS values can net out near zero even when each quarter's
+    # figure is individually correct (INDIGO: +56, +14, -66, -6 sums to
+    # -1.33, implying a P/E in the thousands). Either way, an implausible
+    # own-value is treated the same as a missing one -- fall back to
+    # Yahoo, or `None`, rather than display it.
+    if not book_value_per_share_is_plausible(own_book_value_per_share):
+        own_book_value_per_share = None
+    book_value_per_share = _prefer_own(
+        "pb", own_book_value_per_share, key_stats["book_value_per_share"], method
     )
 
     eps_divergence = r.relative_divergence(ttm_eps_diluted, key_stats["trailing_eps"])
@@ -301,7 +383,14 @@ async def compute_symbol_metrics(symbol: str) -> dict[str, Any]:
                 "divergence_pct": eps_divergence,
             }
         )
-    eps_final = key_stats["trailing_eps"] if key_stats["trailing_eps"] is not None else ttm_eps_diluted
+    own_eps_for_display = ttm_eps_diluted
+    if not pe_is_plausible(r.price_to_earnings(price, ttm_eps_diluted)):
+        own_eps_for_display = None
+    eps_final = _prefer_own("pe", own_eps_for_display, key_stats["trailing_eps"], method)
+    # earnings_yield/peg/payout_ratio derive from the same eps_final, so
+    # they share pe's provenance rather than being tagged independently.
+    method["earnings_yield"] = method["pe"]
+    method["peg"] = method["pe"]
 
     metrics["pe"] = r.price_to_earnings(price, eps_final)
     metrics["pb"] = r.price_to_per_share_value(price, book_value_per_share)
@@ -319,6 +408,7 @@ async def compute_symbol_metrics(symbol: str) -> dict[str, Any]:
     dividend_per_share = await _ttm_dividend_per_share(company.yf_ticker)
     metrics["dividend_yield"] = r.dividend_yield(dividend_per_share, price)
     metrics["payout_ratio"] = r.payout_ratio(dividend_per_share, eps_final)
+    method["payout_ratio"] = method["pe"]
 
     # --- Bank / NBFC / insurance derived ------------------------------------
     metrics["nim"] = r.net_interest_margin(latest_income.get("net_interest_income"), avg_assets)
@@ -377,10 +467,20 @@ async def compute_symbol_metrics(symbol: str) -> dict[str, Any]:
             "Yahoo's own key statistics ({yahoo:.2f})".format(**divergence)
         )
 
+    # Every metric not already explicitly tagged above (roe/roa/pb/pe and
+    # its derivatives, which can fall back to Yahoo) was computed purely
+    # from our own data -- "computed" if it has a value, "unavailable" if
+    # the inputs it needed were missing.
+    for key, value in metrics.items():
+        if key not in method:
+            method[key] = METHOD_COMPUTED if value is not None else METHOD_UNAVAILABLE
+
     return {
         "company": company,
         "quote": quote,
         "metrics": metrics,
+        "method": method,
+        "data_quality": data_quality,
         "latest_income": latest_income,
         "latest_balance": latest_balance,
         "latest_cashflow": latest_cashflow,

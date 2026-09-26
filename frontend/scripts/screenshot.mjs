@@ -38,10 +38,13 @@ for (const theme of THEMES) {
         await page.getByRole("button", { name: "Toggle theme" }).click();
       }
 
-      // Wait for the company header to actually resolve (live quote data),
-      // not just the shell chrome.
-      await page.getByText(new RegExp(target.symbol)).first().waitFor({ timeout: 20000 });
-      await page.waitForTimeout(500); // let any price-flash animation settle
+      // Wait for the Overview tab's slowest-loading piece (the health
+      // radar needs /api/ratios, which itself needs every sector peer's
+      // financials) rather than just the header, so charts are fully
+      // rendered before the screenshot.
+      await page.getByText("Financial health radar").waitFor({ timeout: 30000 });
+      await page.getByText("Key stats").waitFor({ timeout: 30000 });
+      await page.waitForTimeout(800); // let chart animations/price-flash settle
 
       const filename = `${target.symbol}_${viewport.name}_${theme}.png`;
       await page.screenshot({ path: path.join(outDir, filename), fullPage: true });

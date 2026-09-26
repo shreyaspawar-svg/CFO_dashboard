@@ -16,6 +16,7 @@ export type AxisResult = components["schemas"]["AxisResult"];
 export type PeersResponse = components["schemas"]["PeersResponse"];
 export type ValuationResponse = components["schemas"]["ValuationResponse"];
 export type EventsResponse = components["schemas"]["EventsResponse"];
+export type OverviewResponse = components["schemas"]["OverviewResponse"];
 export type CompanyRef = components["schemas"]["CompanyRef"];
 export type SectorGroup = components["schemas"]["SectorGroup"];
 
@@ -59,6 +60,8 @@ export const api = {
   valuation: (symbol: string) =>
     apiFetch<ValuationResponse>(`/api/valuation/${encodeURIComponent(symbol)}`),
   events: (symbol: string) => apiFetch<EventsResponse>(`/api/events/${encodeURIComponent(symbol)}`),
+  overview: (symbol: string) =>
+    apiFetch<OverviewResponse>(`/api/overview/${encodeURIComponent(symbol)}`),
 };
 
 export { ApiError };

@@ -38,7 +38,16 @@ async def get_ratios(symbol: str) -> RatiosResponse:
         median = statistics.median(valid_values) if valid_values else None
         higher_is_better = METRIC_HIGHER_IS_BETTER.get(key, True)
         percentile = percentile_rank(value, values_list, higher_is_better)
-        ratios[key] = RatioValue(value=value, peer_median=median, percentile=percentile)
+        method = own["method"].get(key, "computed" if value is not None else "unavailable")
+        quality_reason = own["data_quality"].get(key)
+        ratios[key] = RatioValue(
+            value=value,
+            peer_median=median,
+            percentile=percentile,
+            method=method,
+            data_quality="inconsistent" if quality_reason else "ok",
+            data_quality_reason=quality_reason,
+        )
 
     radar = health_radar(company.template, own["metrics"], peer_values)
     health_radar_response = {

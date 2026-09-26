@@ -1,3 +1,4 @@
+import { AlertTriangle } from "lucide-react";
 import { formatCrore, formatIndianNumber, formatMultiple, formatPercent, type Unit } from "@/lib/format";
 import type { KpiDef } from "@/lib/kpi-templates";
 import type { RatioValue } from "@/lib/api";
@@ -18,9 +19,22 @@ function formatterFor(format: KpiDef["format"], unit: Unit) {
 export function KpiCard({ def, ratio, unit }: { def: KpiDef; ratio: RatioValue | undefined; unit: Unit }) {
   const format = formatterFor(def.format, unit);
 
+  const isInconsistent = ratio?.data_quality === "inconsistent";
+
   return (
     <div className="rounded-lg border border-border bg-surface p-3">
-      <div className="text-xs text-muted">{def.label}</div>
+      <div className="flex items-center gap-1 text-xs text-muted">
+        <span>{def.label}</span>
+        {isInconsistent && (
+          <span
+            className="inline-flex shrink-0 items-center text-amber-500"
+            title={ratio?.data_quality_reason ?? "Source data inconsistent"}
+            aria-label="Source data inconsistent"
+          >
+            <AlertTriangle size={12} />
+          </span>
+        )}
+      </div>
       {!def.available ? (
         <div className="mt-1 text-sm text-muted" title="Not in free data source">
           {"—"}

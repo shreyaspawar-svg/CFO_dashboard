@@ -157,6 +157,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/overview/{symbol}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Overview */
+        get: operations["get_overview_api_overview__symbol__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/health": {
         parameters: {
             query?: never;
@@ -276,6 +293,10 @@ export interface components {
             warnings?: string[];
             /** Notes */
             notes?: string[];
+            /** Comparable From */
+            comparable_from?: string | null;
+            /** Comparable From Label */
+            comparable_from_label?: string | null;
         };
         /** HTTPValidationError */
         HTTPValidationError: {
@@ -318,6 +339,41 @@ export interface components {
             close?: number | null;
             /** Volume */
             volume?: number | null;
+        };
+        /** OverviewResponse */
+        OverviewResponse: {
+            /** Symbol */
+            symbol: string;
+            /** Beta */
+            beta?: number | null;
+            /** Analyst Target Mean */
+            analyst_target_mean?: number | null;
+            /** Analyst Target High */
+            analyst_target_high?: number | null;
+            /** Analyst Target Low */
+            analyst_target_low?: number | null;
+            /** Analyst Count */
+            analyst_count?: number | null;
+            /** Analyst Recommendation */
+            analyst_recommendation?: string | null;
+            /** Relative Performance Vs Nifty50 Pp */
+            relative_performance_vs_nifty50_pp?: number | null;
+            /** Relative Performance Vs Sector Pp */
+            relative_performance_vs_sector_pp?: number | null;
+            /**
+             * Sector Peer Count
+             * @default 0
+             */
+            sector_peer_count: number;
+            /** Source */
+            source: string;
+            /**
+             * As Of
+             * Format: date-time
+             */
+            as_of: string;
+            /** Warnings */
+            warnings?: string[];
         };
         /** PeerRow */
         PeerRow: {
@@ -412,6 +468,20 @@ export interface components {
             peer_median: number | null;
             /** Percentile */
             percentile: number | null;
+            /**
+             * Method
+             * @default unavailable
+             * @enum {string}
+             */
+            method: "computed" | "yahoo_fallback" | "unavailable";
+            /**
+             * Data Quality
+             * @default ok
+             * @enum {string}
+             */
+            data_quality: "ok" | "inconsistent";
+            /** Data Quality Reason */
+            data_quality_reason?: string | null;
         };
         /** RatiosResponse */
         RatiosResponse: {
@@ -799,6 +869,37 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EventsResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_overview_api_overview__symbol__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                symbol: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OverviewResponse"];
                 };
             };
             /** @description Validation Error */

@@ -342,6 +342,51 @@ async def fetch_key_statistics(yf_ticker: str) -> dict[str, float | None]:
         }
 
 
+_EMPTY_ANALYST_TARGET: dict[str, float | str | None] = {
+    "target_mean_price": None,
+    "target_high_price": None,
+    "target_low_price": None,
+    "number_of_analysts": None,
+    "recommendation": None,
+}
+
+
+async def fetch_analyst_target(yf_ticker: str) -> dict[str, float | str | None]:
+    """Analyst mean/high/low target price and consensus recommendation
+    (PLAN.md Phase 4 §4.1), from the same crumb-gated `financialData`
+    module `fetch_key_statistics` uses. Best-effort: all fields come back
+    None if the crumb isn't available or the symbol has no analyst
+    coverage."""
+    crumb = _get_crumb()
+    if crumb is None:
+        return dict(_EMPTY_ANALYST_TARGET)
+    try:
+        data = await _run_throttled(
+            _get_json_sync,
+            _QUOTE_SUMMARY_URL.format(ticker=yf_ticker),
+            {"modules": "financialData", "crumb": crumb},
+        )
+        result = (data.get("quoteSummary") or {}).get("result") or []
+        if not result:
+            return dict(_EMPTY_ANALYST_TARGET)
+        financial_data = result[0].get("financialData") or {}
+
+        def _raw(field: str) -> float | None:
+            value = (financial_data.get(field) or {}).get("raw")
+            return float(value) if value is not None else None
+
+        return {
+            "target_mean_price": _raw("targetMeanPrice"),
+            "target_high_price": _raw("targetHighPrice"),
+            "target_low_price": _raw("targetLowPrice"),
+            "number_of_analysts": _raw("numberOfAnalystOpinions"),
+            "recommendation": financial_data.get("recommendationKey"),
+        }
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("analyst-target fetch failed for %s: %s", yf_ticker, exc)
+        return dict(_EMPTY_ANALYST_TARGET)
+
+
 async def fetch_market_cap_detailed(
     yf_ticker: str, last_price: float | None
 ) -> tuple[float | None, str, float | None]:

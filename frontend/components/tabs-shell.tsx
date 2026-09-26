@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { OverviewTab } from "@/components/tabs/overview-tab";
 
 const TABS = [
   "Overview",
@@ -14,7 +15,7 @@ const TABS = [
   "Shareholding & Events",
 ] as const;
 
-export function TabsShell() {
+export function TabsShell({ symbol, template }: { symbol: string; template: string }) {
   const [active, setActive] = useState<(typeof TABS)[number]>("Overview");
 
   return (
@@ -48,9 +49,15 @@ export function TabsShell() {
           </button>
         ))}
       </div>
-      <div role="tabpanel" className="p-6 text-sm text-muted">
-        <p className="font-medium text-foreground">{active}</p>
-        <p className="mt-1">Coming in Phase 4.</p>
+      <div role="tabpanel" className="p-4">
+        {active === "Overview" ? (
+          <OverviewTab symbol={symbol} template={template} />
+        ) : (
+          <div className="p-2 text-sm text-muted">
+            <p className="font-medium text-foreground">{active}</p>
+            <p className="mt-1">Coming in Phase 4.</p>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -270,14 +270,14 @@ trailingEps), across all 50 symbols -- catches the whole class of
 bug HDFCBANK revealed (our figure diverging from a more-current
 or correctly-scoped source), not just that one company.
 
-IMPORTANT: a row appearing here does NOT mean the displayed metric
-is wrong -- `pb`/`pe`/`roe`/`roa` always prefer Yahoo's figure over
-ours when both exist, so a row is either (a) the override doing
-its job (ours differs, Yahoo's more-authoritative figure is what's
-actually shown), or (b) neither side was overridden and our own
-TTM-summed EPS differs from Yahoo's `trailingEps` methodology
-(exceptional items, or -- confirmed for INFY -- a Yahoo data-scale
-inconsistency in ITS OWN quarterly figures, not our calculation).
+IMPORTANT (updated Phase 2.2): `pb`/`pe`/`roe`/`roa` always prefer
+OUR OWN calculation now, never Yahoo's, as long as ours succeeded --
+see backend/docs/data-notes.md. A row here means EITHER our own
+figure is the one actually shown and it genuinely differs from
+Yahoo's (HDFCBANK's ROE/book-value rows are exactly this, by
+design -- see data-notes.md for why), OR our own calculation was
+unavailable and Yahoo's crumb-gated figure filled in as a tagged
+fallback (check the `method` field on the ratio in question).
 
 | Symbol | Metric | Ours | Yahoo | Divergence |
 |---|---|---|---|---|
@@ -296,3 +296,27 @@ inconsistency in ITS OWN quarterly figures, not our calculation).
 | HDFCLIFE | roe | 12.24 | 10.83 | 13.1% |
 | RELIANCE | eps | 61.75 | 55.17 | 11.9% |
 | ULTRACEMCO | eps | 323.89 | 290.03 | 11.7% |
+
+## Unit-scale plausibility check (Phase 2.2 item 4)
+
+Sanity bands on book value/share, market-cap-vs-price-times-shares,
+and EPS-vs-price -- catches a *future* crore/share-count/per-share
+unit mistake (the class of bug that produced the Phase 2.1 book-value
+and Phase 1.5 market-cap regressions) even in a symbol with no live
+cross-check to compare against.
+
+None -- all 50 symbols pass every plausibility check.
+
+## Equity-basis oscillation check (Phase 2.3 item 1)
+
+Symbols whose quarterly equity alternates between two reporting
+bases (see `app.metrics.basis_consistency` and
+backend/docs/data-notes.md) -- their ROE/ROA are computed from
+annual, same-basis figures and carry `data_quality: "inconsistent"`
+on `/api/ratios` (an amber badge in the UI) rather than being shown
+as a clean number.
+
+| Symbol | Metric | Reason |
+|---|---|---|
+| HDFCBANK | roa | Quarterly equity shows a basis-switching pattern (alternating figures inconsistent with organic growth) -- ROE/ROA computed from annual, same-basis net income instead of TTM-summed-quarterly. See backend/docs/data-notes.md. |
+| HDFCBANK | roe | Quarterly equity shows a basis-switching pattern (alternating figures inconsistent with organic growth) -- ROE/ROA computed from annual, same-basis net income instead of TTM-summed-quarterly. See backend/docs/data-notes.md. |

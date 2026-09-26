@@ -38,7 +38,13 @@ test("command search finds a company by its former name", async ({ page }) => {
 
 test("shows a warning banner for a company with non-comparable history", async ({ page }) => {
   await page.goto("/?sector=Automobiles&symbol=TMPV");
-  // Next.js's own route-announcer also has role="alert", so match on the
-  // banner's actual text rather than the ambiguous role.
-  await expect(page.getByText(/demerger|not comparable/i)).toBeVisible();
+  // Scoped to role="alert" (the WarningBanner) filtered by its text: a bare
+  // text match now also hits the price chart's break-marker label (Phase
+  // 4.1 review item 3's "Demerger from Tata Motors" chart annotation, which
+  // reads from the same corporate-action data this banner does) -- and
+  // Next.js's own route-announcer also has role="alert", so the text
+  // filter is still needed to land on the actual banner, not just the role.
+  await expect(
+    page.getByRole("alert").filter({ hasText: /demerger|not comparable/i })
+  ).toBeVisible();
 });
