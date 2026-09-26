@@ -463,10 +463,122 @@ Acceptance
 
 ---
 
+### Phase 3 review
+
+Phase 3 itself passed review (screenshots looked right on both themes and both
+breakpoints). Two housekeeping items and one substantive concern about Phase
+2.1's fix came out of it:
+
+- **Housekeeping:** disable Next.js's dev-mode indicator badge (it overlapped
+  KPI card text in a couple of the review screenshots) and update CLAUDE.md,
+  which still says "Next.js 15" -- the registry's current release when this
+  was scaffolded was 16.
+- **The Phase 2.1 concern.** Phase 2.1 fixed HDFCBANK's ROE by displaying
+  Yahoo's own ready-made `financialData.returnOnEquity` instead of our
+  fundamentals-timeseries-derived figure -- closing the gap to Screener, but
+  without pinning down *why* our own number was off. That's fine for one KPI
+  card in isolation. It stops being fine the moment Phase 4 builds a
+  **history chart** for the same metric (an "ROE over time" trend) from our
+  own calculation: the KPI card would show Yahoo's number and the chart's
+  latest point would show ours, disagreeing on the same screen for the same
+  metric. Yahoo's key-statistics endpoint is also crumb-gated and fails
+  silently to our own (different) number when the crumb isn't issued --
+  meaning the metric a viewer sees can depend on request-to-request crumb
+  luck, not just on the data.
+
+#### Phase 2.2 — One method per metric, with its provenance
+
+1. **Find the actual root cause and write it down.** (Superseding Phase
+   2.1's "minority interest" and "2025 bonus" hypotheses -- both investigated
+   there and ruled out.) HDFCBANK's own `StockholdersEquity` **oscillates
+   between quarters in a way no real bank's balance sheet does**:
+   Dec-24 ₹5.02L Cr → Mar-25 ₹7.68L Cr → Jun-25 ₹5.43L Cr → Sep-25 ₹7.90L Cr
+   → Mar-26 ₹8.17L Cr. Revenue and NII show a matching Mar-quarter anomaly.
+   The annual filings we use happen to land consistently on the *high*
+   (post-mega-merger-conglomerate, consolidated-looking) reading every year,
+   while Screener.in's figure sits close to the *low* reading. Most likely
+   cause: Yahoo's free feed inconsistently sources standalone vs.
+   consolidated statements per quarter for HDFC Bank specifically -- a
+   conglomerate that, post the 2023 HDFC Ltd merger, consolidates large
+   insurance/AMC/NBFC subsidiaries whose capital structure differs sharply
+   from the standalone bank's. This is a data-quality property of the free
+   source for this one (large, structurally unusual) company, not a mapping
+   bug in our code. Full writeup: `backend/docs/data-notes.md`.
+2. **One calculation method per metric.** Stop silently overriding our own
+   computed ROE/ROA/book-value/EPS with Yahoo's key-statistics value: a KPI
+   card and its trend chart must be the *same function call* over different
+   periods, or they can disagree. Yahoo's key-statistics endpoint becomes a
+   **fallback only** (used when our own calculation is impossible, e.g. too
+   few periods) and a **cross-check** (flagged if it disagrees with our own
+   by >10%, per Phase 2.1 item 4) -- never a silent substitute for a value we
+   were able to compute ourselves.
+3. **Method provenance on every ratio.** Each `RatioValue` in `/api/ratios`
+   now carries `method`: `"computed"` (our own calculation succeeded --
+   the common case), `"yahoo_fallback"` (ours was `None`; Yahoo's
+   crumb-gated figure filled in), or `"unavailable"` (neither worked).
+4. **Stop crore/share-count/per-share amounts from being mixed up.** The
+   Phase 2.1 book-value bug (equity in ₹ crore divided by a raw share count,
+   understating book value ~1e7x) happened because unit conversions were
+   ad-hoc `* CRORE` multiplications scattered at call sites. `metrics/units.py`
+   makes the three units (`Crore`, `Rupees`, `Shares`) distinct types with
+   one explicit conversion function each, so a future mixing mistake is a
+   type error, not a silent 1e7x bug. A **plausibility check across all 50
+   symbols** (book value per share in a sane ₹ band; market-cap ÷ shares ≈
+   live price; EPS in a sane band relative to price) catches anything
+   implausible that slips through anyway.
+
+**Gate:** for HDFCBANK, the KPI card's ROE and the latest point of its
+computed ROE history must agree within 1.5pp (they're now the same
+calculation, so this should hold exactly, not approximately) -- and the
+plausibility check must pass for all 50 symbols. If not, stop and report
+before Phase 4 starts.
+
+> **Prompt:** "Read PLAN.md → 'Phase 3 review', then Phase 4 §4.0/§4.1.
+> Step A: disable the dev indicator, update CLAUDE.md for Next.js 16, commit
+> Phase 3, tag phase-3. Step B (Phase 2.2): items 1-4, gated as above -- stop
+> and report if the gate fails. Step C: build §4.0 and §4.1. Don't commit
+> Phase 2.2 or Phase 4; stop and summarise."
+
+---
+
 ### Phase 4 — Dashboard modules (the core)
 Build tab by tab, in this order, each as its own PR/commit: **Overview → Income Statement → Ratios → Balance Sheet → Cash Flow → Valuation → Peers → Shareholding & Events.**
 
 Per tab: charts listed in §3, annual/quarterly toggle where relevant, CSV/PNG export, tooltips with formatted INR, sector median overlays, and template‑aware KPI cards.
+
+#### 4.0 Chart foundation
+
+Built once, before any tab uses it, so every chart gets the same for free:
+- PNG/CSV export on every chart.
+- One shared colour theme, defined for both dark and light mode (reusing the
+  design tokens from Phase 3, not a second palette).
+- Gaps for missing data points, never a zero standing in for "no data".
+- **Break markers** at a corporate-action cutoff (TMPV's demerger, JIOFIN's
+  listing, HDFCBANK's merger -- the same `corporate_actions.json` cutoffs
+  already driving `/api/financials`' `notes` and the growth-figure exclusion)
+  so a viewer sees *why* a series jumps, not just that it does.
+
+#### 4.1 Overview tab
+
+- Price chart with 50/200-day moving averages and dividend-payment markers.
+- Performance vs. the NIFTY 50 index and vs. the sector (relative return,
+  not just absolute price).
+- Returns table (1M/3M/6M/1Y/3Y/5Y or whatever span the data supports --
+  per PLAN.md "Phase 1 review" item 4, don't imply history that isn't there).
+- The health radar (`/api/ratios`' 6-axis score), rendered so it explains
+  *why* each axis scored what it did (the metrics/weights already returned
+  by the API), not just a bare 0-100 number.
+- Financial snapshot that changes by business-model template (§2) -- a
+  bank's snapshot is not a general company's snapshot.
+- Key stats row including **beta** (a new backend addition -- see below).
+- News headlines and analyst target price (also new backend additions).
+
+Backend additions §4.0/§4.1 need: beta (vs `^NSEI`, computed from historical
+returns -- Yahoo doesn't reliably expose this for NSE tickers), analyst
+target price (best-effort via the same crumb-gated key-statistics path,
+`null` when unavailable), moving averages (computed from `/api/history`,
+not fetched), and relative-performance series (symbol return vs. `^NSEI`
+and vs. sector-peer-average return, both already fetchable).
 
 Acceptance (per tab)
 - Works for one company from each template (e.g. TCS, HDFCBANK, BAJFINANCE, HDFCLIFE, BSE).
