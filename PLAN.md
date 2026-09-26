@@ -228,6 +228,39 @@ metrics engine) could safely build on it. All were fixed; see
 ### Phase 2 — Metrics engine
 **Goal:** all ratios, sector benchmarks, scores and valuation computed server‑side.
 
+#### Phase 1.5 review
+
+A second review, done after Phase 1.5 landed, found five more things Phase 2
+must account for before it can trust the numbers it's computing:
+
+1. **Stock splits and bonus issues.** Share count comes from the last annual
+   balance sheet, but price is live. After a split or bonus, market cap and
+   per-share numbers (EPS, book value per share, etc.) would be off by the
+   split ratio unless the share count is adjusted to match the price's
+   as-of date.
+2. **Periods that aren't comparable.** TMPV's pre-demerger years and
+   JIOFIN's FY23 shell year (§"Phase 1 review" item 5) must stay out of
+   growth rates, health-radar scores and valuation ranges. Every response
+   that reports a growth rate or CAGR must state which years it actually
+   covers, and the dashboard must visibly mark the break rather than
+   silently smoothing over it.
+3. **Sector averages when a sector is small.** Six sectors have only 1-2
+   companies (Power, Consumer Durables, Consumer Services & Retail,
+   Transport & Logistics, Capital Goods & Defence, Telecom) — a "sector
+   median" of 1-2 companies is meaningless. Those fall back to the median of
+   companies sharing the same **template** (e.g. all `general` companies
+   across sectors), and the response must say which fallback was used.
+4. **Explainable scores.** Each axis of the health radar (Growth,
+   Profitability, Leverage, Liquidity, Efficiency, Valuation) must return
+   the underlying metrics and their weights alongside the 0-100 score, so a
+   tooltip can show *why* a company scored what it scored, not just the
+   number.
+5. **Market-cap cross-check.** Companies where price×shares diverges from
+   Yahoo's own `quoteSummary` market cap by more than 5% (already logged as
+   a warning per §"Phase 1 review" item 1) must be listed in
+   `data_coverage_report.md` so a bad share count or a just-happened
+   split/bonus is caught, not buried in a log line.
+
 Tasks
 1. `metrics/ratios.py` — pure functions, unit‑tested:
    - **Growth:** Revenue, EBITDA, PAT, EPS YoY & 3/5‑yr CAGR.
