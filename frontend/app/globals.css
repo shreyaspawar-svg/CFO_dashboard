@@ -1,0 +1,95 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0b0d10;
+  --foreground: #e8eaed;
+  --surface: #14171c;
+  --surface-raised: #1b1f26;
+  --border: #262b33;
+  --muted: #8b93a1;
+  --accent: #4f8dfd;
+  --accent-foreground: #ffffff;
+  --up: #1fb15a;
+  --down: #e5484d;
+  --warning-bg: #3a2a0f;
+  --warning-border: #6b4d1a;
+  --warning-foreground: #f5c257;
+
+  --radius: 0.625rem;
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+:root[data-theme="light"] {
+  --background: #f7f8fa;
+  --foreground: #14171c;
+  --surface: #ffffff;
+  --surface-raised: #ffffff;
+  --border: #e2e5ea;
+  --muted: #5b6472;
+  --accent: #2563eb;
+  --accent-foreground: #ffffff;
+  --up: #16813b;
+  --down: #c9302c;
+  --warning-bg: #fff6e0;
+  --warning-border: #f0d38a;
+  --warning-foreground: #7a5b06;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-border: var(--border);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-up: var(--up);
+  --color-down: var(--down);
+  --color-warning-bg: var(--warning-bg);
+  --color-warning-border: var(--warning-border);
+  --color-warning-foreground: var(--warning-foreground);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --radius-lg: var(--radius);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+/* Numbers that update live (price, %change, KPI values) must never reflow
+   the layout around them -- tabular figures keep every digit the same
+   width. */
+.tabular-nums-fixed {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+@keyframes price-flash-up {
+  0% { background-color: color-mix(in srgb, var(--up) 35%, transparent); }
+  100% { background-color: transparent; }
+}
+
+@keyframes price-flash-down {
+  0% { background-color: color-mix(in srgb, var(--down) 35%, transparent); }
+  100% { background-color: transparent; }
+}
+
+.price-flash-up {
+  animation: price-flash-up 900ms ease-out;
+}
+
+.price-flash-down {
+  animation: price-flash-down 900ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .price-flash-up,
+  .price-flash-down {
+    animation: none;
+  }
+}

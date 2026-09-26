@@ -1,8 +1,16 @@
 # Project: NIFTY 50 CFO Dashboard
 - Always read PLAN.md first; implement only the phase requested.
-- Backend: Python 3.12, FastAPI, Pydantic v2, yfinance. Frontend: Next.js 15 App Router, TS strict, Tailwind, shadcn/ui, ECharts, TanStack Query, Zustand.
-- Money in ₹ crore internally; format with Indian digit grouping in the UI. Fiscal year = Apr–Mar, label "FY24".
-- Missing data is null, never 0. Surface warnings to the UI.
-- All ratio logic lives in backend/app/metrics as pure, tested functions. No financial maths in React components.
+- Backend: Python 3.12, FastAPI, Pydantic v2. Frontend: Next.js 16 App Router, TS strict, Tailwind, TanStack Query, Zustand, cmdk + Radix primitives (no shadcn CLI dependency -- components are hand-built in the same style).
+- Yahoo Finance access goes through `curl_cffi` directly (backend/app/services/yahoo.py), not the `yfinance` package -- it isn't a dependency. See that file's docstring for why.
+- The frontend never calls the backend directly from the browser: `next.config.ts` rewrites `/api/*` to the FastAPI backend server-side (same-origin from the browser's perspective, no CORS, and avoids a sandboxed-browser network-policy issue found in Phase 3). `NEXT_PUBLIC_API_BASE_URL` stays empty in normal dev/deploy.
+- API types (`frontend/types/api.ts`) are generated from the backend's OpenAPI schema (`npm run gen:api-types`, backend must be running) -- never hand-edited.
+- Money in ₹ crore internally; format with Indian digit grouping in the UI. Fiscal year = Apr–Mar, label "FY24". `frontend/lib/format.ts` mirrors `backend/app/services/normalize.py`'s fiscal-year logic -- keep them in sync.
+- Missing data is null, never 0. Surface warnings to the UI, never silently drop them.
+- All ratio logic lives in `backend/app/metrics` as pure, tested functions. No financial maths in React components. A metric's headline-KPI value and any history/trend chart built from it must be the *same* function call over different periods -- never two different calculation paths for the same metric (see PLAN.md "Phase 3 review" for why this matters).
+- Every ratio value carries a `method` tag (`computed` / `yahoo_fallback` / `unavailable`) -- see `backend/app/metrics/ratios.py` and `RatioValue` in the schema.
+- Currency (₹ crore), rupees, and share counts are distinct unit types (`backend/app/metrics/units.py`) -- convert between them with its named functions, never an inline `* CRORE`/`/ CRORE`. An earlier ad-hoc conversion silently produced a ~1e7x book-value bug.
+- Corporate actions that make part of a symbol's history non-comparable (demergers, spinoffs, mid-history mergers) live in `backend/data/corporate_actions.json`, not scattered `if symbol == "TMPV"` checks.
+- Known Yahoo/free-data-source quirks and how each was diagnosed are logged in `backend/docs/data-notes.md` -- check there before re-investigating something that looks like a bug.
 - Every API response includes source, as_of, warnings[].
+- Tests: backend `pytest` (network-mocked by default; `pytest -m smoke` hits live Yahoo and regenerates `data_coverage_report.md`). Frontend `npm test` (Vitest) and `npm run test:e2e` (Playwright, needs both dev servers running).
 - Run tests before declaring a task done. Summarise changes and open questions at the end of each phase.
