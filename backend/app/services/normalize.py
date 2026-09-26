@@ -55,6 +55,12 @@ BALANCE_SHEET_MAP: dict[str, str] = {
     "AccountsReceivable": "receivables",
     "Payables": "payables",
     "NetPPE": "net_ppe",
+    # Phase 2: needed for Altman Z-score (non-financial companies only).
+    "RetainedEarnings": "retained_earnings",
+    # Phase 2.1: enterprise value adds this back (PLAN.md "Phase 2 review"
+    # item 1) -- StockholdersEquity already excludes it, so it's tracked
+    # separately, not folded into total_equity.
+    "MinorityInterest": "minority_interest",
     # Not exposed as a KPI, just carried through for market-cap calculation
     # (price x shares) and future per-share metrics.
     "OrdinarySharesNumber": "shares_outstanding",

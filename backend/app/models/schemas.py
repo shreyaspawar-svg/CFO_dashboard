@@ -86,3 +86,89 @@ class FinancialsResponse(BaseModel):
     # demerger") -- distinct from `warnings`, which flags missing/absent
     # data. Never empty-vs-populated based on data completeness.
     notes: list[str] = Field(default_factory=list)
+
+
+PeerBasis = Literal["sector", "template", "none"]
+
+
+class RatioValue(BaseModel):
+    value: float | None
+    peer_median: float | None
+    percentile: float | None
+
+
+class AxisComponent(BaseModel):
+    metric: str
+    value: float | None
+    weight: float
+    higher_is_better: bool
+    percentile: float | None
+
+
+class AxisResult(BaseModel):
+    score: float | None
+    components: list[AxisComponent]
+
+
+class RatiosResponse(BaseModel):
+    symbol: str
+    template: Template
+    peer_basis: PeerBasis
+    peer_count: int
+    comparable_annual_years: int
+    growth_note: str | None = None
+    ratios: dict[str, RatioValue]
+    health_radar: dict[str, AxisResult]
+    source: str
+    as_of: datetime
+    warnings: list[str] = Field(default_factory=list)
+
+
+class PeerRow(BaseModel):
+    symbol: str
+    name: str
+    template: Template
+    last_price: float | None
+    market_cap: float | None
+    metrics: dict[str, float | None]
+
+
+class PeersResponse(BaseModel):
+    symbol: str
+    peer_basis: PeerBasis
+    peers: list[PeerRow]
+    source: str
+    as_of: datetime
+    warnings: list[str] = Field(default_factory=list)
+
+
+class ValuationResponse(BaseModel):
+    symbol: str
+    multiples: dict[str, float | None]
+    dcf: dict[str, float | None]
+    dcf_inputs: dict[str, float | None]
+    reverse_dcf_implied_growth_pct: float | None
+    source: str
+    as_of: datetime
+    warnings: list[str] = Field(default_factory=list)
+
+
+class DividendEvent(BaseModel):
+    date: str
+    amount: float
+
+
+class SplitEvent(BaseModel):
+    date: str
+    numerator: float
+    denominator: float
+
+
+class EventsResponse(BaseModel):
+    symbol: str
+    dividends: list[DividendEvent]
+    splits: list[SplitEvent]
+    news: list[dict]
+    source: str
+    as_of: datetime
+    warnings: list[str] = Field(default_factory=list)

@@ -7,7 +7,7 @@
             "BSE.NS"
           ],
           "type": [
-            "annualCurrentAssets"
+            "annualMinorityInterest"
           ]
         },
         "timestamp": [
@@ -16,103 +16,45 @@
           1743379200,
           1774915200
         ],
-        "annualCurrentAssets": [
+        "annualMinorityInterest": [
           {
-            "dataId": 23044,
+            "dataId": 23132,
             "asOfDate": "2023-03-31",
             "periodType": "12M",
             "currencyCode": "INR",
             "reportedValue": {
-              "raw": 38571000000.0,
-              "fmt": "38.57B"
+              "raw": 1278400000.0,
+              "fmt": "1.28B"
             }
           },
           {
-            "dataId": 23044,
+            "dataId": 23132,
             "asOfDate": "2024-03-31",
             "periodType": "12M",
             "currencyCode": "INR",
             "reportedValue": {
-              "raw": 59699100000.0,
-              "fmt": "59.70B"
+              "raw": 1523700000.0,
+              "fmt": "1.52B"
             }
           },
           {
-            "dataId": 23044,
+            "dataId": 23132,
             "asOfDate": "2025-03-31",
             "periodType": "12M",
             "currencyCode": "INR",
             "reportedValue": {
-              "raw": 73426600000.0,
-              "fmt": "73.43B"
+              "raw": 1519700000.0,
+              "fmt": "1.52B"
             }
           },
           {
-            "dataId": 23044,
+            "dataId": 23132,
             "asOfDate": "2026-03-31",
             "periodType": "12M",
             "currencyCode": "INR",
             "reportedValue": {
-              "raw": 82171400000.0,
-              "fmt": "82.17B"
-            }
-          }
-        ]
-      },
-      {
-        "meta": {
-          "symbol": [
-            "BSE.NS"
-          ],
-          "type": [
-            "annualAccountsReceivable"
-          ]
-        },
-        "timestamp": [
-          1680220800,
-          1711843200,
-          1743379200,
-          1774915200
-        ],
-        "annualAccountsReceivable": [
-          {
-            "dataId": 23001,
-            "asOfDate": "2023-03-31",
-            "periodType": "12M",
-            "currencyCode": "INR",
-            "reportedValue": {
-              "raw": 908900000.0,
-              "fmt": "908.90M"
-            }
-          },
-          {
-            "dataId": 23001,
-            "asOfDate": "2024-03-31",
-            "periodType": "12M",
-            "currencyCode": "INR",
-            "reportedValue": {
-              "raw": 2108700000.0,
-              "fmt": "2.11B"
-            }
-          },
-          {
-            "dataId": 23001,
-            "asOfDate": "2025-03-31",
-            "periodType": "12M",
-            "currencyCode": "INR",
-            "reportedValue": {
-              "raw": 2877800000.0,
-              "fmt": "2.88B"
-            }
-          },
-          {
-            "dataId": 23001,
-            "asOfDate": "2026-03-31",
-            "periodType": "12M",
-            "currencyCode": "INR",
-            "reportedValue": {
-              "raw": 5531600000.0,
-              "fmt": "5.53B"
+              "raw": 1224900000.0,
+              "fmt": "1.22B"
             }
           }
         ]
@@ -239,64 +181,6 @@
             "BSE.NS"
           ],
           "type": [
-            "annualStockholdersEquity"
-          ]
-        },
-        "timestamp": [
-          1680220800,
-          1711843200,
-          1743379200,
-          1774915200
-        ],
-        "annualStockholdersEquity": [
-          {
-            "dataId": 23215,
-            "asOfDate": "2023-03-31",
-            "periodType": "12M",
-            "currencyCode": "INR",
-            "reportedValue": {
-              "raw": 27011500000.0,
-              "fmt": "27.01B"
-            }
-          },
-          {
-            "dataId": 23215,
-            "asOfDate": "2024-03-31",
-            "periodType": "12M",
-            "currencyCode": "INR",
-            "reportedValue": {
-              "raw": 33022900000.0,
-              "fmt": "33.02B"
-            }
-          },
-          {
-            "dataId": 23215,
-            "asOfDate": "2025-03-31",
-            "periodType": "12M",
-            "currencyCode": "INR",
-            "reportedValue": {
-              "raw": 44237300000.0,
-              "fmt": "44.24B"
-            }
-          },
-          {
-            "dataId": 23215,
-            "asOfDate": "2026-03-31",
-            "periodType": "12M",
-            "currencyCode": "INR",
-            "reportedValue": {
-              "raw": 66730100000.0,
-              "fmt": "66.73B"
-            }
-          }
-        ]
-      },
-      {
-        "meta": {
-          "symbol": [
-            "BSE.NS"
-          ],
-          "type": [
             "annualTotalLiabilitiesNetMinorityInterest"
           ]
         },
@@ -345,6 +229,238 @@
             "reportedValue": {
               "raw": 66506400000.0,
               "fmt": "66.51B"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "BSE.NS"
+          ],
+          "type": [
+            "annualCurrentAssets"
+          ]
+        },
+        "timestamp": [
+          1680220800,
+          1711843200,
+          1743379200,
+          1774915200
+        ],
+        "annualCurrentAssets": [
+          {
+            "dataId": 23044,
+            "asOfDate": "2023-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 38571000000.0,
+              "fmt": "38.57B"
+            }
+          },
+          {
+            "dataId": 23044,
+            "asOfDate": "2024-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 59699100000.0,
+              "fmt": "59.70B"
+            }
+          },
+          {
+            "dataId": 23044,
+            "asOfDate": "2025-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 73426600000.0,
+              "fmt": "73.43B"
+            }
+          },
+          {
+            "dataId": 23044,
+            "asOfDate": "2026-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 82171400000.0,
+              "fmt": "82.17B"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "BSE.NS"
+          ],
+          "type": [
+            "annualRetainedEarnings"
+          ]
+        },
+        "timestamp": [
+          1680220800,
+          1711843200,
+          1743379200,
+          1774915200
+        ],
+        "annualRetainedEarnings": [
+          {
+            "dataId": 23204,
+            "asOfDate": "2023-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 14363100000.0,
+              "fmt": "14.36B"
+            }
+          },
+          {
+            "dataId": 23204,
+            "asOfDate": "2024-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 20490500000.0,
+              "fmt": "20.49B"
+            }
+          },
+          {
+            "dataId": 23204,
+            "asOfDate": "2025-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 31756600000.0,
+              "fmt": "31.76B"
+            }
+          },
+          {
+            "dataId": 23204,
+            "asOfDate": "2026-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 54147700000.0,
+              "fmt": "54.15B"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "BSE.NS"
+          ],
+          "type": [
+            "annualAccountsReceivable"
+          ]
+        },
+        "timestamp": [
+          1680220800,
+          1711843200,
+          1743379200,
+          1774915200
+        ],
+        "annualAccountsReceivable": [
+          {
+            "dataId": 23001,
+            "asOfDate": "2023-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 908900000.0,
+              "fmt": "908.90M"
+            }
+          },
+          {
+            "dataId": 23001,
+            "asOfDate": "2024-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 2108700000.0,
+              "fmt": "2.11B"
+            }
+          },
+          {
+            "dataId": 23001,
+            "asOfDate": "2025-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 2877800000.0,
+              "fmt": "2.88B"
+            }
+          },
+          {
+            "dataId": 23001,
+            "asOfDate": "2026-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 5531600000.0,
+              "fmt": "5.53B"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "BSE.NS"
+          ],
+          "type": [
+            "annualStockholdersEquity"
+          ]
+        },
+        "timestamp": [
+          1680220800,
+          1711843200,
+          1743379200,
+          1774915200
+        ],
+        "annualStockholdersEquity": [
+          {
+            "dataId": 23215,
+            "asOfDate": "2023-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 27011500000.0,
+              "fmt": "27.01B"
+            }
+          },
+          {
+            "dataId": 23215,
+            "asOfDate": "2024-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 33022900000.0,
+              "fmt": "33.02B"
+            }
+          },
+          {
+            "dataId": 23215,
+            "asOfDate": "2025-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 44237300000.0,
+              "fmt": "44.24B"
+            }
+          },
+          {
+            "dataId": 23215,
+            "asOfDate": "2026-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 66730100000.0,
+              "fmt": "66.73B"
             }
           }
         ]

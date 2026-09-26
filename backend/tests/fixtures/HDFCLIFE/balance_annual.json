@@ -65,64 +65,6 @@
             "HDFCLIFE.NS"
           ],
           "type": [
-            "annualOrdinarySharesNumber"
-          ]
-        },
-        "timestamp": [
-          1680220800,
-          1711843200,
-          1743379200,
-          1774915200
-        ],
-        "annualOrdinarySharesNumber": [
-          {
-            "dataId": 23393,
-            "asOfDate": "2023-03-31",
-            "periodType": "12M",
-            "currencyCode": "INR",
-            "reportedValue": {
-              "raw": 2148856298.0,
-              "fmt": "2.15B"
-            }
-          },
-          {
-            "dataId": 23393,
-            "asOfDate": "2024-03-31",
-            "periodType": "12M",
-            "currencyCode": "INR",
-            "reportedValue": {
-              "raw": 2150404293.0,
-              "fmt": "2.15B"
-            }
-          },
-          {
-            "dataId": 23393,
-            "asOfDate": "2025-03-31",
-            "periodType": "12M",
-            "currencyCode": "INR",
-            "reportedValue": {
-              "raw": 2152448353.0,
-              "fmt": "2.15B"
-            }
-          },
-          {
-            "dataId": 23393,
-            "asOfDate": "2026-03-31",
-            "periodType": "12M",
-            "currencyCode": "INR",
-            "reportedValue": {
-              "raw": 2157279702.0,
-              "fmt": "2.16B"
-            }
-          }
-        ]
-      },
-      {
-        "meta": {
-          "symbol": [
-            "HDFCLIFE.NS"
-          ],
-          "type": [
             "annualNetPPE"
           ]
         },
@@ -171,6 +113,238 @@
             "reportedValue": {
               "raw": 6306700000.0,
               "fmt": "6.31B"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "HDFCLIFE.NS"
+          ],
+          "type": [
+            "annualRetainedEarnings"
+          ]
+        },
+        "timestamp": [
+          1680220800,
+          1711843200,
+          1743379200,
+          1774915200
+        ],
+        "annualRetainedEarnings": [
+          {
+            "dataId": 23204,
+            "asOfDate": "2023-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 70751595000.0,
+              "fmt": "70.75B"
+            }
+          },
+          {
+            "dataId": 23204,
+            "asOfDate": "2024-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 82408100000.0,
+              "fmt": "82.41B"
+            }
+          },
+          {
+            "dataId": 23204,
+            "asOfDate": "2025-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 96214300000.0,
+              "fmt": "96.21B"
+            }
+          },
+          {
+            "dataId": 23204,
+            "asOfDate": "2026-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 110812600000.0,
+              "fmt": "110.81B"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "HDFCLIFE.NS"
+          ],
+          "type": [
+            "annualCashAndCashEquivalents"
+          ]
+        },
+        "timestamp": [
+          1680220800,
+          1711843200,
+          1743379200,
+          1774915200
+        ],
+        "annualCashAndCashEquivalents": [
+          {
+            "dataId": 23030,
+            "asOfDate": "2023-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 19036324000.0,
+              "fmt": "19.04B"
+            }
+          },
+          {
+            "dataId": 23030,
+            "asOfDate": "2024-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 21782800000.0,
+              "fmt": "21.78B"
+            }
+          },
+          {
+            "dataId": 23030,
+            "asOfDate": "2025-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 22756600000.0,
+              "fmt": "22.76B"
+            }
+          },
+          {
+            "dataId": 23030,
+            "asOfDate": "2026-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 24050000000.0,
+              "fmt": "24.05B"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "HDFCLIFE.NS"
+          ],
+          "type": [
+            "annualStockholdersEquity"
+          ]
+        },
+        "timestamp": [
+          1680220800,
+          1711843200,
+          1743379200,
+          1774915200
+        ],
+        "annualStockholdersEquity": [
+          {
+            "dataId": 23215,
+            "asOfDate": "2023-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 129931414000.0,
+              "fmt": "129.93B"
+            }
+          },
+          {
+            "dataId": 23215,
+            "asOfDate": "2024-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 146663400000.0,
+              "fmt": "146.66B"
+            }
+          },
+          {
+            "dataId": 23215,
+            "asOfDate": "2025-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 161546200000.0,
+              "fmt": "161.55B"
+            }
+          },
+          {
+            "dataId": 23215,
+            "asOfDate": "2026-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 177495400000.0,
+              "fmt": "177.50B"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "HDFCLIFE.NS"
+          ],
+          "type": [
+            "annualOrdinarySharesNumber"
+          ]
+        },
+        "timestamp": [
+          1680220800,
+          1711843200,
+          1743379200,
+          1774915200
+        ],
+        "annualOrdinarySharesNumber": [
+          {
+            "dataId": 23393,
+            "asOfDate": "2023-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 2148856298.0,
+              "fmt": "2.15B"
+            }
+          },
+          {
+            "dataId": 23393,
+            "asOfDate": "2024-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 2150404293.0,
+              "fmt": "2.15B"
+            }
+          },
+          {
+            "dataId": 23393,
+            "asOfDate": "2025-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 2152448353.0,
+              "fmt": "2.15B"
+            }
+          },
+          {
+            "dataId": 23393,
+            "asOfDate": "2026-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 2157279702.0,
+              "fmt": "2.16B"
             }
           }
         ]
@@ -797,123 +971,7 @@
             "HDFCLIFE.NS"
           ],
           "type": [
-            "annualCashAndCashEquivalents"
-          ]
-        },
-        "timestamp": [
-          1680220800,
-          1711843200,
-          1743379200,
-          1774915200
-        ],
-        "annualCashAndCashEquivalents": [
-          {
-            "dataId": 23030,
-            "asOfDate": "2023-03-31",
-            "periodType": "12M",
-            "currencyCode": "INR",
-            "reportedValue": {
-              "raw": 19036324000.0,
-              "fmt": "19.04B"
-            }
-          },
-          {
-            "dataId": 23030,
-            "asOfDate": "2024-03-31",
-            "periodType": "12M",
-            "currencyCode": "INR",
-            "reportedValue": {
-              "raw": 21782800000.0,
-              "fmt": "21.78B"
-            }
-          },
-          {
-            "dataId": 23030,
-            "asOfDate": "2025-03-31",
-            "periodType": "12M",
-            "currencyCode": "INR",
-            "reportedValue": {
-              "raw": 22756600000.0,
-              "fmt": "22.76B"
-            }
-          },
-          {
-            "dataId": 23030,
-            "asOfDate": "2026-03-31",
-            "periodType": "12M",
-            "currencyCode": "INR",
-            "reportedValue": {
-              "raw": 24050000000.0,
-              "fmt": "24.05B"
-            }
-          }
-        ]
-      },
-      {
-        "meta": {
-          "symbol": [
-            "HDFCLIFE.NS"
-          ],
-          "type": [
-            "annualStockholdersEquity"
-          ]
-        },
-        "timestamp": [
-          1680220800,
-          1711843200,
-          1743379200,
-          1774915200
-        ],
-        "annualStockholdersEquity": [
-          {
-            "dataId": 23215,
-            "asOfDate": "2023-03-31",
-            "periodType": "12M",
-            "currencyCode": "INR",
-            "reportedValue": {
-              "raw": 129931414000.0,
-              "fmt": "129.93B"
-            }
-          },
-          {
-            "dataId": 23215,
-            "asOfDate": "2024-03-31",
-            "periodType": "12M",
-            "currencyCode": "INR",
-            "reportedValue": {
-              "raw": 146663400000.0,
-              "fmt": "146.66B"
-            }
-          },
-          {
-            "dataId": 23215,
-            "asOfDate": "2025-03-31",
-            "periodType": "12M",
-            "currencyCode": "INR",
-            "reportedValue": {
-              "raw": 161546200000.0,
-              "fmt": "161.55B"
-            }
-          },
-          {
-            "dataId": 23215,
-            "asOfDate": "2026-03-31",
-            "periodType": "12M",
-            "currencyCode": "INR",
-            "reportedValue": {
-              "raw": 177495400000.0,
-              "fmt": "177.50B"
-            }
-          }
-        ]
-      },
-      {
-        "meta": {
-          "symbol": [
-            "HDFCLIFE.NS"
-          ],
-          "type": [
-            "annualCurrentLiabilities"
+            "annualCurrentAssets"
           ]
         }
       },
@@ -923,7 +981,17 @@
             "HDFCLIFE.NS"
           ],
           "type": [
-            "annualCurrentAssets"
+            "annualMinorityInterest"
+          ]
+        }
+      },
+      {
+        "meta": {
+          "symbol": [
+            "HDFCLIFE.NS"
+          ],
+          "type": [
+            "annualCurrentLiabilities"
           ]
         }
       },

@@ -222,9 +222,18 @@ async def fetch_fast_info(yf_ticker: str) -> dict[str, Any]:
 _SHARES_OUTSTANDING_KEYS = ["OrdinarySharesNumber", "ShareIssued"]
 
 
-async def fetch_shares_outstanding(yf_ticker: str) -> float | None:
+async def fetch_shares_outstanding_detailed(
+    yf_ticker: str,
+) -> tuple[float | None, str | None]:
     """Most recent share count, preferring quarterly (fresher) over annual.
-    Tries OrdinarySharesNumber then ShareIssued, per period, newest first."""
+    Tries OrdinarySharesNumber then ShareIssued, per period, newest first.
+
+    Returns (shares, as_of_date). `as_of_date` (the record's period-end) is
+    kept for callers that want it, but `fetch_market_cap_detailed` does NOT
+    use it to split-adjust the share count -- see that function's docstring
+    for why (Yahoo's share count is already current, not point-in-time, for
+    a company that's had a split).
+    """
     for quarterly in (True, False):
         try:
             records = await _fetch_fundamentals(
@@ -242,8 +251,13 @@ async def fetch_shares_outstanding(yf_ticker: str) -> float | None:
             for key in _SHARES_OUTSTANDING_KEYS:
                 value = record.get(key)
                 if value is not None:
-                    return float(value)
-    return None
+                    return float(value), record.get("index")
+    return None, None
+
+
+async def fetch_shares_outstanding(yf_ticker: str) -> float | None:
+    shares, _as_of = await fetch_shares_outstanding_detailed(yf_ticker)
+    return shares
 
 
 async def _fetch_market_cap_via_quote_summary(yf_ticker: str) -> float | None:
@@ -268,44 +282,151 @@ async def _fetch_market_cap_via_quote_summary(yf_ticker: str) -> float | None:
         return None
 
 
+async def fetch_key_statistics(yf_ticker: str) -> dict[str, float | None]:
+    """Yahoo's own already-computed ROE/ROA/book-value/EPS, from the
+    crumb-gated quoteSummary `financialData` + `defaultKeyStatistics`
+    modules. PLAN.md "Phase 2 review": our own fundamentals-timeseries-
+    derived book value for HDFCBANK (Rs530/share) diverged 36% from
+    Screener.in (Rs390); this endpoint's `bookValue` (Rs393.81) and
+    `returnOnEquity` (13.84%) match Screener almost exactly, and turned out
+    to be the actual fix -- not a minority-interest mapping bug (Yahoo's
+    StockholdersEquity already excludes it) and not the 2025 bonus issue
+    (Yahoo's share count already reflects it). Best-effort: any/all fields
+    come back None if the crumb isn't available or a module lacks data for
+    this symbol (e.g. `returnOnEquity` is commonly absent even when
+    `bookValue` is present)."""
+    crumb = _get_crumb()
+    if crumb is None:
+        return {
+            "roe_pct": None,
+            "roa_pct": None,
+            "book_value_per_share": None,
+            "trailing_eps": None,
+        }
+    try:
+        data = await _run_throttled(
+            _get_json_sync,
+            _QUOTE_SUMMARY_URL.format(ticker=yf_ticker),
+            {"modules": "financialData,defaultKeyStatistics", "crumb": crumb},
+        )
+        result = (data.get("quoteSummary") or {}).get("result") or []
+        if not result:
+            return {
+                "roe_pct": None,
+                "roa_pct": None,
+                "book_value_per_share": None,
+                "trailing_eps": None,
+            }
+        financial_data = result[0].get("financialData") or {}
+        key_stats = result[0].get("defaultKeyStatistics") or {}
+
+        def _raw(module: dict, field: str) -> float | None:
+            value = (module.get(field) or {}).get("raw")
+            return float(value) if value is not None else None
+
+        roe = _raw(financial_data, "returnOnEquity")
+        roa = _raw(financial_data, "returnOnAssets")
+        return {
+            "roe_pct": roe * 100 if roe is not None else None,
+            "roa_pct": roa * 100 if roa is not None else None,
+            "book_value_per_share": _raw(key_stats, "bookValue"),
+            "trailing_eps": _raw(key_stats, "trailingEps"),
+        }
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("key-statistics fetch failed for %s: %s", yf_ticker, exc)
+        return {
+            "roe_pct": None,
+            "roa_pct": None,
+            "book_value_per_share": None,
+            "trailing_eps": None,
+        }
+
+
 async def fetch_market_cap_detailed(
     yf_ticker: str, last_price: float | None
-) -> tuple[float | None, str]:
+) -> tuple[float | None, str, float | None]:
     """Primary: price x shares outstanding, from fundamentals data (no crumb
     needed, so always available once a company has reported shares).
-    quoteSummary is used only to cross-check and log a warning on
-    disagreement -- it is NOT relied on, since Yahoo issues a working crumb
-    inconsistently.
 
-    Returns (market_cap, method), where method is one of "price_x_shares",
-    "quote_summary_fallback", or "unavailable".
+    We do NOT apply our own split/bonus adjustment here, despite PLAN.md
+    "Phase 1.5 review" item 1 assuming (reasonably, but incorrectly) that
+    the share count is a stale, period-end balance-sheet figure that goes
+    out of sync with a live price after a split. Empirically it is not: for
+    TRENT (a real 3:2 split on 2026-06-04) and NESTLEIND (a real 2:1 split
+    on 2025-08-08), `OrdinarySharesNumber` is IDENTICAL across every annual
+    period Yahoo returns, including years before either split -- Yahoo
+    normalizes this field to the current, already-post-split count
+    regardless of which period it's attached to (unlike a company with no
+    recent split, e.g. RELIANCE or SHRIRAMFIN, whose share count genuinely
+    varies period to period from buybacks/ESOPs/issuances). Multiplying by
+    our own split ratio on top of an already-current count double-counted
+    the split and overstated TRENT's and NESTLEIND's market cap by exactly
+    their split ratio (50% and 100% -- caught via the >5% quoteSummary
+    cross-check in Phase 2's Screener.in spot-check). `services.yahoo`
+    still exposes `fetch_splits`/`metrics.shares.adjust_shares_for_splits`
+    for a genuinely point-in-time share-count source (e.g. a future paid
+    feed), just not for this one.
+
+    quoteSummary is used only to cross-check -- it is NOT relied on, since
+    Yahoo issues a working crumb inconsistently.
+
+    Returns (market_cap, method, divergence_pct), where method is one of
+    "price_x_shares", "quote_summary_fallback", "unavailable", and
+    divergence_pct is how far the price x shares figure differs from
+    quoteSummary's (None if either side is unavailable) -- surfaced so
+    >5% divergences can be listed in the coverage report (item 5), not just
+    logged.
     """
-    shares = await fetch_shares_outstanding(yf_ticker)
+    shares, _shares_as_of = await fetch_shares_outstanding_detailed(yf_ticker)
     primary = last_price * shares if last_price is not None and shares is not None else None
 
     cross_check = await _fetch_market_cap_via_quote_summary(yf_ticker)
+    divergence_pct = None
     if primary is not None and cross_check is not None and cross_check != 0:
-        divergence = abs(primary - cross_check) / cross_check
-        if divergence > 0.05:
+        divergence_pct = abs(primary - cross_check) / cross_check * 100
+        if divergence_pct > 5:
             logger.warning(
                 "%s: market cap price*shares (%.0f) diverges %.1f%% from "
                 "quoteSummary (%.0f)",
                 yf_ticker,
                 primary,
-                divergence * 100,
+                divergence_pct,
                 cross_check,
             )
 
     if primary is not None:
-        return primary, "price_x_shares"
+        return primary, "price_x_shares", divergence_pct
     if cross_check is not None:
-        return cross_check, "quote_summary_fallback"
-    return None, "unavailable"
+        return cross_check, "quote_summary_fallback", divergence_pct
+    return None, "unavailable", divergence_pct
 
 
 async def fetch_market_cap(yf_ticker: str, last_price: float | None) -> float | None:
-    market_cap, _method = await fetch_market_cap_detailed(yf_ticker, last_price)
+    market_cap, _method, _divergence = await fetch_market_cap_detailed(yf_ticker, last_price)
     return market_cap
+
+
+async def fetch_splits(yf_ticker: str) -> list[dict[str, Any]]:
+    """Stock splits and bonus issues (Yahoo represents both the same way:
+    a numerator:denominator share-multiplication ratio), oldest first."""
+    chart = await fetch_chart(yf_ticker, range_="10y", interval="1mo", events="splits")
+    splits = ((chart.get("events") or {}).get("splits")) or {}
+    out = []
+    for point in splits.values():
+        ts = point.get("date")
+        numerator = point.get("numerator")
+        denominator = point.get("denominator")
+        if ts is None or numerator is None or denominator is None:
+            continue
+        out.append(
+            {
+                "date": datetime.fromtimestamp(ts, tz=timezone.utc).date().isoformat(),
+                "numerator": float(numerator),
+                "denominator": float(denominator),
+            }
+        )
+    out.sort(key=lambda s: s["date"])
+    return out
 
 
 async def fetch_dividends(yf_ticker: str) -> list[dict[str, Any]]:

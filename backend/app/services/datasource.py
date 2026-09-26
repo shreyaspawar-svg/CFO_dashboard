@@ -24,6 +24,8 @@ class MarketDataSource(Protocol):
 
     async def get_market_cap(self, yf_ticker: str, last_price: float | None) -> float | None: ...
 
+    async def get_key_statistics(self, yf_ticker: str) -> dict[str, float | None]: ...
+
     async def get_income_statement(
         self, yf_ticker: str, quarterly: bool = False
     ) -> list[dict[str, Any]]: ...
@@ -37,6 +39,8 @@ class MarketDataSource(Protocol):
     ) -> list[dict[str, Any]]: ...
 
     async def get_dividends(self, yf_ticker: str) -> list[dict[str, Any]]: ...
+
+    async def get_splits(self, yf_ticker: str) -> list[dict[str, Any]]: ...
 
     async def get_news(self, yf_ticker: str) -> list[dict[str, Any]]: ...
 
@@ -68,6 +72,11 @@ class YahooDataSource:
 
         return await yahoo.fetch_market_cap(yf_ticker, last_price)
 
+    async def get_key_statistics(self, yf_ticker: str) -> dict[str, float | None]:
+        from app.services import yahoo
+
+        return await yahoo.fetch_key_statistics(yf_ticker)
+
     async def get_income_statement(
         self, yf_ticker: str, quarterly: bool = False
     ) -> list[dict[str, Any]]:
@@ -93,6 +102,11 @@ class YahooDataSource:
         from app.services import yahoo
 
         return await yahoo.fetch_dividends(yf_ticker)
+
+    async def get_splits(self, yf_ticker: str) -> list[dict[str, Any]]:
+        from app.services import yahoo
+
+        return await yahoo.fetch_splits(yf_ticker)
 
     async def get_news(self, yf_ticker: str) -> list[dict[str, Any]]:
         from app.services import yahoo

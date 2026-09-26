@@ -7,6 +7,420 @@
             "TCS.NS"
           ],
           "type": [
+            "quarterlyCashAndCashEquivalents"
+          ]
+        },
+        "timestamp": [
+          1735603200,
+          1743379200,
+          1751241600,
+          1767139200,
+          1774915200
+        ],
+        "quarterlyCashAndCashEquivalents": [
+          {
+            "dataId": 23030,
+            "asOfDate": "2024-12-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 99150000000.0,
+              "fmt": "99.15B"
+            }
+          },
+          {
+            "dataId": 23030,
+            "asOfDate": "2025-03-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 83310000000.0,
+              "fmt": "83.31B"
+            }
+          },
+          {
+            "dataId": 23030,
+            "asOfDate": "2025-06-30",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 64320000000.0,
+              "fmt": "64.32B"
+            }
+          },
+          {
+            "dataId": 23030,
+            "asOfDate": "2025-12-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 74980000000.0,
+              "fmt": "74.98B"
+            }
+          },
+          {
+            "dataId": 23030,
+            "asOfDate": "2026-03-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 64050000000.0,
+              "fmt": "64.05B"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "TCS.NS"
+          ],
+          "type": [
+            "quarterlyTotalLiabilitiesNetMinorityInterest"
+          ]
+        },
+        "timestamp": [
+          1735603200,
+          1743379200,
+          1751241600,
+          1767139200,
+          1774915200
+        ],
+        "quarterlyTotalLiabilitiesNetMinorityInterest": [
+          {
+            "dataId": 23259,
+            "asOfDate": "2024-12-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 638980000000.0,
+              "fmt": "638.98B"
+            }
+          },
+          {
+            "dataId": 23259,
+            "asOfDate": "2025-03-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 638580000000.0,
+              "fmt": "638.58B"
+            }
+          },
+          {
+            "dataId": 23259,
+            "asOfDate": "2025-06-30",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 675290000000.0,
+              "fmt": "675.29B"
+            }
+          },
+          {
+            "dataId": 23259,
+            "asOfDate": "2025-12-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 696860000000.0,
+              "fmt": "696.86B"
+            }
+          },
+          {
+            "dataId": 23259,
+            "asOfDate": "2026-03-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 738940000000.0,
+              "fmt": "738.94B"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "TCS.NS"
+          ],
+          "type": [
+            "quarterlyNetPPE"
+          ]
+        },
+        "timestamp": [
+          1735603200,
+          1743379200,
+          1751241600,
+          1767139200,
+          1774915200
+        ],
+        "quarterlyNetPPE": [
+          {
+            "dataId": 23139,
+            "asOfDate": "2024-12-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 202880000000.0,
+              "fmt": "202.88B"
+            }
+          },
+          {
+            "dataId": 23139,
+            "asOfDate": "2025-03-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 219480000000.0,
+              "fmt": "219.48B"
+            }
+          },
+          {
+            "dataId": 23139,
+            "asOfDate": "2025-06-30",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 222960000000.0,
+              "fmt": "222.96B"
+            }
+          },
+          {
+            "dataId": 23139,
+            "asOfDate": "2025-12-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 242190000000.0,
+              "fmt": "242.19B"
+            }
+          },
+          {
+            "dataId": 23139,
+            "asOfDate": "2026-03-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 251000000000.0,
+              "fmt": "251.00B"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "TCS.NS"
+          ],
+          "type": [
+            "quarterlyRetainedEarnings"
+          ]
+        },
+        "timestamp": [
+          1735603200,
+          1743379200,
+          1751241600,
+          1767139200,
+          1774915200
+        ],
+        "quarterlyRetainedEarnings": [
+          {
+            "dataId": 23204,
+            "asOfDate": "2024-12-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 987970000000.0,
+              "fmt": "987.97B"
+            }
+          },
+          {
+            "dataId": 23204,
+            "asOfDate": "2025-03-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 887770000000.0,
+              "fmt": "887.77B"
+            }
+          },
+          {
+            "dataId": 23204,
+            "asOfDate": "2025-06-30",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 918090000000.0,
+              "fmt": "918.09B"
+            }
+          },
+          {
+            "dataId": 23204,
+            "asOfDate": "2025-12-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 1067720000000.0,
+              "fmt": "1.07T"
+            }
+          },
+          {
+            "dataId": 23204,
+            "asOfDate": "2026-03-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 998830000000.0,
+              "fmt": "998.83B"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "TCS.NS"
+          ],
+          "type": [
+            "quarterlyInventory"
+          ]
+        },
+        "timestamp": [
+          1735603200,
+          1743379200,
+          1751241600,
+          1767139200,
+          1774915200
+        ],
+        "quarterlyInventory": [
+          {
+            "dataId": 23108,
+            "asOfDate": "2024-12-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 260000000.0,
+              "fmt": "260.00M"
+            }
+          },
+          {
+            "dataId": 23108,
+            "asOfDate": "2025-03-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 210000000.0,
+              "fmt": "210.00M"
+            }
+          },
+          {
+            "dataId": 23108,
+            "asOfDate": "2025-06-30",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 250000000.0,
+              "fmt": "250.00M"
+            }
+          },
+          {
+            "dataId": 23108,
+            "asOfDate": "2025-12-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 260000000.0,
+              "fmt": "260.00M"
+            }
+          },
+          {
+            "dataId": 23108,
+            "asOfDate": "2026-03-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 290000000.0,
+              "fmt": "290.00M"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "TCS.NS"
+          ],
+          "type": [
+            "quarterlyPayables"
+          ]
+        },
+        "timestamp": [
+          1735603200,
+          1743379200,
+          1751241600,
+          1767139200,
+          1774915200
+        ],
+        "quarterlyPayables": [
+          {
+            "dataId": 23165,
+            "asOfDate": "2024-12-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 332340000000.0,
+              "fmt": "332.34B"
+            }
+          },
+          {
+            "dataId": 23165,
+            "asOfDate": "2025-03-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 259700000000.0,
+              "fmt": "259.70B"
+            }
+          },
+          {
+            "dataId": 23165,
+            "asOfDate": "2025-06-30",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 367750000000.0,
+              "fmt": "367.75B"
+            }
+          },
+          {
+            "dataId": 23165,
+            "asOfDate": "2025-12-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 334460000000.0,
+              "fmt": "334.46B"
+            }
+          },
+          {
+            "dataId": 23165,
+            "asOfDate": "2026-03-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 285630000000.0,
+              "fmt": "285.63B"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "TCS.NS"
+          ],
+          "type": [
             "quarterlyAccountsReceivable"
           ]
         },
@@ -145,75 +559,6 @@
             "TCS.NS"
           ],
           "type": [
-            "quarterlyCashAndCashEquivalents"
-          ]
-        },
-        "timestamp": [
-          1735603200,
-          1743379200,
-          1751241600,
-          1767139200,
-          1774915200
-        ],
-        "quarterlyCashAndCashEquivalents": [
-          {
-            "dataId": 23030,
-            "asOfDate": "2024-12-31",
-            "periodType": "3M",
-            "currencyCode": "INR",
-            "reportedValue": {
-              "raw": 99150000000.0,
-              "fmt": "99.15B"
-            }
-          },
-          {
-            "dataId": 23030,
-            "asOfDate": "2025-03-31",
-            "periodType": "3M",
-            "currencyCode": "INR",
-            "reportedValue": {
-              "raw": 83310000000.0,
-              "fmt": "83.31B"
-            }
-          },
-          {
-            "dataId": 23030,
-            "asOfDate": "2025-06-30",
-            "periodType": "3M",
-            "currencyCode": "INR",
-            "reportedValue": {
-              "raw": 64320000000.0,
-              "fmt": "64.32B"
-            }
-          },
-          {
-            "dataId": 23030,
-            "asOfDate": "2025-12-31",
-            "periodType": "3M",
-            "currencyCode": "INR",
-            "reportedValue": {
-              "raw": 74980000000.0,
-              "fmt": "74.98B"
-            }
-          },
-          {
-            "dataId": 23030,
-            "asOfDate": "2026-03-31",
-            "periodType": "3M",
-            "currencyCode": "INR",
-            "reportedValue": {
-              "raw": 64050000000.0,
-              "fmt": "64.05B"
-            }
-          }
-        ]
-      },
-      {
-        "meta": {
-          "symbol": [
-            "TCS.NS"
-          ],
-          "type": [
             "quarterlyCurrentAssets"
           ]
         },
@@ -273,75 +618,6 @@
             "reportedValue": {
               "raw": 1357050000000.0,
               "fmt": "1.36T"
-            }
-          }
-        ]
-      },
-      {
-        "meta": {
-          "symbol": [
-            "TCS.NS"
-          ],
-          "type": [
-            "quarterlyTotalLiabilitiesNetMinorityInterest"
-          ]
-        },
-        "timestamp": [
-          1735603200,
-          1743379200,
-          1751241600,
-          1767139200,
-          1774915200
-        ],
-        "quarterlyTotalLiabilitiesNetMinorityInterest": [
-          {
-            "dataId": 23259,
-            "asOfDate": "2024-12-31",
-            "periodType": "3M",
-            "currencyCode": "INR",
-            "reportedValue": {
-              "raw": 638980000000.0,
-              "fmt": "638.98B"
-            }
-          },
-          {
-            "dataId": 23259,
-            "asOfDate": "2025-03-31",
-            "periodType": "3M",
-            "currencyCode": "INR",
-            "reportedValue": {
-              "raw": 638580000000.0,
-              "fmt": "638.58B"
-            }
-          },
-          {
-            "dataId": 23259,
-            "asOfDate": "2025-06-30",
-            "periodType": "3M",
-            "currencyCode": "INR",
-            "reportedValue": {
-              "raw": 675290000000.0,
-              "fmt": "675.29B"
-            }
-          },
-          {
-            "dataId": 23259,
-            "asOfDate": "2025-12-31",
-            "periodType": "3M",
-            "currencyCode": "INR",
-            "reportedValue": {
-              "raw": 696860000000.0,
-              "fmt": "696.86B"
-            }
-          },
-          {
-            "dataId": 23259,
-            "asOfDate": "2026-03-31",
-            "periodType": "3M",
-            "currencyCode": "INR",
-            "reportedValue": {
-              "raw": 738940000000.0,
-              "fmt": "738.94B"
             }
           }
         ]
@@ -490,7 +766,7 @@
             "TCS.NS"
           ],
           "type": [
-            "quarterlyNetPPE"
+            "quarterlyMinorityInterest"
           ]
         },
         "timestamp": [
@@ -500,55 +776,55 @@
           1767139200,
           1774915200
         ],
-        "quarterlyNetPPE": [
+        "quarterlyMinorityInterest": [
           {
-            "dataId": 23139,
+            "dataId": 23132,
             "asOfDate": "2024-12-31",
             "periodType": "3M",
             "currencyCode": "INR",
             "reportedValue": {
-              "raw": 202880000000.0,
-              "fmt": "202.88B"
+              "raw": 9250000000.0,
+              "fmt": "9.25B"
             }
           },
           {
-            "dataId": 23139,
+            "dataId": 23132,
             "asOfDate": "2025-03-31",
             "periodType": "3M",
             "currencyCode": "INR",
             "reportedValue": {
-              "raw": 219480000000.0,
-              "fmt": "219.48B"
+              "raw": 10150000000.0,
+              "fmt": "10.15B"
             }
           },
           {
-            "dataId": 23139,
+            "dataId": 23132,
             "asOfDate": "2025-06-30",
             "periodType": "3M",
             "currencyCode": "INR",
             "reportedValue": {
-              "raw": 222960000000.0,
-              "fmt": "222.96B"
+              "raw": 10210000000.0,
+              "fmt": "10.21B"
             }
           },
           {
-            "dataId": 23139,
+            "dataId": 23132,
             "asOfDate": "2025-12-31",
             "periodType": "3M",
             "currencyCode": "INR",
             "reportedValue": {
-              "raw": 242190000000.0,
-              "fmt": "242.19B"
+              "raw": 10730000000.0,
+              "fmt": "10.73B"
             }
           },
           {
-            "dataId": 23139,
+            "dataId": 23132,
             "asOfDate": "2026-03-31",
             "periodType": "3M",
             "currencyCode": "INR",
             "reportedValue": {
-              "raw": 251000000000.0,
-              "fmt": "251.00B"
+              "raw": 12380000000.0,
+              "fmt": "12.38B"
             }
           }
         ]
@@ -618,144 +894,6 @@
             "reportedValue": {
               "raw": 3618087518.0,
               "fmt": "3.62B"
-            }
-          }
-        ]
-      },
-      {
-        "meta": {
-          "symbol": [
-            "TCS.NS"
-          ],
-          "type": [
-            "quarterlyInventory"
-          ]
-        },
-        "timestamp": [
-          1735603200,
-          1743379200,
-          1751241600,
-          1767139200,
-          1774915200
-        ],
-        "quarterlyInventory": [
-          {
-            "dataId": 23108,
-            "asOfDate": "2024-12-31",
-            "periodType": "3M",
-            "currencyCode": "INR",
-            "reportedValue": {
-              "raw": 260000000.0,
-              "fmt": "260.00M"
-            }
-          },
-          {
-            "dataId": 23108,
-            "asOfDate": "2025-03-31",
-            "periodType": "3M",
-            "currencyCode": "INR",
-            "reportedValue": {
-              "raw": 210000000.0,
-              "fmt": "210.00M"
-            }
-          },
-          {
-            "dataId": 23108,
-            "asOfDate": "2025-06-30",
-            "periodType": "3M",
-            "currencyCode": "INR",
-            "reportedValue": {
-              "raw": 250000000.0,
-              "fmt": "250.00M"
-            }
-          },
-          {
-            "dataId": 23108,
-            "asOfDate": "2025-12-31",
-            "periodType": "3M",
-            "currencyCode": "INR",
-            "reportedValue": {
-              "raw": 260000000.0,
-              "fmt": "260.00M"
-            }
-          },
-          {
-            "dataId": 23108,
-            "asOfDate": "2026-03-31",
-            "periodType": "3M",
-            "currencyCode": "INR",
-            "reportedValue": {
-              "raw": 290000000.0,
-              "fmt": "290.00M"
-            }
-          }
-        ]
-      },
-      {
-        "meta": {
-          "symbol": [
-            "TCS.NS"
-          ],
-          "type": [
-            "quarterlyPayables"
-          ]
-        },
-        "timestamp": [
-          1735603200,
-          1743379200,
-          1751241600,
-          1767139200,
-          1774915200
-        ],
-        "quarterlyPayables": [
-          {
-            "dataId": 23165,
-            "asOfDate": "2024-12-31",
-            "periodType": "3M",
-            "currencyCode": "INR",
-            "reportedValue": {
-              "raw": 332340000000.0,
-              "fmt": "332.34B"
-            }
-          },
-          {
-            "dataId": 23165,
-            "asOfDate": "2025-03-31",
-            "periodType": "3M",
-            "currencyCode": "INR",
-            "reportedValue": {
-              "raw": 259700000000.0,
-              "fmt": "259.70B"
-            }
-          },
-          {
-            "dataId": 23165,
-            "asOfDate": "2025-06-30",
-            "periodType": "3M",
-            "currencyCode": "INR",
-            "reportedValue": {
-              "raw": 367750000000.0,
-              "fmt": "367.75B"
-            }
-          },
-          {
-            "dataId": 23165,
-            "asOfDate": "2025-12-31",
-            "periodType": "3M",
-            "currencyCode": "INR",
-            "reportedValue": {
-              "raw": 334460000000.0,
-              "fmt": "334.46B"
-            }
-          },
-          {
-            "dataId": 23165,
-            "asOfDate": "2026-03-31",
-            "periodType": "3M",
-            "currencyCode": "INR",
-            "reportedValue": {
-              "raw": 285630000000.0,
-              "fmt": "285.63B"
             }
           }
         ]

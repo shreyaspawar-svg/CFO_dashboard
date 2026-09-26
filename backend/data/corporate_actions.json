@@ -10,5 +10,9 @@
   "ETERNAL": {
     "message": "Renamed from Zomato Ltd in 2024; same listed entity (IPO 2021-07-23). Financial history is continuous across the rename -- no corporate-action discontinuity.",
     "cutoff_period_end": null
+  },
+  "HDFCBANK": {
+    "message": "HDFC Ltd merged into HDFC Bank effective 2023-07-01. Total equity roughly 2.4x'd and shares outstanding rose ~36% between FY23 and FY24 as a result. The period ending 2023-03-31 is the pre-merger, standalone bank and is not comparable to FY24 onward -- discovered via a Screener.in spot-check gap on ROE/ROCE (Phase 2 review).",
+    "cutoff_period_end": "2023-04-01"
   }
 }

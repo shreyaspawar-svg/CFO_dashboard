@@ -24,6 +24,12 @@ def _load() -> dict[str, dict[str, Any]]:
     return json.loads(CORPORATE_ACTIONS_PATH.read_text(encoding="utf-8"))
 
 
+def get_action(symbol: str) -> dict[str, Any] | None:
+    """The raw corporate-action record for a symbol (message + optional
+    cutoff_period_end), or None if it has none."""
+    return _load().get(symbol.upper())
+
+
 def notes_for_symbol(symbol: str, period_ends: list[str]) -> list[str]:
     """Return the corporate-action note(s) applicable to this symbol.
 
@@ -32,7 +38,7 @@ def notes_for_symbol(symbol: str, period_ends: list[str]) -> list[str]:
     otherwise (cutoff is null) the note is always informational and always
     included.
     """
-    action = _load().get(symbol.upper())
+    action = get_action(symbol)
     if action is None:
         return []
 

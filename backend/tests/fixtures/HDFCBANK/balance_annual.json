@@ -65,6 +65,64 @@
             "HDFCBANK.NS"
           ],
           "type": [
+            "annualRetainedEarnings"
+          ]
+        },
+        "timestamp": [
+          1680220800,
+          1711843200,
+          1743379200,
+          1774915200
+        ],
+        "annualRetainedEarnings": [
+          {
+            "dataId": 23204,
+            "asOfDate": "2023-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 1447784100000.0,
+              "fmt": "1.45T"
+            }
+          },
+          {
+            "dataId": 23204,
+            "asOfDate": "2024-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 1746416900000.0,
+              "fmt": "1.75T"
+            }
+          },
+          {
+            "dataId": 23204,
+            "asOfDate": "2025-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 2099097200000.0,
+              "fmt": "2.10T"
+            }
+          },
+          {
+            "dataId": 23204,
+            "asOfDate": "2026-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 2405694200000.0,
+              "fmt": "2.41T"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "HDFCBANK.NS"
+          ],
+          "type": [
             "annualStockholdersEquity"
           ]
         },
@@ -113,6 +171,64 @@
             "reportedValue": {
               "raw": 8167395600000.0,
               "fmt": "8.17T"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "HDFCBANK.NS"
+          ],
+          "type": [
+            "annualMinorityInterest"
+          ]
+        },
+        "timestamp": [
+          1680220800,
+          1711843200,
+          1743379200,
+          1774915200
+        ],
+        "annualMinorityInterest": [
+          {
+            "dataId": 23132,
+            "asOfDate": "2023-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 5637200000.0,
+              "fmt": "5.64B"
+            }
+          },
+          {
+            "dataId": 23132,
+            "asOfDate": "2024-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 938855400000.0,
+              "fmt": "938.86B"
+            }
+          },
+          {
+            "dataId": 23132,
+            "asOfDate": "2025-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 945999600000.0,
+              "fmt": "946.00B"
+            }
+          },
+          {
+            "dataId": 23132,
+            "asOfDate": "2026-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 993299100000.0,
+              "fmt": "993.30B"
             }
           }
         ]
@@ -661,7 +777,7 @@
             "HDFCBANK.NS"
           ],
           "type": [
-            "annualCurrentLiabilities"
+            "annualCurrentAssets"
           ]
         }
       },
@@ -671,7 +787,7 @@
             "HDFCBANK.NS"
           ],
           "type": [
-            "annualCurrentAssets"
+            "annualCurrentLiabilities"
           ]
         }
       },

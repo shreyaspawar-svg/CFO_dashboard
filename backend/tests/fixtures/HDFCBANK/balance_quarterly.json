@@ -145,7 +145,7 @@
             "HDFCBANK.NS"
           ],
           "type": [
-            "quarterlyTotalLiabilitiesNetMinorityInterest"
+            "quarterlyMinorityInterest"
           ]
         },
         "timestamp": [
@@ -155,102 +155,55 @@
           1759190400,
           1774915200
         ],
-        "quarterlyTotalLiabilitiesNetMinorityInterest": [
+        "quarterlyMinorityInterest": [
           {
-            "dataId": 23259,
+            "dataId": 23132,
             "asOfDate": "2024-12-31",
             "periodType": "3M",
             "currencyCode": "INR",
             "reportedValue": {
-              "raw": 37100322200000.0,
-              "fmt": "37.10T"
+              "raw": 159578600000.0,
+              "fmt": "159.58B"
             }
           },
           {
-            "dataId": 23259,
+            "dataId": 23132,
             "asOfDate": "2025-03-31",
             "periodType": "3M",
             "currencyCode": "INR",
             "reportedValue": {
-              "raw": 39564780100000.0,
-              "fmt": "39.56T"
+              "raw": 945999600000.0,
+              "fmt": "946.00B"
             }
           },
           {
-            "dataId": 23259,
+            "dataId": 23132,
             "asOfDate": "2025-06-30",
             "periodType": "3M",
             "currencyCode": "INR",
             "reportedValue": {
-              "raw": 38929003400000.0,
-              "fmt": "38.93T"
+              "raw": 205136800000.0,
+              "fmt": "205.14B"
             }
           },
           {
-            "dataId": 23259,
+            "dataId": 23132,
             "asOfDate": "2025-09-30",
             "periodType": "3M",
             "currencyCode": "INR",
             "reportedValue": {
-              "raw": 40091569400000.0,
-              "fmt": "40.09T"
+              "raw": 983462000000.0,
+              "fmt": "983.46B"
             }
           },
           {
-            "dataId": 23259,
+            "dataId": 23132,
             "asOfDate": "2026-03-31",
             "periodType": "3M",
             "currencyCode": "INR",
             "reportedValue": {
-              "raw": 43460498500000.0,
-              "fmt": "43.46T"
-            }
-          }
-        ]
-      },
-      {
-        "meta": {
-          "symbol": [
-            "HDFCBANK.NS"
-          ],
-          "type": [
-            "quarterlyPayables"
-          ]
-        },
-        "timestamp": [
-          1743379200,
-          1759190400,
-          1774915200
-        ],
-        "quarterlyPayables": [
-          {
-            "dataId": 23165,
-            "asOfDate": "2025-03-31",
-            "periodType": "3M",
-            "currencyCode": "INR",
-            "reportedValue": {
-              "raw": 713379600000.0,
-              "fmt": "713.38B"
-            }
-          },
-          {
-            "dataId": 23165,
-            "asOfDate": "2025-09-30",
-            "periodType": "3M",
-            "currencyCode": "INR",
-            "reportedValue": {
-              "raw": 287173900000.0,
-              "fmt": "287.17B"
-            }
-          },
-          {
-            "dataId": 23165,
-            "asOfDate": "2026-03-31",
-            "periodType": "3M",
-            "currencyCode": "INR",
-            "reportedValue": {
-              "raw": 799128100000.0,
-              "fmt": "799.13B"
+              "raw": 993299100000.0,
+              "fmt": "993.30B"
             }
           }
         ]
@@ -428,6 +381,169 @@
             "reportedValue": {
               "raw": 52621193200000.0,
               "fmt": "52.62T"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "HDFCBANK.NS"
+          ],
+          "type": [
+            "quarterlyRetainedEarnings"
+          ]
+        },
+        "timestamp": [
+          1743379200,
+          1759190400,
+          1774915200
+        ],
+        "quarterlyRetainedEarnings": [
+          {
+            "dataId": 23204,
+            "asOfDate": "2025-03-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 2099097200000.0,
+              "fmt": "2.10T"
+            }
+          },
+          {
+            "dataId": 23204,
+            "asOfDate": "2025-09-30",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 2223578000000.0,
+              "fmt": "2.22T"
+            }
+          },
+          {
+            "dataId": 23204,
+            "asOfDate": "2026-03-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 2405694200000.0,
+              "fmt": "2.41T"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "HDFCBANK.NS"
+          ],
+          "type": [
+            "quarterlyTotalLiabilitiesNetMinorityInterest"
+          ]
+        },
+        "timestamp": [
+          1735603200,
+          1743379200,
+          1751241600,
+          1759190400,
+          1774915200
+        ],
+        "quarterlyTotalLiabilitiesNetMinorityInterest": [
+          {
+            "dataId": 23259,
+            "asOfDate": "2024-12-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 37100322200000.0,
+              "fmt": "37.10T"
+            }
+          },
+          {
+            "dataId": 23259,
+            "asOfDate": "2025-03-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 39564780100000.0,
+              "fmt": "39.56T"
+            }
+          },
+          {
+            "dataId": 23259,
+            "asOfDate": "2025-06-30",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 38929003400000.0,
+              "fmt": "38.93T"
+            }
+          },
+          {
+            "dataId": 23259,
+            "asOfDate": "2025-09-30",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 40091569400000.0,
+              "fmt": "40.09T"
+            }
+          },
+          {
+            "dataId": 23259,
+            "asOfDate": "2026-03-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 43460498500000.0,
+              "fmt": "43.46T"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "HDFCBANK.NS"
+          ],
+          "type": [
+            "quarterlyPayables"
+          ]
+        },
+        "timestamp": [
+          1743379200,
+          1759190400,
+          1774915200
+        ],
+        "quarterlyPayables": [
+          {
+            "dataId": 23165,
+            "asOfDate": "2025-03-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 713379600000.0,
+              "fmt": "713.38B"
+            }
+          },
+          {
+            "dataId": 23165,
+            "asOfDate": "2025-09-30",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 287173900000.0,
+              "fmt": "287.17B"
+            }
+          },
+          {
+            "dataId": 23165,
+            "asOfDate": "2026-03-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 799128100000.0,
+              "fmt": "799.13B"
             }
           }
         ]
@@ -702,7 +818,7 @@
             "HDFCBANK.NS"
           ],
           "type": [
-            "quarterlyCurrentLiabilities"
+            "quarterlyInventory"
           ]
         }
       },
@@ -712,7 +828,7 @@
             "HDFCBANK.NS"
           ],
           "type": [
-            "quarterlyInventory"
+            "quarterlyCurrentLiabilities"
           ]
         }
       }

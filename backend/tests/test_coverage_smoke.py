@@ -16,6 +16,7 @@ import pytest
 from app.config import BASE_DIR
 from app.services import yahoo
 from app.services.corporate_actions import notes_for_symbol
+from app.services.metrics_engine import compute_symbol_metrics
 from app.services.normalize import (
     BALANCE_SHEET_MAP,
     CASH_FLOW_MAP,
@@ -56,11 +57,12 @@ async def _check_symbol(symbol: str) -> dict:
         result["quote_warning"] = str(exc)
         result["last_price"] = None
 
-    market_cap, method = await yahoo.fetch_market_cap_detailed(
+    market_cap, method, divergence_pct = await yahoo.fetch_market_cap_detailed(
         company.yf_ticker, result["last_price"]
     )
     result["market_cap"] = market_cap
     result["market_cap_method"] = method
+    result["market_cap_divergence_pct"] = divergence_pct
 
     async def _annual_and_quarterly(fetch_fn):
         try:
@@ -98,6 +100,16 @@ async def _check_symbol(symbol: str) -> dict:
 
     period_ends = [p["period_end"] for p in income]
     result["corporate_action_notes"] = notes_for_symbol(symbol, period_ends)
+
+    # Phase 2.1 item 4: cross-check our own book-value-per-share and EPS
+    # against Yahoo's own key statistics across all 50 symbols, to catch
+    # the whole class of bug the HDFCBANK case revealed, not just HDFCBANK.
+    try:
+        metrics_result = await compute_symbol_metrics(symbol)
+        result["cross_check_divergences"] = metrics_result["cross_check_divergences"]
+    except Exception as exc:  # noqa: BLE001
+        result["cross_check_divergences"] = []
+        result["cross_check_error"] = str(exc)
 
     return result
 
@@ -189,6 +201,26 @@ def _render_report(results: list[dict]) -> str:
         cap = f"{r['market_cap'] / 1e7:,.0f}" if r["market_cap"] is not None else "—"
         lines.append(f"| {r['symbol']} | {r['market_cap_method']} | {cap} |")
 
+    divergent_rows = [
+        r for r in results if (r["market_cap_divergence_pct"] or 0) > 5
+    ]
+    lines += [
+        "",
+        "## Market-cap cross-check divergences (>5%)",
+        "",
+        "Phase 1.5 review item 5: symbols where price x shares outstanding",
+        "disagrees with Yahoo's own quoteSummary market cap by more than 5%",
+        "-- worth investigating (stale share count, a just-happened",
+        "split/bonus not yet reflected, or a quoteSummary anomaly).",
+        "",
+    ]
+    if divergent_rows:
+        lines += ["| Symbol | Divergence |", "|---|---|"]
+        for r in sorted(divergent_rows, key=lambda x: -x["market_cap_divergence_pct"]):
+            lines.append(f"| {r['symbol']} | {r['market_cap_divergence_pct']:.1f}% |")
+    else:
+        lines.append("None -- every symbol with both figures available agrees within 5%.")
+
     action_rows = [r for r in results if r["corporate_action_notes"]]
     if action_rows:
         lines += [
@@ -199,6 +231,40 @@ def _render_report(results: list[dict]) -> str:
         for r in sorted(action_rows, key=lambda x: x["symbol"]):
             for note in r["corporate_action_notes"]:
                 lines.append(f"- **{r['symbol']}**: {note}")
+
+    lines += [
+        "",
+        "## Book value / EPS cross-check (Phase 2.1 item 4)",
+        "",
+        "Our fundamentals-timeseries-derived book value per share and EPS,",
+        "compared against Yahoo's own key-statistics figures (bookValue,",
+        "trailingEps), across all 50 symbols -- catches the whole class of",
+        "bug HDFCBANK revealed (our figure diverging from a more-current",
+        "or correctly-scoped source), not just that one company.",
+        "",
+        "IMPORTANT: a row appearing here does NOT mean the displayed metric",
+        "is wrong -- `pb`/`pe`/`roe`/`roa` always prefer Yahoo's figure over",
+        "ours when both exist, so a row is either (a) the override doing",
+        "its job (ours differs, Yahoo's more-authoritative figure is what's",
+        "actually shown), or (b) neither side was overridden and our own",
+        "TTM-summed EPS differs from Yahoo's `trailingEps` methodology",
+        "(exceptional items, or -- confirmed for INFY -- a Yahoo data-scale",
+        "inconsistency in ITS OWN quarterly figures, not our calculation).",
+        "",
+    ]
+    divergence_rows = [
+        (r["symbol"], d)
+        for r in results
+        for d in r.get("cross_check_divergences", [])
+    ]
+    if divergence_rows:
+        lines += ["| Symbol | Metric | Ours | Yahoo | Divergence |", "|---|---|---|---|---|"]
+        for symbol, d in sorted(divergence_rows, key=lambda x: -x[1]["divergence_pct"]):
+            lines.append(
+                f"| {symbol} | {d['metric']} | {d['ours']:.2f} | {d['yahoo']:.2f} | {d['divergence_pct']:.1f}% |"
+            )
+    else:
+        lines.append("None -- every symbol with both figures available agrees within 10%.")
 
     lines.append("")
     return "\n".join(lines)

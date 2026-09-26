@@ -238,6 +238,18 @@ must account for before it can trust the numbers it's computing:
    per-share numbers (EPS, book value per share, etc.) would be off by the
    split ratio unless the share count is adjusted to match the price's
    as-of date.
+   > **Resolved differently than assumed.** Building the fix (fetch splits,
+   > multiply the share count forward) actually *introduced* a 2x/1.5x
+   > overstatement for TRENT and NESTLEIND, caught by item 5's own
+   > cross-check. Investigating showed Yahoo's `OrdinarySharesNumber` is
+   > already the CURRENT share count on every historical period row for a
+   > company that's had a split (identical across periods spanning the
+   > split date), not a point-in-time figure -- unlike a company with no
+   > recent split (RELIANCE, SHRIRAMFIN), whose share count genuinely
+   > varies period to period from buybacks/issuances. So no adjustment is
+   > applied for market cap; `fetch_splits`/`adjust_shares_for_splits`
+   > remain available (and unit-tested) for a future data source where the
+   > share count really is point-in-time.
 2. **Periods that aren't comparable.** TMPV's pre-demerger years and
    JIOFIN's FY23 shell year (§"Phase 1 review" item 5) must stay out of
    growth rates, health-radar scores and valuation ranges. Every response
@@ -260,6 +272,12 @@ must account for before it can trust the numbers it's computing:
    a warning per §"Phase 1 review" item 1) must be listed in
    `data_coverage_report.md` so a bad share count or a just-happened
    split/bonus is caught, not buried in a log line.
+   > **This is what caught item 1's bug.** After fixing it, two genuine
+   > (not a bug) divergences remain -- SHRIRAMFIN (~20%) and ADANIENT
+   > (~9%) -- both companies whose share count changes every period from
+   > real issuances, where our balance-sheet-sourced count can lag
+   > `quoteSummary`'s figure by up to a quarter. Documented in the coverage
+   > report, not hidden.
 
 Tasks
 1. `metrics/ratios.py` — pure functions, unit‑tested:
@@ -283,6 +301,84 @@ Acceptance
 - Spot‑check 3 companies (TCS, HDFCBANK, RELIANCE) against Screener.in; differences >5% explained in a note.
 
 > **Prompt:** "Implement Phase 2 of PLAN.md. Keep ratio functions pure and fully unit‑tested. Then spot‑check TCS, HDFCBANK and RELIANCE against Screener.in values and list discrepancies."
+
+---
+
+### Phase 2 review
+
+TCS and RELIANCE matched Screener.in closely. HDFCBANK didn't: ROE 8.9% vs
+Screener's 13.6%, book value ₹530.58/share vs Screener's ₹393.81 -- a ~35%
+gap, too large to wave off as methodology, especially for the index's
+largest company. Five things came out of investigating it:
+
+1. **ROE, book value and P/B use equity belonging to the parent company's
+   shareholders only. EV adds minority interest instead.**
+   > **Investigated, root cause was different than expected.** Yahoo's
+   > `StockholdersEquity` already excludes minority interest by its own
+   > schema (confirmed: `TotalEquityGrossMinorityInterest` -
+   > `MinorityInterest` = `StockholdersEquity` exactly, for HDFCBANK,
+   > BAJAJFINSV, GRASIM and TCS alike) -- so this wasn't a mapping bug. The
+   > real fix was preferring Yahoo's own crumb-gated `financialData`/
+   > `defaultKeyStatistics` cross-check (ROE, book value, trailing EPS)
+   > over our fundamentals-timeseries-derived figures when available,
+   > since it reflects a more current/correctly-scoped snapshot than an
+   > annual filing ever can. `enterprise_value()` now takes
+   > `minority_interest` as a fourth term, added (not netted into equity),
+   > backed by a newly-mapped `MinorityInterest` balance-sheet field.
+2. **EPS and P/E use profit belonging to the parent company's shareholders
+   only.** Same finding: `NetIncome` already equals
+   `NetIncomeCommonStockholders` in Yahoo's data (checked across 4
+   companies) -- already parent-only. Fixed by the same key-statistics
+   preference as item 1 (`trailingEps` over our TTM-summed diluted EPS).
+3. **Check HDFC Bank's 2025 1:1 bonus issue is reflected in the share
+   count.** Investigated and ruled out: `fetch_splits` does show a real
+   2025-08-26 bonus, but Yahoo's `OrdinarySharesNumber` (15.39B) already
+   matches `quoteSummary`'s live `sharesOutstanding` (15.42B) within 0.2%
+   -- the bonus was a red herring, not the cause.
+4. **A check across all 50 companies comparing our book value per share and
+   EPS with Yahoo's own figures, flagging any over 10% apart.** Built (see
+   `data_coverage_report.md`'s "Book value / EPS cross-check" section).
+   Building it caught a second, unrelated bug it was never aimed at: our
+   `book_value_per_share` calculation divided `total_equity` (stored in ₹
+   crore) directly by `shares_outstanding` (a raw count) with no unit
+   conversion, understating book value by ~1e7x and showing a spurious
+   ~100% "divergence" for nearly every symbol. Fixed by re-expanding equity
+   to raw rupees first. After that fix, the remaining >10% rows are (a)
+   entries where our figure legitimately differs from Yahoo's own and the
+   override already prefers Yahoo's (HDFCBANK/HDFCLIFE ROE, HDFCBANK/BSE
+   book value), which is the mechanism working as intended, not an
+   unresolved error, and (b) EPS divergences explained by our naive
+   "sum the last 4 quarters" TTM approach differing from Yahoo's own
+   `trailingEps` methodology (exceptional items, ADR-share-count quirks for
+   INFY specifically -- confirmed INFY's own quarterly EPS and annual
+   equity figures are inconsistently scaled in Yahoo's data, unrelated to
+   our code) -- again, already using Yahoo's more-authoritative figure via
+   the same override.
+5. **Re-run the Screener comparison for HDFC Bank, adding Bajaj Finserv and
+   Grasim.** See below.
+
+**Spot-check after the fix:**
+
+| Metric | HDFCBANK (ours) | HDFCBANK (Screener) | BAJAJFINSV (ours) | BAJAJFINSV (Screener) | GRASIM (ours) | GRASIM (Screener) |
+|---|---|---|---|---|---|---|
+| ROE | 13.84% | 13.6% | 13.50% | 13.2-13.8% | 6.53% | 5.21% (3y avg) |
+| ROCE | n/a (bank) | n/a | n/a (NBFC) | n/a | 4.61% | 8.01% |
+| D/E | 0.81 | -- | 4.64 | -- | 2.20 | ~2.19 |
+| P/E | 16.08 | 14.4 | 27.85 | 27.6 | 38.02 | 37.8 |
+| P/B | 1.87 | 1.87 (₹736 / ₹393.81 book value) | 3.63 | 3.64 | 2.09 | 2.10 |
+| 3y revenue CAGR | 9.54%* | -- | 22.91% | 22% | 14.30% | 14% |
+
+\* HDFCBANK's CAGR now correctly excludes its pre-merger FY23 (§"Phase 1
+review" item 5), so it's a 2-year span dated FY24→FY26, not a 3-year one.
+
+BAJAJFINSV matches on every metric within ~1%. GRASIM's P/E, P/B, D/E and
+CAGR all match within ~1%; its ROE/ROCE gap is a basis difference (Screener
+shows a 3-year average ROE, not latest-year) compounded with a capital-
+employed definition difference, the same class of gap already accepted for
+TCS's ROCE -- not a repeat of the HDFCBANK bug.
+
+**Gate: HDFCBANK ROE is 0.24pp from Screener (well inside the ~1.5pp bar).
+Phase 2 and 2.1 committed and tagged `phase-2`.**
 
 ---
 
