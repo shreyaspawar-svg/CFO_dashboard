@@ -1,0 +1,923 @@
+{
+  "timeseries": {
+    "result": [
+      {
+        "meta": {
+          "symbol": [
+            "HDFCLIFE.NS"
+          ],
+          "type": [
+            "annualPretaxIncome"
+          ]
+        },
+        "timestamp": [
+          1680220800,
+          1711843200,
+          1743379200,
+          1774915200
+        ],
+        "annualPretaxIncome": [
+          {
+            "dataId": 20136,
+            "asOfDate": "2023-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 12822096000.0,
+              "fmt": "12.82B"
+            }
+          },
+          {
+            "dataId": 20136,
+            "asOfDate": "2024-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 15696700000.0,
+              "fmt": "15.70B"
+            }
+          },
+          {
+            "dataId": 20136,
+            "asOfDate": "2025-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 18779400000.0,
+              "fmt": "18.78B"
+            }
+          },
+          {
+            "dataId": 20136,
+            "asOfDate": "2026-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 19623300000.0,
+              "fmt": "19.62B"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "HDFCLIFE.NS"
+          ],
+          "type": [
+            "annualInterestIncome"
+          ]
+        },
+        "timestamp": [
+          1680220800,
+          1711843200,
+          1743379200,
+          1774915200
+        ],
+        "annualInterestIncome": [
+          {
+            "dataId": 20177,
+            "asOfDate": "2023-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 135274671000.0,
+              "fmt": "135.27B"
+            }
+          },
+          {
+            "dataId": 20177,
+            "asOfDate": "2024-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 108831600000.0,
+              "fmt": "108.83B"
+            }
+          },
+          {
+            "dataId": 20177,
+            "asOfDate": "2025-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 126956600000.0,
+              "fmt": "126.96B"
+            }
+          },
+          {
+            "dataId": 20177,
+            "asOfDate": "2026-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 146041400000.0,
+              "fmt": "146.04B"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "HDFCLIFE.NS"
+          ],
+          "type": [
+            "annualNetIncome"
+          ]
+        },
+        "timestamp": [
+          1680220800,
+          1711843200,
+          1743379200,
+          1774915200
+        ],
+        "annualNetIncome": [
+          {
+            "dataId": 20091,
+            "asOfDate": "2023-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 13682771000.0,
+              "fmt": "13.68B"
+            }
+          },
+          {
+            "dataId": 20091,
+            "asOfDate": "2024-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 15740800000.0,
+              "fmt": "15.74B"
+            }
+          },
+          {
+            "dataId": 20091,
+            "asOfDate": "2025-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 18108200000.0,
+              "fmt": "18.11B"
+            }
+          },
+          {
+            "dataId": 20091,
+            "asOfDate": "2026-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 19123200000.0,
+              "fmt": "19.12B"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "HDFCLIFE.NS"
+          ],
+          "type": [
+            "annualEBIT"
+          ]
+        },
+        "timestamp": [
+          1680220800,
+          1711843200,
+          1743379200,
+          1774915200
+        ],
+        "annualEBIT": [
+          {
+            "dataId": 20189,
+            "asOfDate": "2023-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 13954912000.0,
+              "fmt": "13.95B"
+            }
+          },
+          {
+            "dataId": 20189,
+            "asOfDate": "2024-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 16815800000.0,
+              "fmt": "16.82B"
+            }
+          },
+          {
+            "dataId": 20189,
+            "asOfDate": "2025-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 20197900000.0,
+              "fmt": "20.20B"
+            }
+          },
+          {
+            "dataId": 20189,
+            "asOfDate": "2026-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 21909500000.0,
+              "fmt": "21.91B"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "HDFCLIFE.NS"
+          ],
+          "type": [
+            "annualBasicEPS"
+          ]
+        },
+        "timestamp": [
+          1680220800,
+          1711843200,
+          1743379200,
+          1774915200
+        ],
+        "annualBasicEPS": [
+          {
+            "dataId": 29004,
+            "asOfDate": "2023-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 6.41,
+              "fmt": "6.41"
+            }
+          },
+          {
+            "dataId": 29004,
+            "asOfDate": "2024-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 7.32,
+              "fmt": "7.32"
+            }
+          },
+          {
+            "dataId": 29004,
+            "asOfDate": "2025-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 8.41,
+              "fmt": "8.41"
+            }
+          },
+          {
+            "dataId": 29004,
+            "asOfDate": "2026-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 8.87,
+              "fmt": "8.87"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "HDFCLIFE.NS"
+          ],
+          "type": [
+            "annualInterestExpense"
+          ]
+        },
+        "timestamp": [
+          1680220800,
+          1711843200,
+          1743379200,
+          1774915200
+        ],
+        "annualInterestExpense": [
+          {
+            "dataId": 20057,
+            "asOfDate": "2023-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 1132816000.0,
+              "fmt": "1.13B"
+            }
+          },
+          {
+            "dataId": 20057,
+            "asOfDate": "2024-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 1119100000.0,
+              "fmt": "1.12B"
+            }
+          },
+          {
+            "dataId": 20057,
+            "asOfDate": "2025-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 1418500000.0,
+              "fmt": "1.42B"
+            }
+          },
+          {
+            "dataId": 20057,
+            "asOfDate": "2026-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 2286200000.0,
+              "fmt": "2.29B"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "HDFCLIFE.NS"
+          ],
+          "type": [
+            "annualTotalPremiumsEarned"
+          ]
+        },
+        "timestamp": [
+          1680220800,
+          1711843200,
+          1743379200,
+          1774915200
+        ],
+        "annualTotalPremiumsEarned": [
+          {
+            "dataId": 20135,
+            "asOfDate": "2023-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 568787795000.0,
+              "fmt": "568.79B"
+            }
+          },
+          {
+            "dataId": 20135,
+            "asOfDate": "2024-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 621120500000.0,
+              "fmt": "621.12B"
+            },
+            "businessSegmentData": [
+              {
+                "dataValue": 51604200000.0,
+                "segmentType": "Business",
+                "segmentName": "Non Participating - Individual & Group Annuity",
+                "isPrimarySegment": 0
+              },
+              {
+                "dataValue": 327300000.0,
+                "segmentType": "Business",
+                "segmentName": "Non Participating - Individual & Group Health",
+                "isPrimarySegment": 0
+              },
+              {
+                "dataValue": 268011400000.0,
+                "segmentType": "Business",
+                "segmentName": "Non Participating - Individual & Group Life",
+                "isPrimarySegment": 0
+              },
+              {
+                "dataValue": 7020000000.0,
+                "segmentType": "Business",
+                "segmentName": "Non Participating - Individual & Group Pension",
+                "isPrimarySegment": 0
+              },
+              {
+                "dataValue": 5438100000.0,
+                "segmentType": "Business",
+                "segmentName": "Non Participating - Individual & Group Pension Variable",
+                "isPrimarySegment": 0
+              },
+              {
+                "dataValue": 5745000000.0,
+                "segmentType": "Business",
+                "segmentName": "Non Participating - Life Group Variable",
+                "isPrimarySegment": 0
+              },
+              {
+                "dataValue": 132204100000.0,
+                "segmentType": "Business",
+                "segmentName": "Participating - Individual & Group Life",
+                "isPrimarySegment": 0
+              },
+              {
+                "dataValue": 2179700000.0,
+                "segmentType": "Business",
+                "segmentName": "Participating - Individual & Group Pension",
+                "isPrimarySegment": 0
+              },
+              {
+                "dataValue": 1477600000.0,
+                "segmentType": "Business",
+                "segmentName": "Reinsurance",
+                "isPrimarySegment": 0
+              },
+              {
+                "dataValue": 17102900000.0,
+                "segmentType": "Business",
+                "segmentName": "Unit Linked - Group Life",
+                "isPrimarySegment": 0
+              },
+              {
+                "dataValue": 1413000000.0,
+                "segmentType": "Business",
+                "segmentName": "Unit Linked - Group Pension",
+                "isPrimarySegment": 0
+              },
+              {
+                "dataValue": 124351700000.0,
+                "segmentType": "Business",
+                "segmentName": "Unit Linked - Individual Life",
+                "isPrimarySegment": 0
+              },
+              {
+                "dataValue": 4245600000.0,
+                "segmentType": "Business",
+                "segmentName": "Unit Linked - Individual Pension",
+                "isPrimarySegment": 0
+              }
+            ]
+          },
+          {
+            "dataId": 20135,
+            "asOfDate": "2025-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 698369700000.0,
+              "fmt": "698.37B"
+            }
+          },
+          {
+            "dataId": 20135,
+            "asOfDate": "2026-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 777604900000.0,
+              "fmt": "777.60B"
+            },
+            "businessSegmentData": [
+              {
+                "dataValue": 15318800000.0,
+                "segmentType": "Business",
+                "segmentName": "Non Participating - Individual & Group Annuity",
+                "isPrimarySegment": 0
+              },
+              {
+                "dataValue": 287400000.0,
+                "segmentType": "Business",
+                "segmentName": "Non Participating - Individual & Group Health",
+                "isPrimarySegment": 0
+              },
+              {
+                "dataValue": 294914500000.0,
+                "segmentType": "Business",
+                "segmentName": "Non Participating - Individual & Group Life",
+                "isPrimarySegment": 0
+              },
+              {
+                "dataValue": 5492200000.0,
+                "segmentType": "Business",
+                "segmentName": "Non Participating - Individual & Group Pension",
+                "isPrimarySegment": 0
+              },
+              {
+                "dataValue": 6800600000.0,
+                "segmentType": "Business",
+                "segmentName": "Non Participating - Individual & Group Pension Variable",
+                "isPrimarySegment": 0
+              },
+              {
+                "dataValue": 9634700000.0,
+                "segmentType": "Business",
+                "segmentName": "Non Participating - Life Group Variable",
+                "isPrimarySegment": 0
+              },
+              {
+                "dataValue": 143768200000.0,
+                "segmentType": "Business",
+                "segmentName": "Participating - Individual & Group Life",
+                "isPrimarySegment": 0
+              },
+              {
+                "dataValue": 9707100000.0,
+                "segmentType": "Business",
+                "segmentName": "Participating - Individual & Group Pension",
+                "isPrimarySegment": 0
+              },
+              {
+                "dataValue": 3395200000.0,
+                "segmentType": "Business",
+                "segmentName": "Reinsurance",
+                "isPrimarySegment": 0
+              },
+              {
+                "dataValue": 41476500000.0,
+                "segmentType": "Business",
+                "segmentName": "Unit Linked - Group Life",
+                "isPrimarySegment": 0
+              },
+              {
+                "dataValue": 3113300000.0,
+                "segmentType": "Business",
+                "segmentName": "Unit Linked - Group Pension",
+                "isPrimarySegment": 0
+              },
+              {
+                "dataValue": 186325900000.0,
+                "segmentType": "Business",
+                "segmentName": "Unit Linked - Individual Life",
+                "isPrimarySegment": 0
+              },
+              {
+                "dataValue": 11205100000.0,
+                "segmentType": "Business",
+                "segmentName": "Unit Linked - Individual Pension",
+                "isPrimarySegment": 0
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "HDFCLIFE.NS"
+          ],
+          "type": [
+            "annualDilutedEPS"
+          ]
+        },
+        "timestamp": [
+          1680220800,
+          1711843200,
+          1743379200,
+          1774915200
+        ],
+        "annualDilutedEPS": [
+          {
+            "dataId": 29009,
+            "asOfDate": "2023-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 6.41,
+              "fmt": "6.41"
+            }
+          },
+          {
+            "dataId": 29009,
+            "asOfDate": "2024-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 7.31,
+              "fmt": "7.31"
+            }
+          },
+          {
+            "dataId": 29009,
+            "asOfDate": "2025-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 8.41,
+              "fmt": "8.41"
+            }
+          },
+          {
+            "dataId": 29009,
+            "asOfDate": "2026-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 8.86,
+              "fmt": "8.86"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "HDFCLIFE.NS"
+          ],
+          "type": [
+            "annualTaxProvision"
+          ]
+        },
+        "timestamp": [
+          1680220800,
+          1711843200,
+          1743379200,
+          1774915200
+        ],
+        "annualTaxProvision": [
+          {
+            "dataId": 20145,
+            "asOfDate": "2023-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": -860675000.0,
+              "fmt": "-860.67M"
+            }
+          },
+          {
+            "dataId": 20145,
+            "asOfDate": "2024-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": -44100000.0,
+              "fmt": "-44.10M"
+            }
+          },
+          {
+            "dataId": 20145,
+            "asOfDate": "2025-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 671200000.0,
+              "fmt": "671.20M"
+            }
+          },
+          {
+            "dataId": 20145,
+            "asOfDate": "2026-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 500100000.0,
+              "fmt": "500.10M"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "HDFCLIFE.NS"
+          ],
+          "type": [
+            "annualNetInterestIncome"
+          ]
+        },
+        "timestamp": [
+          1680220800,
+          1711843200,
+          1743379200,
+          1774915200
+        ],
+        "annualNetInterestIncome": [
+          {
+            "dataId": 20095,
+            "asOfDate": "2023-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": -1132816000.0,
+              "fmt": "-1.13B"
+            }
+          },
+          {
+            "dataId": 20095,
+            "asOfDate": "2024-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": -1119100000.0,
+              "fmt": "-1.12B"
+            }
+          },
+          {
+            "dataId": 20095,
+            "asOfDate": "2025-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": -1418500000.0,
+              "fmt": "-1.42B"
+            }
+          },
+          {
+            "dataId": 20095,
+            "asOfDate": "2026-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": -2286200000.0,
+              "fmt": "-2.29B"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "HDFCLIFE.NS"
+          ],
+          "type": [
+            "annualReconciledDepreciation"
+          ]
+        },
+        "timestamp": [
+          1680220800,
+          1711843200,
+          1743379200,
+          1774915200
+        ],
+        "annualReconciledDepreciation": [
+          {
+            "dataId": 20315,
+            "asOfDate": "2023-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 759288000.0,
+              "fmt": "759.29M"
+            }
+          },
+          {
+            "dataId": 20315,
+            "asOfDate": "2024-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 787500000.0,
+              "fmt": "787.50M"
+            }
+          },
+          {
+            "dataId": 20315,
+            "asOfDate": "2025-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 1039300000.0,
+              "fmt": "1.04B"
+            }
+          },
+          {
+            "dataId": 20315,
+            "asOfDate": "2026-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 1606400000.0,
+              "fmt": "1.61B"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "HDFCLIFE.NS"
+          ],
+          "type": [
+            "annualTotalRevenue"
+          ]
+        },
+        "timestamp": [
+          1680220800,
+          1711843200,
+          1743379200,
+          1774915200
+        ],
+        "annualTotalRevenue": [
+          {
+            "dataId": 20100,
+            "asOfDate": "2023-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 702463154000.0,
+              "fmt": "702.46B"
+            }
+          },
+          {
+            "dataId": 20100,
+            "asOfDate": "2024-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 958232700000.0,
+              "fmt": "958.23B"
+            }
+          },
+          {
+            "dataId": 20100,
+            "asOfDate": "2025-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 900685300000.0,
+              "fmt": "900.69B"
+            }
+          },
+          {
+            "dataId": 20100,
+            "asOfDate": "2026-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 916062200000.0,
+              "fmt": "916.06B"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "HDFCLIFE.NS"
+          ],
+          "type": [
+            "annualEBITDA"
+          ]
+        }
+      },
+      {
+        "meta": {
+          "symbol": [
+            "HDFCLIFE.NS"
+          ],
+          "type": [
+            "annualNonInterestIncome"
+          ]
+        }
+      },
+      {
+        "meta": {
+          "symbol": [
+            "HDFCLIFE.NS"
+          ],
+          "type": [
+            "annualOperatingIncome"
+          ]
+        }
+      },
+      {
+        "meta": {
+          "symbol": [
+            "HDFCLIFE.NS"
+          ],
+          "type": [
+            "annualNonInterestExpense"
+          ]
+        }
+      },
+      {
+        "meta": {
+          "symbol": [
+            "HDFCLIFE.NS"
+          ],
+          "type": [
+            "annualGrossProfit"
+          ]
+        }
+      },
+      {
+        "meta": {
+          "symbol": [
+            "HDFCLIFE.NS"
+          ],
+          "type": [
+            "annualCostOfRevenue"
+          ]
+        }
+      }
+    ],
+    "error": null
+  }
+}

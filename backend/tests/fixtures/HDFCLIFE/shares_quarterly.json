@@ -1,0 +1,145 @@
+{
+  "timeseries": {
+    "result": [
+      {
+        "meta": {
+          "symbol": [
+            "HDFCLIFE.NS"
+          ],
+          "type": [
+            "quarterlyShareIssued"
+          ]
+        },
+        "timestamp": [
+          1743379200,
+          1751241600,
+          1767139200,
+          1774915200,
+          1782777600
+        ],
+        "quarterlyShareIssued": [
+          {
+            "dataId": 23532,
+            "asOfDate": "2025-03-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 2152988187.0,
+              "fmt": "2.15B"
+            }
+          },
+          {
+            "dataId": 23532,
+            "asOfDate": "2025-06-30",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 2154693826.0,
+              "fmt": "2.15B"
+            }
+          },
+          {
+            "dataId": 23532,
+            "asOfDate": "2025-12-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 2157615850.0,
+              "fmt": "2.16B"
+            }
+          },
+          {
+            "dataId": 23532,
+            "asOfDate": "2026-03-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 2157819536.0,
+              "fmt": "2.16B"
+            }
+          },
+          {
+            "dataId": 23532,
+            "asOfDate": "2026-06-30",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 2172474981.0,
+              "fmt": "2.17B"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "HDFCLIFE.NS"
+          ],
+          "type": [
+            "quarterlyOrdinarySharesNumber"
+          ]
+        },
+        "timestamp": [
+          1743379200,
+          1751241600,
+          1767139200,
+          1774915200,
+          1782777600
+        ],
+        "quarterlyOrdinarySharesNumber": [
+          {
+            "dataId": 23393,
+            "asOfDate": "2025-03-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 2152448353.0,
+              "fmt": "2.15B"
+            }
+          },
+          {
+            "dataId": 23393,
+            "asOfDate": "2025-06-30",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 2154153992.0,
+              "fmt": "2.15B"
+            }
+          },
+          {
+            "dataId": 23393,
+            "asOfDate": "2025-12-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 2157076016.0,
+              "fmt": "2.16B"
+            }
+          },
+          {
+            "dataId": 23393,
+            "asOfDate": "2026-03-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 2157279702.0,
+              "fmt": "2.16B"
+            }
+          },
+          {
+            "dataId": 23393,
+            "asOfDate": "2026-06-30",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 2171935147.0,
+              "fmt": "2.17B"
+            }
+          }
+        ]
+      }
+    ],
+    "error": null
+  }
+}

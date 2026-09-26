@@ -1,0 +1,691 @@
+{
+  "timeseries": {
+    "result": [
+      {
+        "meta": {
+          "symbol": [
+            "HDFCBANK.NS"
+          ],
+          "type": [
+            "annualAccountsReceivable"
+          ]
+        },
+        "timestamp": [
+          1680220800,
+          1711843200,
+          1743379200,
+          1774915200
+        ],
+        "annualAccountsReceivable": [
+          {
+            "dataId": 23001,
+            "asOfDate": "2023-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 194533400000.0,
+              "fmt": "194.53B"
+            }
+          },
+          {
+            "dataId": 23001,
+            "asOfDate": "2024-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 249940000000.0,
+              "fmt": "249.94B"
+            }
+          },
+          {
+            "dataId": 23001,
+            "asOfDate": "2025-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 323230700000.0,
+              "fmt": "323.23B"
+            }
+          },
+          {
+            "dataId": 23001,
+            "asOfDate": "2026-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 330247200000.0,
+              "fmt": "330.25B"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "HDFCBANK.NS"
+          ],
+          "type": [
+            "annualStockholdersEquity"
+          ]
+        },
+        "timestamp": [
+          1680220800,
+          1711843200,
+          1743379200,
+          1774915200
+        ],
+        "annualStockholdersEquity": [
+          {
+            "dataId": 23215,
+            "asOfDate": "2023-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 2912200700000.0,
+              "fmt": "2.91T"
+            }
+          },
+          {
+            "dataId": 23215,
+            "asOfDate": "2024-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 6947327400000.0,
+              "fmt": "6.95T"
+            }
+          },
+          {
+            "dataId": 23215,
+            "asOfDate": "2025-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 7676891400000.0,
+              "fmt": "7.68T"
+            }
+          },
+          {
+            "dataId": 23215,
+            "asOfDate": "2026-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 8167395600000.0,
+              "fmt": "8.17T"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "HDFCBANK.NS"
+          ],
+          "type": [
+            "annualTotalDebt"
+          ]
+        },
+        "timestamp": [
+          1680220800,
+          1711843200,
+          1743379200,
+          1774915200
+        ],
+        "annualTotalDebt": [
+          {
+            "dataId": 23386,
+            "asOfDate": "2023-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 3151792800000.0,
+              "fmt": "3.15T"
+            }
+          },
+          {
+            "dataId": 23386,
+            "asOfDate": "2024-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 8093552100000.0,
+              "fmt": "8.09T"
+            }
+          },
+          {
+            "dataId": 23386,
+            "asOfDate": "2025-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 7326106100000.0,
+              "fmt": "7.33T"
+            }
+          },
+          {
+            "dataId": 23386,
+            "asOfDate": "2026-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 6643640400000.0,
+              "fmt": "6.64T"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "HDFCBANK.NS"
+          ],
+          "type": [
+            "annualTotalLiabilitiesNetMinorityInterest"
+          ]
+        },
+        "timestamp": [
+          1680220800,
+          1711843200,
+          1743379200,
+          1774915200
+        ],
+        "annualTotalLiabilitiesNetMinorityInterest": [
+          {
+            "dataId": 23259,
+            "asOfDate": "2023-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 22837786100000.0,
+              "fmt": "22.84T"
+            }
+          },
+          {
+            "dataId": 23259,
+            "asOfDate": "2024-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 36232390200000.0,
+              "fmt": "36.23T"
+            }
+          },
+          {
+            "dataId": 23259,
+            "asOfDate": "2025-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 39564780100000.0,
+              "fmt": "39.56T"
+            }
+          },
+          {
+            "dataId": 23259,
+            "asOfDate": "2026-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 43460498500000.0,
+              "fmt": "43.46T"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "HDFCBANK.NS"
+          ],
+          "type": [
+            "annualCashAndCashEquivalents"
+          ]
+        },
+        "timestamp": [
+          1680220800,
+          1711843200,
+          1743379200,
+          1774915200
+        ],
+        "annualCashAndCashEquivalents": [
+          {
+            "dataId": 23030,
+            "asOfDate": "2023-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 2363920200000.0,
+              "fmt": "2.36T"
+            }
+          },
+          {
+            "dataId": 23030,
+            "asOfDate": "2024-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 3425973300000.0,
+              "fmt": "3.43T"
+            }
+          },
+          {
+            "dataId": 23030,
+            "asOfDate": "2025-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 3222323100000.0,
+              "fmt": "3.22T"
+            }
+          },
+          {
+            "dataId": 23030,
+            "asOfDate": "2026-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 3650673900000.0,
+              "fmt": "3.65T"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "HDFCBANK.NS"
+          ],
+          "type": [
+            "annualTotalAssets"
+          ]
+        },
+        "timestamp": [
+          1680220800,
+          1711843200,
+          1743379200,
+          1774915200
+        ],
+        "annualTotalAssets": [
+          {
+            "dataId": 23220,
+            "asOfDate": "2023-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 25755624000000.0,
+              "fmt": "25.76T"
+            },
+            "businessSegmentData": [
+              {
+                "dataValue": 13599750200000.0,
+                "segmentType": "Business",
+                "segmentName": "Retail Banking",
+                "isPrimarySegment": 1
+              },
+              {
+                "dataValue": 2881464700000.0,
+                "segmentType": "Business",
+                "segmentName": "Treasury",
+                "isPrimarySegment": 0
+              },
+              {
+                "dataValue": 9274409100000.0,
+                "segmentType": "Business",
+                "segmentName": "Wholesale Banking",
+                "isPrimarySegment": 0
+              }
+            ],
+            "geographicSegmentData": [
+              {
+                "dataValue": 25755624000000.0,
+                "segmentType": "Geographic",
+                "segmentName": "India",
+                "isPrimarySegment": 1
+              }
+            ]
+          },
+          {
+            "dataId": 23220,
+            "asOfDate": "2024-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 44118573000000.0,
+              "fmt": "44.12T"
+            },
+            "businessSegmentData": [
+              {
+                "dataValue": 4387398100000.0,
+                "segmentType": "Business",
+                "segmentName": "Insurance Business",
+                "isPrimarySegment": 0
+              },
+              {
+                "dataValue": 4387398100000.0,
+                "segmentType": "Business",
+                "segmentName": "Insurance Services",
+                "isPrimarySegment": 0
+              },
+              {
+                "dataValue": 608678600000.0,
+                "segmentType": "Business",
+                "segmentName": "Others",
+                "isPrimarySegment": 0
+              },
+              {
+                "dataValue": 23256928800000.0,
+                "segmentType": "Business",
+                "segmentName": "Retail Banking",
+                "isPrimarySegment": 1
+              },
+              {
+                "dataValue": 2731823500000.0,
+                "segmentType": "Business",
+                "segmentName": "Treasury",
+                "isPrimarySegment": 0
+              },
+              {
+                "dataValue": 2731823500000.0,
+                "segmentType": "Business",
+                "segmentName": "Treasury Services",
+                "isPrimarySegment": 0
+              },
+              {
+                "dataValue": 13133744000000.0,
+                "segmentType": "Business",
+                "segmentName": "Wholesale Banking",
+                "isPrimarySegment": 0
+              }
+            ],
+            "geographicSegmentData": [
+              {
+                "dataValue": 44118573000000.0,
+                "segmentType": "Geographic",
+                "segmentName": "India",
+                "isPrimarySegment": 1
+              }
+            ]
+          },
+          {
+            "dataId": 23220,
+            "asOfDate": "2025-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 48187671100000.0,
+              "fmt": "48.19T"
+            },
+            "businessSegmentData": [
+              {
+                "dataValue": 4917053500000.0,
+                "segmentType": "Business",
+                "segmentName": "Insurance Business",
+                "isPrimarySegment": 0
+              },
+              {
+                "dataValue": 4917053500000.0,
+                "segmentType": "Business",
+                "segmentName": "Insurance Services",
+                "isPrimarySegment": 0
+              },
+              {
+                "dataValue": 620876400000.0,
+                "segmentType": "Business",
+                "segmentName": "Others",
+                "isPrimarySegment": 0
+              },
+              {
+                "dataValue": 25660856300000.0,
+                "segmentType": "Business",
+                "segmentName": "Retail Banking",
+                "isPrimarySegment": 1
+              },
+              {
+                "dataValue": 3204355400000.0,
+                "segmentType": "Business",
+                "segmentName": "Treasury",
+                "isPrimarySegment": 0
+              },
+              {
+                "dataValue": 3204355400000.0,
+                "segmentType": "Business",
+                "segmentName": "Treasury Services",
+                "isPrimarySegment": 0
+              },
+              {
+                "dataValue": 13784529500000.0,
+                "segmentType": "Business",
+                "segmentName": "Wholesale Banking",
+                "isPrimarySegment": 0
+              }
+            ],
+            "geographicSegmentData": [
+              {
+                "dataValue": 48187671100000.0,
+                "segmentType": "Geographic",
+                "segmentName": "India",
+                "isPrimarySegment": 1
+              }
+            ]
+          },
+          {
+            "dataId": 23220,
+            "asOfDate": "2026-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 52621193200000.0,
+              "fmt": "52.62T"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "HDFCBANK.NS"
+          ],
+          "type": [
+            "annualPayables"
+          ]
+        },
+        "timestamp": [
+          1680220800,
+          1711843200,
+          1743379200,
+          1774915200
+        ],
+        "annualPayables": [
+          {
+            "dataId": 23165,
+            "asOfDate": "2023-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 437291100000.0,
+              "fmt": "437.29B"
+            }
+          },
+          {
+            "dataId": 23165,
+            "asOfDate": "2024-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 670939100000.0,
+              "fmt": "670.94B"
+            }
+          },
+          {
+            "dataId": 23165,
+            "asOfDate": "2025-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 713379600000.0,
+              "fmt": "713.38B"
+            }
+          },
+          {
+            "dataId": 23165,
+            "asOfDate": "2026-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 799128100000.0,
+              "fmt": "799.13B"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "HDFCBANK.NS"
+          ],
+          "type": [
+            "annualOrdinarySharesNumber"
+          ]
+        },
+        "timestamp": [
+          1680220800,
+          1711843200,
+          1743379200,
+          1774915200
+        ],
+        "annualOrdinarySharesNumber": [
+          {
+            "dataId": 23393,
+            "asOfDate": "2023-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 11159485572.0,
+              "fmt": "11.16B"
+            }
+          },
+          {
+            "dataId": 23393,
+            "asOfDate": "2024-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 15193797254.0,
+              "fmt": "15.19B"
+            }
+          },
+          {
+            "dataId": 23393,
+            "asOfDate": "2025-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 15304409210.0,
+              "fmt": "15.30B"
+            }
+          },
+          {
+            "dataId": 23393,
+            "asOfDate": "2026-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 15393260762.0,
+              "fmt": "15.39B"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "HDFCBANK.NS"
+          ],
+          "type": [
+            "annualNetPPE"
+          ]
+        },
+        "timestamp": [
+          1680220800,
+          1711843200,
+          1743379200,
+          1774915200
+        ],
+        "annualNetPPE": [
+          {
+            "dataId": 23139,
+            "asOfDate": "2023-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 177559000000.0,
+              "fmt": "177.56B"
+            }
+          },
+          {
+            "dataId": 23139,
+            "asOfDate": "2024-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 268332900000.0,
+              "fmt": "268.33B"
+            }
+          },
+          {
+            "dataId": 23139,
+            "asOfDate": "2025-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 314735300000.0,
+              "fmt": "314.74B"
+            }
+          },
+          {
+            "dataId": 23139,
+            "asOfDate": "2026-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 339807800000.0,
+              "fmt": "339.81B"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "HDFCBANK.NS"
+          ],
+          "type": [
+            "annualCurrentLiabilities"
+          ]
+        }
+      },
+      {
+        "meta": {
+          "symbol": [
+            "HDFCBANK.NS"
+          ],
+          "type": [
+            "annualCurrentAssets"
+          ]
+        }
+      },
+      {
+        "meta": {
+          "symbol": [
+            "HDFCBANK.NS"
+          ],
+          "type": [
+            "annualInventory"
+          ]
+        }
+      }
+    ],
+    "error": null
+  }
+}

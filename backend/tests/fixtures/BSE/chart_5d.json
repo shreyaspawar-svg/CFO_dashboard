@@ -1,0 +1,130 @@
+{
+  "chart": {
+    "result": [
+      {
+        "meta": {
+          "currency": "INR",
+          "symbol": "BSE.NS",
+          "exchangeName": "NSI",
+          "fullExchangeName": "NSE",
+          "instrumentType": "EQUITY",
+          "firstTradeDate": 1486093500,
+          "regularMarketTime": 1790329500,
+          "hasPrePostMarketData": false,
+          "gmtoffset": 19800,
+          "timezone": "IST",
+          "exchangeTimezoneName": "Asia/Kolkata",
+          "regularMarketPrice": 3191.5,
+          "regularMarketChangePercent": 0.242,
+          "fulldayPrice": 3191.5,
+          "fulldayChange": 7.7,
+          "fulldayChangePercent": 0.242,
+          "fiftyTwoWeekHigh": 4446.8,
+          "fiftyTwoWeekLow": 2035.1,
+          "regularMarketDayHigh": 3209.7,
+          "regularMarketDayLow": 3155.3,
+          "regularMarketVolume": 4500591,
+          "longName": "BSE Limited",
+          "shortName": "BSE LIMITED",
+          "chartPreviousClose": 3161.0,
+          "priceHint": 2,
+          "currentTradingPeriod": {
+            "pre": {
+              "timezone": "IST",
+              "start": 1790307900,
+              "end": 1790307900,
+              "gmtoffset": 19800
+            },
+            "regular": {
+              "timezone": "IST",
+              "start": 1790307900,
+              "end": 1790330400,
+              "gmtoffset": 19800
+            },
+            "post": {
+              "timezone": "IST",
+              "start": 1790330400,
+              "end": 1790330400,
+              "gmtoffset": 19800
+            }
+          },
+          "dataGranularity": "1d",
+          "range": "5d",
+          "validRanges": [
+            "1d",
+            "5d",
+            "1mo",
+            "3mo",
+            "6mo",
+            "1y",
+            "2y",
+            "5y",
+            "10y",
+            "ytd",
+            "max"
+          ]
+        },
+        "timestamp": [
+          1789962300,
+          1790048700,
+          1790135100,
+          1790221500,
+          1790307900
+        ],
+        "indicators": {
+          "quote": [
+            {
+              "low": [
+                3085.10009765625,
+                3170.800048828125,
+                3214.199951171875,
+                3175.0,
+                3155.300048828125
+              ],
+              "volume": [
+                6738927,
+                3165566,
+                2796681,
+                5659943,
+                4501619
+              ],
+              "high": [
+                3258.0,
+                3254.0,
+                3280.0,
+                3308.0,
+                3209.699951171875
+              ],
+              "open": [
+                3258.0,
+                3170.800048828125,
+                3249.0,
+                3235.0,
+                3206.10009765625
+              ],
+              "close": [
+                3161.0,
+                3235.0,
+                3270.699951171875,
+                3183.800048828125,
+                3191.5
+              ]
+            }
+          ],
+          "adjclose": [
+            {
+              "adjclose": [
+                3161.0,
+                3235.0,
+                3270.699951171875,
+                3183.800048828125,
+                3191.5
+              ]
+            }
+          ]
+        }
+      }
+    ],
+    "error": null
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "timeseries": {
+    "result": [
+      {
+        "meta": {
+          "symbol": [
+            "BSE.NS"
+          ],
+          "type": [
+            "quarterlyFinancingCashFlow"
+          ]
+        }
+      },
+      {
+        "meta": {
+          "symbol": [
+            "BSE.NS"
+          ],
+          "type": [
+            "quarterlyInvestingCashFlow"
+          ]
+        }
+      },
+      {
+        "meta": {
+          "symbol": [
+            "BSE.NS"
+          ],
+          "type": [
+            "quarterlyOperatingCashFlow"
+          ]
+        }
+      },
+      {
+        "meta": {
+          "symbol": [
+            "BSE.NS"
+          ],
+          "type": [
+            "quarterlyCapitalExpenditure"
+          ]
+        }
+      },
+      {
+        "meta": {
+          "symbol": [
+            "BSE.NS"
+          ],
+          "type": [
+            "quarterlyFreeCashFlow"
+          ]
+        }
+      }
+    ],
+    "error": null
+  }
+}

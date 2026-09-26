@@ -1,0 +1,101 @@
+{
+  "timeseries": {
+    "result": [
+      {
+        "meta": {
+          "symbol": [
+            "BAJFINANCE.NS"
+          ],
+          "type": [
+            "quarterlyShareIssued"
+          ]
+        },
+        "timestamp": [
+          1743379200,
+          1759190400,
+          1774915200
+        ],
+        "quarterlyShareIssued": [
+          {
+            "dataId": 23532,
+            "asOfDate": "2025-03-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 6214286520.0,
+              "fmt": "6.21B"
+            }
+          },
+          {
+            "dataId": 23532,
+            "asOfDate": "2025-09-30",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 6222481865.0,
+              "fmt": "6.22B"
+            }
+          },
+          {
+            "dataId": 23532,
+            "asOfDate": "2026-03-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 6222481865.0,
+              "fmt": "6.22B"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "BAJFINANCE.NS"
+          ],
+          "type": [
+            "quarterlyOrdinarySharesNumber"
+          ]
+        },
+        "timestamp": [
+          1743379200,
+          1759190400,
+          1774915200
+        ],
+        "quarterlyOrdinarySharesNumber": [
+          {
+            "dataId": 23393,
+            "asOfDate": "2025-03-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 6208123640.0,
+              "fmt": "6.21B"
+            }
+          },
+          {
+            "dataId": 23393,
+            "asOfDate": "2025-09-30",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 6215134963.0,
+              "fmt": "6.22B"
+            }
+          },
+          {
+            "dataId": 23393,
+            "asOfDate": "2026-03-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 6217876336.0,
+              "fmt": "6.22B"
+            }
+          }
+        ]
+      }
+    ],
+    "error": null
+  }
+}

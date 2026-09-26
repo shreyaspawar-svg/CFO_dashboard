@@ -1,0 +1,130 @@
+{
+  "chart": {
+    "result": [
+      {
+        "meta": {
+          "currency": "INR",
+          "symbol": "HDFCBANK.NS",
+          "exchangeName": "NSI",
+          "fullExchangeName": "NSE",
+          "instrumentType": "EQUITY",
+          "firstTradeDate": 820467900,
+          "regularMarketTime": 1790329500,
+          "hasPrePostMarketData": false,
+          "gmtoffset": 19800,
+          "timezone": "IST",
+          "exchangeTimezoneName": "Asia/Kolkata",
+          "regularMarketPrice": 735.6,
+          "regularMarketChangePercent": 0.919,
+          "fulldayPrice": 735.6,
+          "fulldayChange": 6.7,
+          "fulldayChangePercent": 0.919,
+          "fiftyTwoWeekHigh": 1020.5,
+          "fiftyTwoWeekLow": 681.9,
+          "regularMarketDayHigh": 739.65,
+          "regularMarketDayLow": 723.0,
+          "regularMarketVolume": 19849831,
+          "longName": "HDFC Bank Limited",
+          "shortName": "HDFC BANK LTD",
+          "chartPreviousClose": 739.5,
+          "priceHint": 2,
+          "currentTradingPeriod": {
+            "pre": {
+              "timezone": "IST",
+              "start": 1790307900,
+              "end": 1790307900,
+              "gmtoffset": 19800
+            },
+            "regular": {
+              "timezone": "IST",
+              "start": 1790307900,
+              "end": 1790330400,
+              "gmtoffset": 19800
+            },
+            "post": {
+              "timezone": "IST",
+              "start": 1790330400,
+              "end": 1790330400,
+              "gmtoffset": 19800
+            }
+          },
+          "dataGranularity": "1d",
+          "range": "5d",
+          "validRanges": [
+            "1d",
+            "5d",
+            "1mo",
+            "3mo",
+            "6mo",
+            "1y",
+            "2y",
+            "5y",
+            "10y",
+            "ytd",
+            "max"
+          ]
+        },
+        "timestamp": [
+          1789962300,
+          1790048700,
+          1790135100,
+          1790221500,
+          1790307900
+        ],
+        "indicators": {
+          "quote": [
+            {
+              "volume": [
+                35482683,
+                35483669,
+                23197231,
+                29575194,
+                19853034
+              ],
+              "low": [
+                729.0499877929688,
+                738.5999755859375,
+                734.0,
+                722.7000122070312,
+                723.0
+              ],
+              "close": [
+                739.5,
+                738.5999755859375,
+                737.25,
+                728.9000244140625,
+                735.5999755859375
+              ],
+              "high": [
+                742.6500244140625,
+                749.2999877929688,
+                742.7999877929688,
+                734.8499755859375,
+                739.6500244140625
+              ],
+              "open": [
+                731.0,
+                738.8499755859375,
+                735.6500244140625,
+                725.0,
+                723.0
+              ]
+            }
+          ],
+          "adjclose": [
+            {
+              "adjclose": [
+                739.5,
+                738.5999755859375,
+                737.25,
+                728.9000244140625,
+                735.5999755859375
+              ]
+            }
+          ]
+        }
+      }
+    ],
+    "error": null
+  }
+}

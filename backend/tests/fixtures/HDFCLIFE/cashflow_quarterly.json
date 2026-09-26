@@ -1,0 +1,57 @@
+{
+  "timeseries": {
+    "result": [
+      {
+        "meta": {
+          "symbol": [
+            "HDFCLIFE.NS"
+          ],
+          "type": [
+            "quarterlyFinancingCashFlow"
+          ]
+        }
+      },
+      {
+        "meta": {
+          "symbol": [
+            "HDFCLIFE.NS"
+          ],
+          "type": [
+            "quarterlyInvestingCashFlow"
+          ]
+        }
+      },
+      {
+        "meta": {
+          "symbol": [
+            "HDFCLIFE.NS"
+          ],
+          "type": [
+            "quarterlyOperatingCashFlow"
+          ]
+        }
+      },
+      {
+        "meta": {
+          "symbol": [
+            "HDFCLIFE.NS"
+          ],
+          "type": [
+            "quarterlyCapitalExpenditure"
+          ]
+        }
+      },
+      {
+        "meta": {
+          "symbol": [
+            "HDFCLIFE.NS"
+          ],
+          "type": [
+            "quarterlyFreeCashFlow"
+          ]
+        }
+      }
+    ],
+    "error": null
+  }
+}

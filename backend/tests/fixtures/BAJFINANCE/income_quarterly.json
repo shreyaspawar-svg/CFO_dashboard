@@ -1,0 +1,836 @@
+{
+  "timeseries": {
+    "result": [
+      {
+        "meta": {
+          "symbol": [
+            "BAJFINANCE.NS"
+          ],
+          "type": [
+            "quarterlyNetIncome"
+          ]
+        },
+        "timestamp": [
+          1751241600,
+          1759190400,
+          1767139200,
+          1774915200,
+          1782777600
+        ],
+        "quarterlyNetIncome": [
+          {
+            "dataId": 20091,
+            "asOfDate": "2025-06-30",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 46996100000.0,
+              "fmt": "47.00B"
+            }
+          },
+          {
+            "dataId": 20091,
+            "asOfDate": "2025-09-30",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 48753600000.0,
+              "fmt": "48.75B"
+            }
+          },
+          {
+            "dataId": 20091,
+            "asOfDate": "2025-12-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 39778500000.0,
+              "fmt": "39.78B"
+            }
+          },
+          {
+            "dataId": 20091,
+            "asOfDate": "2026-03-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 54645700000.0,
+              "fmt": "54.65B"
+            }
+          },
+          {
+            "dataId": 20091,
+            "asOfDate": "2026-06-30",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 59857500000.0,
+              "fmt": "59.86B"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "BAJFINANCE.NS"
+          ],
+          "type": [
+            "quarterlyNetInterestIncome"
+          ]
+        },
+        "timestamp": [
+          1751241600,
+          1759190400,
+          1767139200,
+          1774915200,
+          1782777600
+        ],
+        "quarterlyNetInterestIncome": [
+          {
+            "dataId": 20095,
+            "asOfDate": "2025-06-30",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 102277900000.0,
+              "fmt": "102.28B"
+            }
+          },
+          {
+            "dataId": 20095,
+            "asOfDate": "2025-09-30",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 107846900000.0,
+              "fmt": "107.85B"
+            }
+          },
+          {
+            "dataId": 20095,
+            "asOfDate": "2025-12-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 113177800000.0,
+              "fmt": "113.18B"
+            }
+          },
+          {
+            "dataId": 20095,
+            "asOfDate": "2026-03-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 117806200000.0,
+              "fmt": "117.81B"
+            }
+          },
+          {
+            "dataId": 20095,
+            "asOfDate": "2026-06-30",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 125706400000.0,
+              "fmt": "125.71B"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "BAJFINANCE.NS"
+          ],
+          "type": [
+            "quarterlyPretaxIncome"
+          ]
+        },
+        "timestamp": [
+          1751241600,
+          1759190400,
+          1767139200,
+          1774915200,
+          1782777600
+        ],
+        "quarterlyPretaxIncome": [
+          {
+            "dataId": 20136,
+            "asOfDate": "2025-06-30",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 63675800000.0,
+              "fmt": "63.68B"
+            }
+          },
+          {
+            "dataId": 20136,
+            "asOfDate": "2025-09-30",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 66081300000.0,
+              "fmt": "66.08B"
+            }
+          },
+          {
+            "dataId": 20136,
+            "asOfDate": "2025-12-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 54311000000.0,
+              "fmt": "54.31B"
+            }
+          },
+          {
+            "dataId": 20136,
+            "asOfDate": "2026-03-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 74098400000.0,
+              "fmt": "74.10B"
+            }
+          },
+          {
+            "dataId": 20136,
+            "asOfDate": "2026-06-30",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 81490000000.0,
+              "fmt": "81.49B"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "BAJFINANCE.NS"
+          ],
+          "type": [
+            "quarterlyInterestExpense"
+          ]
+        },
+        "timestamp": [
+          1751241600,
+          1759190400,
+          1767139200,
+          1774915200,
+          1782777600
+        ],
+        "quarterlyInterestExpense": [
+          {
+            "dataId": 20057,
+            "asOfDate": "2025-06-30",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 69168600000.0,
+              "fmt": "69.17B"
+            }
+          },
+          {
+            "dataId": 20057,
+            "asOfDate": "2025-09-30",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 70112800000.0,
+              "fmt": "70.11B"
+            }
+          },
+          {
+            "dataId": 20057,
+            "asOfDate": "2025-12-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 73387100000.0,
+              "fmt": "73.39B"
+            }
+          },
+          {
+            "dataId": 20057,
+            "asOfDate": "2026-03-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 73982800000.0,
+              "fmt": "73.98B"
+            }
+          },
+          {
+            "dataId": 20057,
+            "asOfDate": "2026-06-30",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 79420900000.0,
+              "fmt": "79.42B"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "BAJFINANCE.NS"
+          ],
+          "type": [
+            "quarterlyTaxProvision"
+          ]
+        },
+        "timestamp": [
+          1751241600,
+          1759190400,
+          1767139200,
+          1774915200,
+          1782777600
+        ],
+        "quarterlyTaxProvision": [
+          {
+            "dataId": 20145,
+            "asOfDate": "2025-06-30",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 16022900000.0,
+              "fmt": "16.02B"
+            }
+          },
+          {
+            "dataId": 20145,
+            "asOfDate": "2025-09-30",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 16603700000.0,
+              "fmt": "16.60B"
+            }
+          },
+          {
+            "dataId": 20145,
+            "asOfDate": "2025-12-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 13650900000.0,
+              "fmt": "13.65B"
+            }
+          },
+          {
+            "dataId": 20145,
+            "asOfDate": "2026-03-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 18565400000.0,
+              "fmt": "18.57B"
+            }
+          },
+          {
+            "dataId": 20145,
+            "asOfDate": "2026-06-30",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 20684000000.0,
+              "fmt": "20.68B"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "BAJFINANCE.NS"
+          ],
+          "type": [
+            "quarterlyDilutedEPS"
+          ]
+        },
+        "timestamp": [
+          1751241600,
+          1759190400,
+          1767139200,
+          1774915200,
+          1782777600
+        ],
+        "quarterlyDilutedEPS": [
+          {
+            "dataId": 29009,
+            "asOfDate": "2025-06-30",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 7.55,
+              "fmt": "7.55"
+            }
+          },
+          {
+            "dataId": 29009,
+            "asOfDate": "2025-09-30",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 7.83,
+              "fmt": "7.83"
+            }
+          },
+          {
+            "dataId": 29009,
+            "asOfDate": "2025-12-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 6.38,
+              "fmt": "6.38"
+            }
+          },
+          {
+            "dataId": 29009,
+            "asOfDate": "2026-03-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 8.76,
+              "fmt": "8.76"
+            }
+          },
+          {
+            "dataId": 29009,
+            "asOfDate": "2026-06-30",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 9.6,
+              "fmt": "9.60"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "BAJFINANCE.NS"
+          ],
+          "type": [
+            "quarterlyBasicEPS"
+          ]
+        },
+        "timestamp": [
+          1751241600,
+          1759190400,
+          1767139200,
+          1774915200,
+          1782777600
+        ],
+        "quarterlyBasicEPS": [
+          {
+            "dataId": 29004,
+            "asOfDate": "2025-06-30",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 7.57,
+              "fmt": "7.57"
+            }
+          },
+          {
+            "dataId": 29004,
+            "asOfDate": "2025-09-30",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 7.85,
+              "fmt": "7.85"
+            }
+          },
+          {
+            "dataId": 29004,
+            "asOfDate": "2025-12-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 6.4,
+              "fmt": "6.40"
+            }
+          },
+          {
+            "dataId": 29004,
+            "asOfDate": "2026-03-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 8.79,
+              "fmt": "8.79"
+            }
+          },
+          {
+            "dataId": 29004,
+            "asOfDate": "2026-06-30",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 9.62,
+              "fmt": "9.62"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "BAJFINANCE.NS"
+          ],
+          "type": [
+            "quarterlyInterestIncome"
+          ]
+        },
+        "timestamp": [
+          1751241600,
+          1759190400,
+          1767139200,
+          1774915200,
+          1782777600
+        ],
+        "quarterlyInterestIncome": [
+          {
+            "dataId": 20177,
+            "asOfDate": "2025-06-30",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 171446500000.0,
+              "fmt": "171.45B"
+            }
+          },
+          {
+            "dataId": 20177,
+            "asOfDate": "2025-09-30",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 177959700000.0,
+              "fmt": "177.96B"
+            }
+          },
+          {
+            "dataId": 20177,
+            "asOfDate": "2025-12-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 186564900000.0,
+              "fmt": "186.56B"
+            }
+          },
+          {
+            "dataId": 20177,
+            "asOfDate": "2026-03-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 191789000000.0,
+              "fmt": "191.79B"
+            }
+          },
+          {
+            "dataId": 20177,
+            "asOfDate": "2026-06-30",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 205127300000.0,
+              "fmt": "205.13B"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "BAJFINANCE.NS"
+          ],
+          "type": [
+            "quarterlyNonInterestIncome"
+          ]
+        },
+        "timestamp": [
+          1751241600,
+          1759190400,
+          1767139200,
+          1774915200,
+          1782777600
+        ],
+        "quarterlyNonInterestIncome": [
+          {
+            "dataId": 20106,
+            "asOfDate": "2025-06-30",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 14642900000.0,
+              "fmt": "14.64B"
+            }
+          },
+          {
+            "dataId": 20106,
+            "asOfDate": "2025-09-30",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 15490700000.0,
+              "fmt": "15.49B"
+            }
+          },
+          {
+            "dataId": 20106,
+            "asOfDate": "2025-12-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 15487600000.0,
+              "fmt": "15.49B"
+            }
+          },
+          {
+            "dataId": 20106,
+            "asOfDate": "2026-03-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 13820400000.0,
+              "fmt": "13.82B"
+            }
+          },
+          {
+            "dataId": 20106,
+            "asOfDate": "2026-06-30",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 16002500000.0,
+              "fmt": "16.00B"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "BAJFINANCE.NS"
+          ],
+          "type": [
+            "quarterlyTotalRevenue"
+          ]
+        },
+        "timestamp": [
+          1751241600,
+          1759190400,
+          1767139200,
+          1774915200,
+          1782777600
+        ],
+        "quarterlyTotalRevenue": [
+          {
+            "dataId": 20100,
+            "asOfDate": "2025-06-30",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 116920800000.0,
+              "fmt": "116.92B"
+            }
+          },
+          {
+            "dataId": 20100,
+            "asOfDate": "2025-09-30",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 123337600000.0,
+              "fmt": "123.34B"
+            }
+          },
+          {
+            "dataId": 20100,
+            "asOfDate": "2025-12-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 128665400000.0,
+              "fmt": "128.67B"
+            }
+          },
+          {
+            "dataId": 20100,
+            "asOfDate": "2026-03-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 131626600000.0,
+              "fmt": "131.63B"
+            }
+          },
+          {
+            "dataId": 20100,
+            "asOfDate": "2026-06-30",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 141708900000.0,
+              "fmt": "141.71B"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "BAJFINANCE.NS"
+          ],
+          "type": [
+            "quarterlyReconciledDepreciation"
+          ]
+        },
+        "timestamp": [
+          1751241600,
+          1759190400,
+          1767139200,
+          1774915200,
+          1782777600
+        ],
+        "quarterlyReconciledDepreciation": [
+          {
+            "dataId": 20315,
+            "asOfDate": "2025-06-30",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 2514900000.0,
+              "fmt": "2.51B"
+            }
+          },
+          {
+            "dataId": 20315,
+            "asOfDate": "2025-09-30",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 2580600000.0,
+              "fmt": "2.58B"
+            }
+          },
+          {
+            "dataId": 20315,
+            "asOfDate": "2025-12-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 2439100000.0,
+              "fmt": "2.44B"
+            }
+          },
+          {
+            "dataId": 20315,
+            "asOfDate": "2026-03-31",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 2555200000.0,
+              "fmt": "2.56B"
+            }
+          },
+          {
+            "dataId": 20315,
+            "asOfDate": "2026-06-30",
+            "periodType": "3M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 2875500000.0,
+              "fmt": "2.88B"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "BAJFINANCE.NS"
+          ],
+          "type": [
+            "quarterlyEBITDA"
+          ]
+        }
+      },
+      {
+        "meta": {
+          "symbol": [
+            "BAJFINANCE.NS"
+          ],
+          "type": [
+            "quarterlyGrossProfit"
+          ]
+        }
+      },
+      {
+        "meta": {
+          "symbol": [
+            "BAJFINANCE.NS"
+          ],
+          "type": [
+            "quarterlyCostOfRevenue"
+          ]
+        }
+      },
+      {
+        "meta": {
+          "symbol": [
+            "BAJFINANCE.NS"
+          ],
+          "type": [
+            "quarterlyEBIT"
+          ]
+        }
+      },
+      {
+        "meta": {
+          "symbol": [
+            "BAJFINANCE.NS"
+          ],
+          "type": [
+            "quarterlyOperatingIncome"
+          ]
+        }
+      },
+      {
+        "meta": {
+          "symbol": [
+            "BAJFINANCE.NS"
+          ],
+          "type": [
+            "quarterlyNonInterestExpense"
+          ]
+        }
+      },
+      {
+        "meta": {
+          "symbol": [
+            "BAJFINANCE.NS"
+          ],
+          "type": [
+            "quarterlyTotalPremiumsEarned"
+          ]
+        }
+      }
+    ],
+    "error": null
+  }
+}

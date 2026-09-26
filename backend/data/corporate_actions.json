@@ -1,0 +1,14 @@
+{
+  "TMPV": {
+    "message": "Yahoo's TMPV.NS carries the pre-demerger Tata Motors Limited's trading history (listed since 1991). Periods ending before 2025-04-01 include the commercial-vehicle business and are not comparable to standalone Tata Motors Passenger Vehicles.",
+    "cutoff_period_end": "2025-04-01"
+  },
+  "JIOFIN": {
+    "message": "Jio Financial Services listed on 2023-08-21 after its demerger from Reliance Industries. The period ending 2023-03-31 reflects a pre-listing shell entity (Reliance Strategic Investments) with minimal operations, not comparable to JFS's operating business.",
+    "cutoff_period_end": "2023-04-01"
+  },
+  "ETERNAL": {
+    "message": "Renamed from Zomato Ltd in 2024; same listed entity (IPO 2021-07-23). Financial history is continuous across the rename -- no corporate-action discontinuity.",
+    "cutoff_period_end": null
+  }
+}

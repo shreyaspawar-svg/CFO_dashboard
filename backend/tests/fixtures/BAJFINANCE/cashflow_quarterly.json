@@ -1,0 +1,57 @@
+{
+  "timeseries": {
+    "result": [
+      {
+        "meta": {
+          "symbol": [
+            "BAJFINANCE.NS"
+          ],
+          "type": [
+            "quarterlyFinancingCashFlow"
+          ]
+        }
+      },
+      {
+        "meta": {
+          "symbol": [
+            "BAJFINANCE.NS"
+          ],
+          "type": [
+            "quarterlyInvestingCashFlow"
+          ]
+        }
+      },
+      {
+        "meta": {
+          "symbol": [
+            "BAJFINANCE.NS"
+          ],
+          "type": [
+            "quarterlyOperatingCashFlow"
+          ]
+        }
+      },
+      {
+        "meta": {
+          "symbol": [
+            "BAJFINANCE.NS"
+          ],
+          "type": [
+            "quarterlyCapitalExpenditure"
+          ]
+        }
+      },
+      {
+        "meta": {
+          "symbol": [
+            "BAJFINANCE.NS"
+          ],
+          "type": [
+            "quarterlyFreeCashFlow"
+          ]
+        }
+      }
+    ],
+    "error": null
+  }
+}

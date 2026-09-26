@@ -1,0 +1,130 @@
+{
+  "chart": {
+    "result": [
+      {
+        "meta": {
+          "currency": "INR",
+          "symbol": "HDFCLIFE.NS",
+          "exchangeName": "NSI",
+          "fullExchangeName": "NSE",
+          "instrumentType": "EQUITY",
+          "firstTradeDate": 1510890300,
+          "regularMarketTime": 1790329502,
+          "hasPrePostMarketData": false,
+          "gmtoffset": 19800,
+          "timezone": "IST",
+          "exchangeTimezoneName": "Asia/Kolkata",
+          "regularMarketPrice": 531.0,
+          "regularMarketChangePercent": 0.778,
+          "fulldayPrice": 531.0,
+          "fulldayChange": 4.1,
+          "fulldayChangePercent": 0.778,
+          "fiftyTwoWeekHigh": 788.5,
+          "fiftyTwoWeekLow": 508.7,
+          "regularMarketDayHigh": 535.0,
+          "regularMarketDayLow": 516.45,
+          "regularMarketVolume": 4285492,
+          "longName": "HDFC Life Insurance Company Limited",
+          "shortName": "HDFC LIFE INS CO LTD",
+          "chartPreviousClose": 559.4,
+          "priceHint": 2,
+          "currentTradingPeriod": {
+            "pre": {
+              "timezone": "IST",
+              "end": 1790307900,
+              "start": 1790307900,
+              "gmtoffset": 19800
+            },
+            "regular": {
+              "timezone": "IST",
+              "end": 1790330400,
+              "start": 1790307900,
+              "gmtoffset": 19800
+            },
+            "post": {
+              "timezone": "IST",
+              "end": 1790330400,
+              "start": 1790330400,
+              "gmtoffset": 19800
+            }
+          },
+          "dataGranularity": "1d",
+          "range": "5d",
+          "validRanges": [
+            "1d",
+            "5d",
+            "1mo",
+            "3mo",
+            "6mo",
+            "1y",
+            "2y",
+            "5y",
+            "10y",
+            "ytd",
+            "max"
+          ]
+        },
+        "timestamp": [
+          1789962300,
+          1790048700,
+          1790135100,
+          1790221500,
+          1790307900
+        ],
+        "indicators": {
+          "quote": [
+            {
+              "close": [
+                559.4000244140625,
+                559.2000122070312,
+                561.5,
+                526.9000244140625,
+                531.0
+              ],
+              "open": [
+                551.6500244140625,
+                560.5499877929688,
+                561.9000244140625,
+                531.0,
+                526.9000244140625
+              ],
+              "volume": [
+                2831490,
+                1788405,
+                2018805,
+                17905953,
+                4285606
+              ],
+              "high": [
+                565.9000244140625,
+                567.4000244140625,
+                565.5,
+                535.3499755859375,
+                535.0
+              ],
+              "low": [
+                551.6500244140625,
+                559.0499877929688,
+                556.4000244140625,
+                514.0,
+                516.4500122070312
+              ]
+            }
+          ],
+          "adjclose": [
+            {
+              "adjclose": [
+                559.4000244140625,
+                559.2000122070312,
+                561.5,
+                526.9000244140625,
+                531.0
+              ]
+            }
+          ]
+        }
+      }
+    ],
+    "error": null
+  }
+}

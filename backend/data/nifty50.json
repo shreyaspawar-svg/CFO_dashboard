@@ -1,0 +1,126 @@
+{
+  "generated_at": "2026-09-26",
+  "source": "https://niftyindices.com/IndexConstituent/ind_nifty50list.csv",
+  "sectors": [
+    {
+      "name": "Banks & Financial Services",
+      "companies": [
+        { "symbol": "HDFCBANK", "yf_ticker": "HDFCBANK.NS", "name": "HDFC Bank Ltd", "template": "bank" },
+        { "symbol": "ICICIBANK", "yf_ticker": "ICICIBANK.NS", "name": "ICICI Bank Ltd", "template": "bank" },
+        { "symbol": "SBIN", "yf_ticker": "SBIN.NS", "name": "State Bank of India", "template": "bank" },
+        { "symbol": "KOTAKBANK", "yf_ticker": "KOTAKBANK.NS", "name": "Kotak Mahindra Bank Ltd", "template": "bank" },
+        { "symbol": "AXISBANK", "yf_ticker": "AXISBANK.NS", "name": "Axis Bank Ltd", "template": "bank" },
+        { "symbol": "BAJFINANCE", "yf_ticker": "BAJFINANCE.NS", "name": "Bajaj Finance Ltd", "template": "nbfc" },
+        { "symbol": "BAJAJFINSV", "yf_ticker": "BAJAJFINSV.NS", "name": "Bajaj Finserv Ltd", "template": "nbfc" },
+        { "symbol": "SHRIRAMFIN", "yf_ticker": "SHRIRAMFIN.NS", "name": "Shriram Finance Ltd", "template": "nbfc" },
+        { "symbol": "JIOFIN", "yf_ticker": "JIOFIN.NS", "name": "Jio Financial Services Ltd", "template": "nbfc" },
+        { "symbol": "HDFCLIFE", "yf_ticker": "HDFCLIFE.NS", "name": "HDFC Life Insurance Company Ltd", "template": "insurance" },
+        { "symbol": "SBILIFE", "yf_ticker": "SBILIFE.NS", "name": "SBI Life Insurance Company Ltd", "template": "insurance" },
+        { "symbol": "BSE", "yf_ticker": "BSE.NS", "name": "BSE Ltd", "template": "exchange" }
+      ]
+    },
+    {
+      "name": "Information Technology",
+      "companies": [
+        { "symbol": "TCS", "yf_ticker": "TCS.NS", "name": "Tata Consultancy Services Ltd", "template": "general" },
+        { "symbol": "INFY", "yf_ticker": "INFY.NS", "name": "Infosys Ltd", "template": "general" },
+        { "symbol": "HCLTECH", "yf_ticker": "HCLTECH.NS", "name": "HCL Technologies Ltd", "template": "general" },
+        { "symbol": "TECHM", "yf_ticker": "TECHM.NS", "name": "Tech Mahindra Ltd", "template": "general" }
+      ]
+    },
+    {
+      "name": "Oil, Gas & Energy",
+      "companies": [
+        { "symbol": "RELIANCE", "yf_ticker": "RELIANCE.NS", "name": "Reliance Industries Ltd", "template": "general" },
+        { "symbol": "ONGC", "yf_ticker": "ONGC.NS", "name": "Oil and Natural Gas Corporation Ltd", "template": "general" },
+        { "symbol": "COALINDIA", "yf_ticker": "COALINDIA.NS", "name": "Coal India Ltd", "template": "general" }
+      ]
+    },
+    {
+      "name": "Automobiles",
+      "companies": [
+        { "symbol": "MARUTI", "yf_ticker": "MARUTI.NS", "name": "Maruti Suzuki India Ltd", "template": "general" },
+        { "symbol": "M&M", "yf_ticker": "M&M.NS", "name": "Mahindra & Mahindra Ltd", "template": "general" },
+        { "symbol": "TMPV", "yf_ticker": "TMPV.NS", "name": "Tata Motors Passenger Vehicles Ltd", "template": "general" },
+        { "symbol": "BAJAJ-AUTO", "yf_ticker": "BAJAJ-AUTO.NS", "name": "Bajaj Auto Ltd", "template": "general" },
+        { "symbol": "EICHERMOT", "yf_ticker": "EICHERMOT.NS", "name": "Eicher Motors Ltd", "template": "general" }
+      ]
+    },
+    {
+      "name": "FMCG",
+      "companies": [
+        { "symbol": "ITC", "yf_ticker": "ITC.NS", "name": "ITC Ltd", "template": "general" },
+        { "symbol": "HINDUNILVR", "yf_ticker": "HINDUNILVR.NS", "name": "Hindustan Unilever Ltd", "template": "general" },
+        { "symbol": "NESTLEIND", "yf_ticker": "NESTLEIND.NS", "name": "Nestle India Ltd", "template": "general" },
+        { "symbol": "TATACONSUM", "yf_ticker": "TATACONSUM.NS", "name": "Tata Consumer Products Ltd", "template": "general" }
+      ]
+    },
+    {
+      "name": "Healthcare & Pharma",
+      "companies": [
+        { "symbol": "SUNPHARMA", "yf_ticker": "SUNPHARMA.NS", "name": "Sun Pharmaceutical Industries Ltd", "template": "general" },
+        { "symbol": "CIPLA", "yf_ticker": "CIPLA.NS", "name": "Cipla Ltd", "template": "general" },
+        { "symbol": "DRREDDY", "yf_ticker": "DRREDDY.NS", "name": "Dr. Reddy's Laboratories Ltd", "template": "general" },
+        { "symbol": "APOLLOHOSP", "yf_ticker": "APOLLOHOSP.NS", "name": "Apollo Hospitals Enterprise Ltd", "template": "general" },
+        { "symbol": "MAXHEALTH", "yf_ticker": "MAXHEALTH.NS", "name": "Max Healthcare Institute Ltd", "template": "general" }
+      ]
+    },
+    {
+      "name": "Metals & Mining",
+      "companies": [
+        { "symbol": "TATASTEEL", "yf_ticker": "TATASTEEL.NS", "name": "Tata Steel Ltd", "template": "general" },
+        { "symbol": "JSWSTEEL", "yf_ticker": "JSWSTEEL.NS", "name": "JSW Steel Ltd", "template": "general" },
+        { "symbol": "HINDALCO", "yf_ticker": "HINDALCO.NS", "name": "Hindalco Industries Ltd", "template": "general" },
+        { "symbol": "ADANIENT", "yf_ticker": "ADANIENT.NS", "name": "Adani Enterprises Ltd", "template": "general" }
+      ]
+    },
+    {
+      "name": "Power",
+      "companies": [
+        { "symbol": "NTPC", "yf_ticker": "NTPC.NS", "name": "NTPC Ltd", "template": "general" },
+        { "symbol": "POWERGRID", "yf_ticker": "POWERGRID.NS", "name": "Power Grid Corporation of India Ltd", "template": "general" }
+      ]
+    },
+    {
+      "name": "Construction & Materials",
+      "companies": [
+        { "symbol": "LT", "yf_ticker": "LT.NS", "name": "Larsen & Toubro Ltd", "template": "general" },
+        { "symbol": "ULTRACEMCO", "yf_ticker": "ULTRACEMCO.NS", "name": "UltraTech Cement Ltd", "template": "general" },
+        { "symbol": "GRASIM", "yf_ticker": "GRASIM.NS", "name": "Grasim Industries Ltd", "template": "general" }
+      ]
+    },
+    {
+      "name": "Consumer Durables",
+      "companies": [
+        { "symbol": "TITAN", "yf_ticker": "TITAN.NS", "name": "Titan Company Ltd", "template": "general" },
+        { "symbol": "ASIANPAINT", "yf_ticker": "ASIANPAINT.NS", "name": "Asian Paints Ltd", "template": "general" }
+      ]
+    },
+    {
+      "name": "Consumer Services & Retail",
+      "companies": [
+        { "symbol": "ETERNAL", "yf_ticker": "ETERNAL.NS", "name": "Eternal Ltd", "template": "general" },
+        { "symbol": "TRENT", "yf_ticker": "TRENT.NS", "name": "Trent Ltd", "template": "general" }
+      ]
+    },
+    {
+      "name": "Transport & Logistics",
+      "companies": [
+        { "symbol": "ADANIPORTS", "yf_ticker": "ADANIPORTS.NS", "name": "Adani Ports and Special Economic Zone Ltd", "template": "general" },
+        { "symbol": "INDIGO", "yf_ticker": "INDIGO.NS", "name": "InterGlobe Aviation Ltd", "template": "general" }
+      ]
+    },
+    {
+      "name": "Capital Goods & Defence",
+      "companies": [
+        { "symbol": "BEL", "yf_ticker": "BEL.NS", "name": "Bharat Electronics Ltd", "template": "general" }
+      ]
+    },
+    {
+      "name": "Telecom",
+      "companies": [
+        { "symbol": "BHARTIARTL", "yf_ticker": "BHARTIARTL.NS", "name": "Bharti Airtel Ltd", "template": "general" }
+      ]
+    }
+  ]
+}

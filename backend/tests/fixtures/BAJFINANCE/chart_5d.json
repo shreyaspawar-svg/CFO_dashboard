@@ -1,0 +1,130 @@
+{
+  "chart": {
+    "result": [
+      {
+        "meta": {
+          "currency": "INR",
+          "symbol": "BAJFINANCE.NS",
+          "exchangeName": "NSI",
+          "fullExchangeName": "NSE",
+          "instrumentType": "EQUITY",
+          "firstTradeDate": 1025495100,
+          "regularMarketTime": 1790329500,
+          "hasPrePostMarketData": false,
+          "gmtoffset": 19800,
+          "timezone": "IST",
+          "exchangeTimezoneName": "Asia/Kolkata",
+          "regularMarketPrice": 996.9,
+          "regularMarketChangePercent": 1.517,
+          "fulldayPrice": 996.9,
+          "fulldayChange": 14.9,
+          "fulldayChangePercent": 1.517,
+          "fiftyTwoWeekHigh": 1176.4,
+          "fiftyTwoWeekLow": 787.9,
+          "regularMarketDayHigh": 997.2,
+          "regularMarketDayLow": 980.2,
+          "regularMarketVolume": 5467221,
+          "longName": "Bajaj Finance Limited",
+          "shortName": "BAJAJ FINANCE LIMITED",
+          "chartPreviousClose": 1021.3,
+          "priceHint": 2,
+          "currentTradingPeriod": {
+            "pre": {
+              "timezone": "IST",
+              "start": 1790307900,
+              "end": 1790307900,
+              "gmtoffset": 19800
+            },
+            "regular": {
+              "timezone": "IST",
+              "start": 1790307900,
+              "end": 1790330400,
+              "gmtoffset": 19800
+            },
+            "post": {
+              "timezone": "IST",
+              "start": 1790330400,
+              "end": 1790330400,
+              "gmtoffset": 19800
+            }
+          },
+          "dataGranularity": "1d",
+          "range": "5d",
+          "validRanges": [
+            "1d",
+            "5d",
+            "1mo",
+            "3mo",
+            "6mo",
+            "1y",
+            "2y",
+            "5y",
+            "10y",
+            "ytd",
+            "max"
+          ]
+        },
+        "timestamp": [
+          1789962300,
+          1790048700,
+          1790135100,
+          1790221500,
+          1790307900
+        ],
+        "indicators": {
+          "quote": [
+            {
+              "high": [
+                1037.699951171875,
+                1029.199951171875,
+                1043.199951171875,
+                1015.0,
+                997.2000122070312
+              ],
+              "open": [
+                1035.0,
+                1025.300048828125,
+                1034.699951171875,
+                1005.0,
+                982.0
+              ],
+              "volume": [
+                4170558,
+                4581750,
+                8618523,
+                13385656,
+                5467794
+              ],
+              "low": [
+                1021.2999877929688,
+                1005.0,
+                1022.0,
+                974.0,
+                980.2000122070312
+              ],
+              "close": [
+                1021.2999877929688,
+                1008.7999877929688,
+                1043.199951171875,
+                982.0,
+                996.9000244140625
+              ]
+            }
+          ],
+          "adjclose": [
+            {
+              "adjclose": [
+                1021.2999877929688,
+                1008.7999877929688,
+                1043.199951171875,
+                982.0,
+                996.9000244140625
+              ]
+            }
+          ]
+        }
+      }
+    ],
+    "error": null
+  }
+}

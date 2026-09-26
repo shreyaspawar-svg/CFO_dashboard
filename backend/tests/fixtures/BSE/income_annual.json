@@ -1,0 +1,907 @@
+{
+  "timeseries": {
+    "result": [
+      {
+        "meta": {
+          "symbol": [
+            "BSE.NS"
+          ],
+          "type": [
+            "annualInterestIncome"
+          ]
+        },
+        "timestamp": [
+          1680220800,
+          1711843200,
+          1743379200,
+          1774915200
+        ],
+        "annualInterestIncome": [
+          {
+            "dataId": 20177,
+            "asOfDate": "2023-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 925600000.0,
+              "fmt": "925.60M"
+            }
+          },
+          {
+            "dataId": 20177,
+            "asOfDate": "2024-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 1587400000.0,
+              "fmt": "1.59B"
+            }
+          },
+          {
+            "dataId": 20177,
+            "asOfDate": "2025-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 1900500000.0,
+              "fmt": "1.90B"
+            }
+          },
+          {
+            "dataId": 20177,
+            "asOfDate": "2026-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 2036800000.0,
+              "fmt": "2.04B"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "BSE.NS"
+          ],
+          "type": [
+            "annualNetIncome"
+          ]
+        },
+        "timestamp": [
+          1680220800,
+          1711843200,
+          1743379200,
+          1774915200
+        ],
+        "annualNetIncome": [
+          {
+            "dataId": 20091,
+            "asOfDate": "2023-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 2206700000.0,
+              "fmt": "2.21B"
+            }
+          },
+          {
+            "dataId": 20091,
+            "asOfDate": "2024-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 7783900000.0,
+              "fmt": "7.78B"
+            }
+          },
+          {
+            "dataId": 20091,
+            "asOfDate": "2025-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 13258900000.0,
+              "fmt": "13.26B"
+            }
+          },
+          {
+            "dataId": 20091,
+            "asOfDate": "2026-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 24969800000.0,
+              "fmt": "24.97B"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "BSE.NS"
+          ],
+          "type": [
+            "annualTaxProvision"
+          ]
+        },
+        "timestamp": [
+          1680220800,
+          1711843200,
+          1743379200,
+          1774915200
+        ],
+        "annualTaxProvision": [
+          {
+            "dataId": 20145,
+            "asOfDate": "2023-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 916100000.0,
+              "fmt": "916.10M"
+            }
+          },
+          {
+            "dataId": 20145,
+            "asOfDate": "2024-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 2235200000.0,
+              "fmt": "2.24B"
+            }
+          },
+          {
+            "dataId": 20145,
+            "asOfDate": "2025-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 4312100000.0,
+              "fmt": "4.31B"
+            }
+          },
+          {
+            "dataId": 20145,
+            "asOfDate": "2026-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 8238400000.0,
+              "fmt": "8.24B"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "BSE.NS"
+          ],
+          "type": [
+            "annualTotalRevenue"
+          ]
+        },
+        "timestamp": [
+          1680220800,
+          1711843200,
+          1743379200,
+          1774915200
+        ],
+        "annualTotalRevenue": [
+          {
+            "dataId": 20100,
+            "asOfDate": "2023-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 8155300000.0,
+              "fmt": "8.16B"
+            }
+          },
+          {
+            "dataId": 20100,
+            "asOfDate": "2024-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 13710400000.0,
+              "fmt": "13.71B"
+            }
+          },
+          {
+            "dataId": 20100,
+            "asOfDate": "2025-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 27376600000.0,
+              "fmt": "27.38B"
+            }
+          },
+          {
+            "dataId": 20100,
+            "asOfDate": "2026-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 44854400000.0,
+              "fmt": "44.85B"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "BSE.NS"
+          ],
+          "type": [
+            "annualDilutedEPS"
+          ]
+        },
+        "timestamp": [
+          1680220800,
+          1711843200,
+          1743379200,
+          1774915200
+        ],
+        "annualDilutedEPS": [
+          {
+            "dataId": 29009,
+            "asOfDate": "2023-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 5.353333,
+              "fmt": "5.35"
+            }
+          },
+          {
+            "dataId": 29009,
+            "asOfDate": "2024-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 18.886667,
+              "fmt": "18.89"
+            }
+          },
+          {
+            "dataId": 29009,
+            "asOfDate": "2025-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 32.18,
+              "fmt": "32.18"
+            }
+          },
+          {
+            "dataId": 29009,
+            "asOfDate": "2026-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 60.61,
+              "fmt": "60.61"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "BSE.NS"
+          ],
+          "type": [
+            "annualCostOfRevenue"
+          ]
+        },
+        "timestamp": [
+          1680220800,
+          1711843200,
+          1743379200,
+          1774915200
+        ],
+        "annualCostOfRevenue": [
+          {
+            "dataId": 20013,
+            "asOfDate": "2023-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 3159600000.0,
+              "fmt": "3.16B"
+            }
+          },
+          {
+            "dataId": 20013,
+            "asOfDate": "2024-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 6874800000.0,
+              "fmt": "6.87B"
+            }
+          },
+          {
+            "dataId": 20013,
+            "asOfDate": "2025-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 11375600000.0,
+              "fmt": "11.38B"
+            }
+          },
+          {
+            "dataId": 20013,
+            "asOfDate": "2026-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 13871200000.0,
+              "fmt": "13.87B"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "BSE.NS"
+          ],
+          "type": [
+            "annualOperatingIncome"
+          ]
+        },
+        "timestamp": [
+          1680220800,
+          1711843200,
+          1743379200,
+          1774915200
+        ],
+        "annualOperatingIncome": [
+          {
+            "dataId": 20109,
+            "asOfDate": "2023-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 1487400000.0,
+              "fmt": "1.49B"
+            }
+          },
+          {
+            "dataId": 20109,
+            "asOfDate": "2024-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 3271600000.0,
+              "fmt": "3.27B"
+            }
+          },
+          {
+            "dataId": 20109,
+            "asOfDate": "2025-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 14162100000.0,
+              "fmt": "14.16B"
+            }
+          },
+          {
+            "dataId": 20109,
+            "asOfDate": "2026-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 29540800000.0,
+              "fmt": "29.54B"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "BSE.NS"
+          ],
+          "type": [
+            "annualBasicEPS"
+          ]
+        },
+        "timestamp": [
+          1680220800,
+          1711843200,
+          1743379200,
+          1774915200
+        ],
+        "annualBasicEPS": [
+          {
+            "dataId": 29004,
+            "asOfDate": "2023-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 5.353333,
+              "fmt": "5.35"
+            }
+          },
+          {
+            "dataId": 29004,
+            "asOfDate": "2024-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 18.886667,
+              "fmt": "18.89"
+            }
+          },
+          {
+            "dataId": 29004,
+            "asOfDate": "2025-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 32.18,
+              "fmt": "32.18"
+            }
+          },
+          {
+            "dataId": 29004,
+            "asOfDate": "2026-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 60.61,
+              "fmt": "60.61"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "BSE.NS"
+          ],
+          "type": [
+            "annualNetInterestIncome"
+          ]
+        },
+        "timestamp": [
+          1680220800,
+          1711843200,
+          1743379200,
+          1774915200
+        ],
+        "annualNetInterestIncome": [
+          {
+            "dataId": 20095,
+            "asOfDate": "2023-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 557000000.0,
+              "fmt": "557.00M"
+            }
+          },
+          {
+            "dataId": 20095,
+            "asOfDate": "2024-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 1200400000.0,
+              "fmt": "1.20B"
+            }
+          },
+          {
+            "dataId": 20095,
+            "asOfDate": "2025-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 1583400000.0,
+              "fmt": "1.58B"
+            }
+          },
+          {
+            "dataId": 20095,
+            "asOfDate": "2026-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 1691900000.0,
+              "fmt": "1.69B"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "BSE.NS"
+          ],
+          "type": [
+            "annualEBITDA"
+          ]
+        },
+        "timestamp": [
+          1680220800,
+          1711843200,
+          1743379200,
+          1774915200
+        ],
+        "annualEBITDA": [
+          {
+            "dataId": 20190,
+            "asOfDate": "2023-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 3850800000.0,
+              "fmt": "3.85B"
+            }
+          },
+          {
+            "dataId": 20190,
+            "asOfDate": "2024-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 11022000000.0,
+              "fmt": "11.02B"
+            }
+          },
+          {
+            "dataId": 20190,
+            "asOfDate": "2025-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 18612800000.0,
+              "fmt": "18.61B"
+            }
+          },
+          {
+            "dataId": 20190,
+            "asOfDate": "2026-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 34582600000.0,
+              "fmt": "34.58B"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "BSE.NS"
+          ],
+          "type": [
+            "annualEBIT"
+          ]
+        },
+        "timestamp": [
+          1680220800,
+          1711843200,
+          1743379200,
+          1774915200
+        ],
+        "annualEBIT": [
+          {
+            "dataId": 20189,
+            "asOfDate": "2023-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 3247400000.0,
+              "fmt": "3.25B"
+            }
+          },
+          {
+            "dataId": 20189,
+            "asOfDate": "2024-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 10072700000.0,
+              "fmt": "10.07B"
+            }
+          },
+          {
+            "dataId": 20189,
+            "asOfDate": "2025-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 17483000000.0,
+              "fmt": "17.48B"
+            }
+          },
+          {
+            "dataId": 20189,
+            "asOfDate": "2026-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 32993000000.0,
+              "fmt": "32.99B"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "BSE.NS"
+          ],
+          "type": [
+            "annualGrossProfit"
+          ]
+        },
+        "timestamp": [
+          1680220800,
+          1711843200,
+          1743379200,
+          1774915200
+        ],
+        "annualGrossProfit": [
+          {
+            "dataId": 20046,
+            "asOfDate": "2023-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 4995700000.0,
+              "fmt": "5.00B"
+            }
+          },
+          {
+            "dataId": 20046,
+            "asOfDate": "2024-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 6835600000.0,
+              "fmt": "6.84B"
+            }
+          },
+          {
+            "dataId": 20046,
+            "asOfDate": "2025-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 16001000000.0,
+              "fmt": "16.00B"
+            }
+          },
+          {
+            "dataId": 20046,
+            "asOfDate": "2026-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 30983200000.0,
+              "fmt": "30.98B"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "BSE.NS"
+          ],
+          "type": [
+            "annualPretaxIncome"
+          ]
+        },
+        "timestamp": [
+          1680220800,
+          1711843200,
+          1743379200,
+          1774915200
+        ],
+        "annualPretaxIncome": [
+          {
+            "dataId": 20136,
+            "asOfDate": "2023-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 2972600000.0,
+              "fmt": "2.97B"
+            }
+          },
+          {
+            "dataId": 20136,
+            "asOfDate": "2024-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 9922200000.0,
+              "fmt": "9.92B"
+            }
+          },
+          {
+            "dataId": 20136,
+            "asOfDate": "2025-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 17482700000.0,
+              "fmt": "17.48B"
+            }
+          },
+          {
+            "dataId": 20136,
+            "asOfDate": "2026-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 32991400000.0,
+              "fmt": "32.99B"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "BSE.NS"
+          ],
+          "type": [
+            "annualReconciledDepreciation"
+          ]
+        },
+        "timestamp": [
+          1680220800,
+          1711843200,
+          1743379200,
+          1774915200
+        ],
+        "annualReconciledDepreciation": [
+          {
+            "dataId": 20315,
+            "asOfDate": "2023-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 603400000.0,
+              "fmt": "603.40M"
+            }
+          },
+          {
+            "dataId": 20315,
+            "asOfDate": "2024-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 949300000.0,
+              "fmt": "949.30M"
+            }
+          },
+          {
+            "dataId": 20315,
+            "asOfDate": "2025-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 1129800000.0,
+              "fmt": "1.13B"
+            }
+          },
+          {
+            "dataId": 20315,
+            "asOfDate": "2026-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 1589600000.0,
+              "fmt": "1.59B"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "BSE.NS"
+          ],
+          "type": [
+            "annualInterestExpense"
+          ]
+        },
+        "timestamp": [
+          1680220800,
+          1711843200,
+          1743379200,
+          1774915200
+        ],
+        "annualInterestExpense": [
+          {
+            "dataId": 20057,
+            "asOfDate": "2023-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 274800000.0,
+              "fmt": "274.80M"
+            }
+          },
+          {
+            "dataId": 20057,
+            "asOfDate": "2024-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 150500000.0,
+              "fmt": "150.50M"
+            }
+          },
+          {
+            "dataId": 20057,
+            "asOfDate": "2025-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 300000.0,
+              "fmt": "300.00k"
+            }
+          },
+          {
+            "dataId": 20057,
+            "asOfDate": "2026-03-31",
+            "periodType": "12M",
+            "currencyCode": "INR",
+            "reportedValue": {
+              "raw": 1600000.0,
+              "fmt": "1.60M"
+            }
+          }
+        ]
+      },
+      {
+        "meta": {
+          "symbol": [
+            "BSE.NS"
+          ],
+          "type": [
+            "annualTotalPremiumsEarned"
+          ]
+        }
+      },
+      {
+        "meta": {
+          "symbol": [
+            "BSE.NS"
+          ],
+          "type": [
+            "annualNonInterestIncome"
+          ]
+        }
+      },
+      {
+        "meta": {
+          "symbol": [
+            "BSE.NS"
+          ],
+          "type": [
+            "annualNonInterestExpense"
+          ]
+        }
+      }
+    ],
+    "error": null
+  }
+}

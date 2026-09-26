@@ -1,0 +1,130 @@
+{
+  "chart": {
+    "result": [
+      {
+        "meta": {
+          "currency": "INR",
+          "symbol": "TCS.NS",
+          "exchangeName": "NSI",
+          "fullExchangeName": "NSE",
+          "instrumentType": "EQUITY",
+          "firstTradeDate": 1029123900,
+          "regularMarketTime": 1790329500,
+          "hasPrePostMarketData": false,
+          "gmtoffset": 19800,
+          "timezone": "IST",
+          "exchangeTimezoneName": "Asia/Kolkata",
+          "regularMarketPrice": 2082.0,
+          "regularMarketChangePercent": -0.24,
+          "fulldayPrice": 2082.0,
+          "fulldayChange": -5.0,
+          "fulldayChangePercent": -0.24,
+          "fiftyTwoWeekHigh": 3350.0,
+          "fiftyTwoWeekLow": 1976.8,
+          "regularMarketDayHigh": 2090.2,
+          "regularMarketDayLow": 2038.1,
+          "regularMarketVolume": 3341139,
+          "longName": "Tata Consultancy Services Limited",
+          "shortName": "TATA CONSULTANCY SERV LT",
+          "chartPreviousClose": 2128.7,
+          "priceHint": 2,
+          "currentTradingPeriod": {
+            "pre": {
+              "timezone": "IST",
+              "start": 1790307900,
+              "end": 1790307900,
+              "gmtoffset": 19800
+            },
+            "regular": {
+              "timezone": "IST",
+              "start": 1790307900,
+              "end": 1790330400,
+              "gmtoffset": 19800
+            },
+            "post": {
+              "timezone": "IST",
+              "start": 1790330400,
+              "end": 1790330400,
+              "gmtoffset": 19800
+            }
+          },
+          "dataGranularity": "1d",
+          "range": "5d",
+          "validRanges": [
+            "1d",
+            "5d",
+            "1mo",
+            "3mo",
+            "6mo",
+            "1y",
+            "2y",
+            "5y",
+            "10y",
+            "ytd",
+            "max"
+          ]
+        },
+        "timestamp": [
+          1789962300,
+          1790048700,
+          1790135100,
+          1790221500,
+          1790307900
+        ],
+        "indicators": {
+          "quote": [
+            {
+              "high": [
+                2145.0,
+                2135.199951171875,
+                2104.199951171875,
+                2096.89990234375,
+                2090.199951171875
+              ],
+              "close": [
+                2128.699951171875,
+                2105.0,
+                2089.60009765625,
+                2087.0,
+                2082.0
+              ],
+              "open": [
+                2090.0,
+                2135.10009765625,
+                2099.0,
+                2076.0,
+                2054.0
+              ],
+              "volume": [
+                2330811,
+                3641623,
+                2228402,
+                1760662,
+                3342195
+              ],
+              "low": [
+                2075.300048828125,
+                2098.199951171875,
+                2077.60009765625,
+                2067.10009765625,
+                2038.0999755859375
+              ]
+            }
+          ],
+          "adjclose": [
+            {
+              "adjclose": [
+                2128.699951171875,
+                2105.0,
+                2089.60009765625,
+                2087.0,
+                2082.0
+              ]
+            }
+          ]
+        }
+      }
+    ],
+    "error": null
+  }
+}

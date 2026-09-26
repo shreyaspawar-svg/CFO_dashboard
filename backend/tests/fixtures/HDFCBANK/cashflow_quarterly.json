@@ -1,0 +1,57 @@
+{
+  "timeseries": {
+    "result": [
+      {
+        "meta": {
+          "symbol": [
+            "HDFCBANK.NS"
+          ],
+          "type": [
+            "quarterlyFinancingCashFlow"
+          ]
+        }
+      },
+      {
+        "meta": {
+          "symbol": [
+            "HDFCBANK.NS"
+          ],
+          "type": [
+            "quarterlyInvestingCashFlow"
+          ]
+        }
+      },
+      {
+        "meta": {
+          "symbol": [
+            "HDFCBANK.NS"
+          ],
+          "type": [
+            "quarterlyOperatingCashFlow"
+          ]
+        }
+      },
+      {
+        "meta": {
+          "symbol": [
+            "HDFCBANK.NS"
+          ],
+          "type": [
+            "quarterlyCapitalExpenditure"
+          ]
+        }
+      },
+      {
+        "meta": {
+          "symbol": [
+            "HDFCBANK.NS"
+          ],
+          "type": [
+            "quarterlyFreeCashFlow"
+          ]
+        }
+      }
+    ],
+    "error": null
+  }
+}
