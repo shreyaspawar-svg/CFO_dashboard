@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { OverviewTab } from "@/components/tabs/overview-tab";
+import { IncomeStatementTab } from "@/components/tabs/income-statement-tab";
 
 const TABS = [
   "Overview",
@@ -52,6 +53,8 @@ export function TabsShell({ symbol, template }: { symbol: string; template: stri
       <div role="tabpanel" className="p-4">
         {active === "Overview" ? (
           <OverviewTab symbol={symbol} template={template} />
+        ) : active === "Income Statement" ? (
+          <IncomeStatementTab symbol={symbol} template={template} />
         ) : (
           <div className="p-2 text-sm text-muted">
             <p className="font-medium text-foreground">{active}</p>

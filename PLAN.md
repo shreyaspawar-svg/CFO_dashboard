@@ -732,6 +732,63 @@ Acceptance
 
 ---
 
+### Phase 4.2 review (planner): accepted
+- Phase 2.3 accepted: date-keyed beta fix verified; HDFCBANK ROE/ROA amber-badged with data_quality "inconsistent". Drop Yahoo's beta as a cross-check (unreliable for NSE) and note that in docs/data-notes.md.
+- Distinguish "missing" from "not meaningful" everywhere: growth from a non-positive base (e.g. INDIGO PAT −₹306 Cr → +₹8,172 Cr) shows "n.m." with the tooltip "Not meaningful: prior-period value ≤ 0", not "—". The API returns `reason: "not_meaningful"` vs `reason: "missing"`. Apply this to tables, tooltips and KPI cards.
+- Backlog (Phase 6): add `manual_overrides.json` for annual-report figures with a source citation (first candidate: HDFCBANK equity and PAT), shown with method "manual_override".
+
+#### 4.3 Ratios tab
+
+**Layout:** a "Strengths & watch-outs" panel at the top, then ratio card groups, then a DuPont chart, a ratio-history heatmap, a peer strip plot, and quality scores.
+
+**1. Ratio card groups (template-aware)**
+- General: Profitability (Gross, EBITDA, EBIT, PAT margin), Returns (ROE, ROCE, ROIC, ROA), Leverage (D/E, Net debt/EBITDA, Interest coverage, Debt/Assets), Liquidity (Current, Quick, Cash), Efficiency (Asset turnover, Inventory/Debtor/Payable days, Cash conversion cycle), Cash flow (FCF margin, CFO/PAT, Capex/Revenue), Per share (EPS, BVPS, DPS, payout).
+- Bank/NBFC: NIM (proxy), Cost-to-income, ROA, ROE, Leverage (Assets/Equity), NII growth, PAT growth, P/B. Also show GNPA, NNPA, CASA and credit cost as "—", with the tooltip "Not in free data source".
+- Insurance: Premium growth, PAT margin, ROE, P/B. P/EV and solvency as "—" (not in free data source).
+- Exchange: General minus inventory/debtor days.
+
+**2. Ratio card spec**
+- Latest (TTM where applicable) value and a 4-year sparkline with a break marker at `comparable_from`.
+- A sector/template median tick on a small horizontal range bar (sector min → max).
+- Percentile badge, e.g. "Top 20% in sector" / "Bottom quartile vs template".
+- Every ratio has a `direction` field in the API (`higher_better` | `lower_better` | `neutral`, e.g. D/E lower_better, CCC lower_better). Badge colour uses direction, so a low D/E is shown as good.
+- `method` and `data_quality` badges, as on the KPI cards.
+- Glossary tooltip: formula, plain-English meaning, and what "good" typically looks like. The glossary lives in `backend/data/glossary.json` (single source), served at `/api/glossary`. Include the ROCE definition: EBIT ÷ (equity + total debt), average of opening and closing.
+- No percentile badge if there are fewer than 3 peers. Show "vs template" when `benchmark == "template"`.
+
+**3. DuPont decomposition**
+- General: ROE = PAT margin × Asset turnover × Equity multiplier, one grouped chart across years plus a latest-year "equation" strip showing the three factors and the result.
+- Bank/NBFC: ROE = ROA × Leverage.
+- The product must reconcile to the ROE shown on the card within 0.5 pp; otherwise show a note explaining the gap (average vs closing balances).
+
+**4. Ratio-history heatmap:** rows are key ratios, columns are fiscal years. Colour each cell by the company's position vs the sector median that year (diverging palette, direction-aware), with the value printed in each cell. Accessible: values are always printed, colour is secondary.
+
+**5. Peer strip plot:** a dropdown to pick any ratio; a dot for every sector (or template) peer on one axis, the selected company highlighted and labelled, a median line, and clicking a dot navigates to that company.
+
+**6. Quality scores**
+- Altman Z with its 5 components and zones (safe / grey / distress).
+- Piotroski F (0–9) with a checklist of all 9 tests, each pass/fail with its numbers.
+- Hidden for bank/NBFC/insurance templates with "Not applicable to financial companies".
+
+**7. Strengths & watch-outs (rule-based, not AI)**
+- Rules live in `backend/app/metrics/signals.py`, returned by `/api/ratios` as `signals[]` with `{type: strength|watch, rule, message, values}`.
+- Example rules:
+  - ROCE > sector p75 → strength
+  - D/E rising 3 years in a row → watch
+  - CFO/PAT < 0.8 for 2+ years → watch
+  - Margin expanding 3 years in a row → strength
+  - Interest coverage < 3 → watch
+- Every message cites its numbers (e.g. "ROCE 56.5% vs sector median 28.1%"). At most 4 strengths and 4 watch-outs, ranked by magnitude.
+- Unit-test every rule.
+
+**Acceptance**
+- Works for TCS, HDFCBANK, BAJFINANCE, HDFCLIFE, BSE and TMPV.
+- Percentiles and medians match what the Peers tab will use (same backend function).
+- DuPont reconciles or explains; a direction test proves low D/E renders as favourable.
+- No 0/NaN anywhere; "—" vs "n.m." is used correctly.
+
+---
+
 ### Phase 5 — Live data layer
 **Goal:** prices feel live without abusing the free source.
 
