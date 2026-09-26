@@ -415,6 +415,24 @@ def test_hdfcbank_roe_is_badged_inconsistent_not_silently_wrong():
 
 
 @pytest.mark.smoke
+def test_indigo_pat_growth_headline_is_real_when_previous_period_is_positive():
+    """INDIGO's latest two comparable annual periods (FY25 positive ->
+    FY26 negative) have a POSITIVE prior value, so the headline pat_growth
+    is a real, meaningful (if steep) decline -- not everything touching a
+    sign change is "n.m.", only a computation whose PRIOR value is
+    non-positive is (PLAN.md "Phase 4.2 review"). The actual sign-crossing
+    "n.m." case in INDIGO's history is FY23 (-Rs305.79 Cr) -> FY24
+    (+Rs8,172.50 Cr); metrics_engine's headline only ever looks at the
+    latest two periods so it can't reach that pair, but
+    `test_ratios.py::test_yoy_growth_sign_crossing_negative_to_positive_is_none_not_meaningful`
+    pins that exact real case down directly."""
+    result = asyncio.run(compute_symbol_metrics("INDIGO"))
+    assert result["metrics"]["pat_growth"] is not None
+    assert result["metrics"]["pat_growth"] < 0
+    assert "pat_growth" not in result["reasons"]
+
+
+@pytest.mark.smoke
 def test_equity_basis_oscillation_only_flags_symbols_with_real_evidence():
     """Guards against the detector becoming noisy over time: as of this
     run, only HDFCBANK's real quarterly equity shows the basis-switching

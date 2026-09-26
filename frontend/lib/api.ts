@@ -19,6 +19,12 @@ export type EventsResponse = components["schemas"]["EventsResponse"];
 export type OverviewResponse = components["schemas"]["OverviewResponse"];
 export type CompanyRef = components["schemas"]["CompanyRef"];
 export type SectorGroup = components["schemas"]["SectorGroup"];
+export type GlossaryResponse = components["schemas"]["GlossaryResponse"];
+export type GlossaryEntry = components["schemas"]["GlossaryEntry"];
+export type RatioHistoryPoint = components["schemas"]["RatioHistoryPoint"];
+export type Signal = components["schemas"]["Signal"];
+export type PeerRow = components["schemas"]["PeerRow"];
+export type QualityScores = components["schemas"]["QualityScores"];
 
 class ApiError extends Error {
   constructor(
@@ -62,6 +68,7 @@ export const api = {
   events: (symbol: string) => apiFetch<EventsResponse>(`/api/events/${encodeURIComponent(symbol)}`),
   overview: (symbol: string) =>
     apiFetch<OverviewResponse>(`/api/overview/${encodeURIComponent(symbol)}`),
+  glossary: () => apiFetch<GlossaryResponse>("/api/glossary"),
 };
 
 export { ApiError };

@@ -1,5 +1,12 @@
 import { AlertTriangle } from "lucide-react";
-import { formatCrore, formatIndianNumber, formatMultiple, formatPercent, type Unit } from "@/lib/format";
+import {
+  formatCrore,
+  formatIndianNumber,
+  formatMultiple,
+  formatPercent,
+  NOT_MEANINGFUL_PLACEHOLDER,
+  type Unit,
+} from "@/lib/format";
 import type { KpiDef } from "@/lib/kpi-templates";
 import type { RatioValue } from "@/lib/api";
 
@@ -38,6 +45,13 @@ export function KpiCard({ def, ratio, unit }: { def: KpiDef; ratio: RatioValue |
       {!def.available ? (
         <div className="mt-1 text-sm text-muted" title="Not in free data source">
           {"—"}
+        </div>
+      ) : ratio?.value == null && ratio?.reason === "not_meaningful" ? (
+        <div
+          className="mt-1 text-lg font-semibold tabular-nums-fixed text-muted"
+          title="Not meaningful: prior-period value ≤ 0"
+        >
+          {NOT_MEANINGFUL_PLACEHOLDER}
         </div>
       ) : (
         <>

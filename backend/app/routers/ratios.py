@@ -5,7 +5,16 @@ from fastapi import APIRouter, HTTPException
 
 from app.config import get_settings
 from app.metrics.scoring import METRIC_HIGHER_IS_BETTER, health_radar, percentile_rank
-from app.models.schemas import AxisComponent, AxisResult, RatiosResponse, RatioValue
+from app.metrics.signals import strengths_and_watchouts
+from app.models.schemas import (
+    AxisComponent,
+    AxisResult,
+    QualityScores,
+    RatioHistoryPoint,
+    RatiosResponse,
+    RatioValue,
+    Signal,
+)
 from app.services.cache import get_cache
 from app.services.metrics_engine import compute_symbol_metrics
 from app.services.peer_stats import compute_peer_metric_values
@@ -43,11 +52,23 @@ async def get_ratios(symbol: str) -> RatiosResponse:
         ratios[key] = RatioValue(
             value=value,
             peer_median=median,
+            peer_min=min(valid_values) if valid_values else None,
+            peer_max=max(valid_values) if valid_values else None,
             percentile=percentile,
             method=method,
             data_quality="inconsistent" if quality_reason else "ok",
             data_quality_reason=quality_reason,
+            reason=own["reasons"].get(key),
+            direction="higher_better" if higher_is_better else "lower_better",
         )
+
+    history_response = {
+        key: [RatioHistoryPoint(**point) for point in points] for key, points in own["history"].items()
+    }
+    signals = [
+        Signal(**s)
+        for s in strengths_and_watchouts(own["metrics"], own["history"], peer_values, company.template)
+    ]
 
     radar = health_radar(company.template, own["metrics"], peer_values)
     health_radar_response = {
@@ -67,6 +88,11 @@ async def get_ratios(symbol: str) -> RatiosResponse:
         growth_note=own["growth_note"],
         ratios=ratios,
         health_radar=health_radar_response,
+        history=history_response,
+        dupont_kind=own["dupont_kind"],
+        dupont_reconciliation_gap_pp=own["dupont_reconciliation_gap_pp"],
+        signals=signals,
+        quality_scores=QualityScores(**own["quality_scores"]) if own["quality_scores"] else None,
         source="yahoo",
         as_of=datetime.now(timezone.utc),
         warnings=own["warnings"],

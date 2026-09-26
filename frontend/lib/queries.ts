@@ -13,6 +13,7 @@ const STALE_TIME = {
   peers: 60 * 60 * 1000,
   valuation: 6 * 60 * 60 * 1000,
   events: 6 * 60 * 60 * 1000,
+  glossary: 24 * 60 * 60 * 1000,
 } as const;
 
 export function useUniverse() {
@@ -101,5 +102,13 @@ export function useEvents(symbol: string | null) {
     queryFn: () => api.events(symbol as string),
     enabled: !!symbol,
     staleTime: STALE_TIME.events,
+  });
+}
+
+export function useGlossary() {
+  return useQuery({
+    queryKey: ["glossary"],
+    queryFn: api.glossary,
+    staleTime: STALE_TIME.glossary,
   });
 }

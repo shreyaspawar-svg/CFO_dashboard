@@ -6,6 +6,12 @@
  */
 
 export const MISSING_VALUE_PLACEHOLDER = "—"; // em dash: "—"
+// "Not meaningful" -- distinct from missing data (PLAN.md "Phase 4.2
+// review"): the inputs were present, but the computation itself isn't a
+// sensible percentage (e.g. growth from a non-positive base). Shown
+// instead of MISSING_VALUE_PLACEHOLDER whenever the API/a pure function
+// tags a null value with reason "not_meaningful" rather than "missing".
+export const NOT_MEANINGFUL_PLACEHOLDER = "n.m.";
 
 export type Unit = "crore" | "lakh_crore";
 

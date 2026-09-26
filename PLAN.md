@@ -787,6 +787,8 @@ Acceptance
 - DuPont reconciles or explains; a direction test proves low D/E renders as favourable.
 - No 0/NaN anywhere; "—" vs "n.m." is used correctly.
 
+4.3 fixes (materiality floors, template-aware signals, DuPont labelling) — done, see commit `phase-4.3`.
+
 ---
 
 ### Phase 5 — Live data layer

@@ -52,6 +52,33 @@ def test_hdfcbank_template_has_bank_metrics_not_general_ones():
     assert "altman_z_score" not in metrics
 
 
+def test_tcs_dupont_is_general_3_step_and_reconciles_to_roe():
+    result = _run("TCS")
+    assert result["dupont_kind"] == "general"
+    metrics = result["metrics"]
+    assert metrics["dupont_net_margin_pct"] is not None
+    assert metrics["dupont_asset_turnover"] is not None
+    assert metrics["dupont_equity_multiplier"] is not None
+    assert metrics["dupont_roe_check_pct"] is not None
+    # Same net_income_for_returns feeds both metrics["roe"] and the DuPont
+    # product -- an algebraic identity, not an approximation -- whenever
+    # the KPI card shows our own "computed" figure (PLAN.md §4.3 item 3).
+    if result["method"]["roe"] == "computed":
+        assert metrics["dupont_roe_check_pct"] == pytest.approx(metrics["roe"], abs=1e-6)
+        assert result["dupont_reconciliation_gap_pp"] == pytest.approx(0.0, abs=1e-6)
+
+
+def test_hdfcbank_dupont_is_bank_2_step_and_reconciles_to_roe():
+    result = _run("HDFCBANK")
+    assert result["dupont_kind"] == "bank"
+    metrics = result["metrics"]
+    assert "dupont_net_margin_pct" not in metrics  # no 3-step fields for a bank
+    assert metrics["dupont_roa_pct"] is not None
+    assert metrics["dupont_leverage"] is not None
+    assert metrics["dupont_roe_check_pct"] == pytest.approx(metrics["roe"], abs=1e-6)
+    assert result["dupont_reconciliation_gap_pp"] == pytest.approx(0.0, abs=1e-6)
+
+
 def test_bajfinance_nbfc_template():
     result = _run("BAJFINANCE")
     metrics = result["metrics"]

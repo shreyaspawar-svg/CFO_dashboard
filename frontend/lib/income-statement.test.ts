@@ -17,31 +17,36 @@ describe("computeGrowthSeries", () => {
     period("FY25", "2025-03-31", { revenue: 121 }),
   ];
 
-  it("has no growth for the first (oldest) period", () => {
+  it("has no growth for the first (oldest) period, tagged missing", () => {
     const result = computeGrowthSeries(periods, "revenue", null);
-    expect(result[0]).toEqual({ label: "FY23", growthPct: null });
+    expect(result[0]).toEqual({ label: "FY23", growthPct: null, reason: "missing" });
   });
 
-  it("computes YoY growth for subsequent periods", () => {
+  it("computes YoY growth for subsequent periods with no reason", () => {
     const result = computeGrowthSeries(periods, "revenue", null);
     expect(result[1].growthPct).toBeCloseTo(10, 5);
+    expect(result[1].reason).toBeNull();
     expect(result[2].growthPct).toBeCloseTo(10, 5);
   });
 
-  it("returns null growth for a missing value on either side", () => {
+  it("returns null growth (reason: missing) for a missing value on either side", () => {
     const withGap = [period("FY23", "2023-03-31", { revenue: null }), period("FY24", "2024-03-31", { revenue: 110 })];
-    expect(computeGrowthSeries(withGap, "revenue", null)[1].growthPct).toBeNull();
+    const result = computeGrowthSeries(withGap, "revenue", null)[1];
+    expect(result.growthPct).toBeNull();
+    expect(result.reason).toBe("missing");
   });
 
-  it("treats growth from a non-positive base as not meaningful (null), not an extreme percentage", () => {
-    // INDIGO-shaped: net income swings from -305.79 to +8172.50 -- the raw
-    // formula would report an extreme, sign-inverted "+2673%" that isn't a
+  it("treats growth from a non-positive base as not meaningful, not an extreme percentage", () => {
+    // INDIGO's real PAT: FY23 -305.79 -> FY24 +8172.50 -- the raw formula
+    // would report an extreme, sign-inverted "+2673%" that isn't a
     // meaningful growth figure.
     const swingy = [
       period("FY23", "2023-03-31", { net_income: -305.79 }),
       period("FY24", "2024-03-31", { net_income: 8172.5 }),
     ];
-    expect(computeGrowthSeries(swingy, "net_income", null)[1].growthPct).toBeNull();
+    const result = computeGrowthSeries(swingy, "net_income", null)[1];
+    expect(result.growthPct).toBeNull();
+    expect(result.reason).toBe("not_meaningful");
   });
 
   it("excludes growth across a comparable_from cutoff, not just before/after it individually", () => {
@@ -49,6 +54,7 @@ describe("computeGrowthSeries", () => {
     // "growth" would be a corporate-action jump, not organic growth.
     const result = computeGrowthSeries(periods, "revenue", "2023-04-01");
     expect(result[1].growthPct).toBeNull(); // FY23 -> FY24 straddles the cutoff
+    expect(result[1].reason).toBe("missing");
     expect(result[2].growthPct).toBeCloseTo(10, 5); // FY24 -> FY25 is fully post-cutoff
   });
 });
@@ -62,22 +68,27 @@ describe("computeSeriesCagr", () => {
 
   it("computes CAGR across the full comparable span", () => {
     const cagr = computeSeriesCagr(periods, "revenue", null);
-    expect(cagr).toBeCloseTo(10, 0);
+    expect(cagr.value).toBeCloseTo(10, 0);
+    expect(cagr.reason).toBeNull();
   });
 
   it("only uses periods at or after comparable_from", () => {
     // Only FY23->FY24 (10%) should count, not FY22's lower base.
     const cagr = computeSeriesCagr(periods, "revenue", "2023-01-01");
-    expect(cagr).toBeCloseTo(10, 0);
+    expect(cagr.value).toBeCloseTo(10, 0);
   });
 
-  it("returns null with fewer than 2 comparable periods", () => {
-    expect(computeSeriesCagr(periods, "revenue", "2024-01-01")).toBeNull();
+  it("returns reason 'missing' with fewer than 2 comparable periods", () => {
+    const cagr = computeSeriesCagr(periods, "revenue", "2024-01-01");
+    expect(cagr.value).toBeNull();
+    expect(cagr.reason).toBe("missing");
   });
 
-  it("returns null for a negative or zero base value", () => {
+  it("returns reason 'not_meaningful' for a negative or zero base value", () => {
     const negative = [period("FY22", "2022-03-31", { revenue: -50 }), period("FY24", "2024-03-31", { revenue: 100 })];
-    expect(computeSeriesCagr(negative, "revenue", null)).toBeNull();
+    const cagr = computeSeriesCagr(negative, "revenue", null);
+    expect(cagr.value).toBeNull();
+    expect(cagr.reason).toBe("not_meaningful");
   });
 });
 

@@ -1,0 +1,224 @@
+{
+  "gross_margin": {
+    "label": "Gross margin",
+    "formula": "Gross profit ÷ Revenue",
+    "meaning": "How much of every rupee of sales is left after direct production costs.",
+    "good_looks_like": "Stable or rising over time; varies hugely by industry, so compare within the sector."
+  },
+  "ebitda_margin": {
+    "label": "EBITDA margin",
+    "formula": "EBITDA ÷ Revenue",
+    "meaning": "Core operating profitability before financing, tax and non-cash charges.",
+    "good_looks_like": "Higher than sector peers, and stable or expanding year over year."
+  },
+  "ebit_margin": {
+    "label": "EBIT margin",
+    "formula": "EBIT ÷ Revenue",
+    "meaning": "Operating profitability after depreciation and amortisation.",
+    "good_looks_like": "Tracking EBITDA margin closely; a widening gap signals rising D&A."
+  },
+  "pat_margin": {
+    "label": "PAT margin (net margin)",
+    "formula": "Net income ÷ Revenue",
+    "meaning": "How much of every rupee of sales ends up as bottom-line profit.",
+    "good_looks_like": "Consistent or improving; a sudden drop with stable EBITDA margin points to interest, tax or one-off items."
+  },
+  "roe": {
+    "label": "Return on Equity (ROE)",
+    "formula": "Net income ÷ Average shareholders' equity",
+    "meaning": "How efficiently the company turns shareholders' capital into profit.",
+    "good_looks_like": "Consistently above the cost of equity (often 12-15%+ for Indian large-caps), without excessive leverage driving it."
+  },
+  "roce": {
+    "label": "Return on Capital Employed (ROCE)",
+    "formula": "EBIT ÷ (Equity + Total debt), average of opening and closing",
+    "meaning": "Return generated on all capital invested in the business -- both equity and debt -- independent of how it's financed.",
+    "good_looks_like": "Comfortably above the company's cost of capital; a widening gap over ROE suggests leverage is inflating equity returns."
+  },
+  "roic": {
+    "label": "Return on Invested Capital (ROIC)",
+    "formula": "NOPAT (EBIT × (1 - tax rate)) ÷ Invested capital",
+    "meaning": "After-tax return on the capital actually deployed in operations.",
+    "good_looks_like": "Above the weighted average cost of capital, i.e. the business creates value rather than just growing."
+  },
+  "roa": {
+    "label": "Return on Assets (ROA)",
+    "formula": "Net income ÷ Average total assets",
+    "meaning": "How efficiently the balance sheet is used to generate profit -- the primary profitability yardstick for banks/NBFCs.",
+    "good_looks_like": "For banks, >1% is typically considered healthy; varies by template."
+  },
+  "debt_to_equity": {
+    "label": "Debt / Equity (D/E)",
+    "formula": "Total debt ÷ Total equity",
+    "meaning": "How much borrowed capital is used relative to shareholders' own capital.",
+    "good_looks_like": "Lower is generally safer; a rising trend without a matching growth payoff is worth watching."
+  },
+  "net_debt_to_ebitda": {
+    "label": "Net debt / EBITDA",
+    "formula": "(Total debt − Cash) ÷ EBITDA",
+    "meaning": "How many years of current EBITDA it would take to pay off net debt.",
+    "good_looks_like": "Under 2-3x is typically comfortable; above 4x warrants scrutiny."
+  },
+  "interest_coverage": {
+    "label": "Interest coverage",
+    "formula": "EBIT ÷ Interest expense",
+    "meaning": "How many times over the company can pay its interest obligations from operating profit.",
+    "good_looks_like": "Above 3x is a common comfort threshold; below that signals refinancing/solvency risk."
+  },
+  "debt_to_assets": {
+    "label": "Debt / Assets",
+    "formula": "Total debt ÷ Total assets",
+    "meaning": "What fraction of the balance sheet is funded by debt.",
+    "good_looks_like": "Lower means more of the asset base is equity-funded, generally a safer structure."
+  },
+  "current_ratio": {
+    "label": "Current ratio",
+    "formula": "Current assets ÷ Current liabilities",
+    "meaning": "Ability to cover short-term obligations with short-term assets.",
+    "good_looks_like": "Above 1.0x comfortably; well above 2x can also mean idle working capital."
+  },
+  "quick_ratio": {
+    "label": "Quick ratio",
+    "formula": "(Current assets − Inventory) ÷ Current liabilities",
+    "meaning": "Short-term solvency excluding inventory, which can be slow to convert to cash.",
+    "good_looks_like": "Above 1.0x; a large gap versus the current ratio means inventory dominates working capital."
+  },
+  "cash_ratio": {
+    "label": "Cash ratio",
+    "formula": "Cash & equivalents ÷ Current liabilities",
+    "meaning": "The most conservative liquidity measure -- can short-term debts be paid from cash alone.",
+    "good_looks_like": "Context-dependent; very high values may mean cash is being under-deployed."
+  },
+  "asset_turnover": {
+    "label": "Asset turnover",
+    "formula": "Revenue ÷ Average total assets",
+    "meaning": "How much revenue is generated per rupee of assets -- an efficiency measure.",
+    "good_looks_like": "Higher is more efficient; naturally lower for capital-intensive/financial businesses."
+  },
+  "inventory_days": {
+    "label": "Inventory days",
+    "formula": "(Inventory ÷ COGS) × 365",
+    "meaning": "How many days of sales are sitting in inventory.",
+    "good_looks_like": "Lower generally means less capital tied up, but too low can signal stockouts."
+  },
+  "debtor_days": {
+    "label": "Debtor (receivable) days",
+    "formula": "(Receivables ÷ Revenue) × 365",
+    "meaning": "How long, on average, it takes to collect payment from customers.",
+    "good_looks_like": "Lower means faster cash collection; a rising trend can signal collection problems."
+  },
+  "payable_days": {
+    "label": "Payable days",
+    "formula": "(Payables ÷ COGS) × 365",
+    "meaning": "How long, on average, the company takes to pay its own suppliers.",
+    "good_looks_like": "Longer terms improve working capital, within reason -- too long can strain supplier relationships."
+  },
+  "cash_conversion_cycle": {
+    "label": "Cash conversion cycle (CCC)",
+    "formula": "Inventory days + Debtor days − Payable days",
+    "meaning": "How many days cash is tied up in the operating cycle before it's collected back.",
+    "good_looks_like": "Lower (or negative) is better -- cash is freed up faster, or even before it's spent."
+  },
+  "fcf_margin": {
+    "label": "FCF margin",
+    "formula": "Free cash flow ÷ Revenue",
+    "meaning": "What share of revenue converts into cash left over after operations and capex.",
+    "good_looks_like": "Positive and stable or growing; consistently negative FCF margin needs external funding to sustain."
+  },
+  "cfo_to_pat": {
+    "label": "CFO / PAT",
+    "formula": "Cash flow from operations ÷ Net income",
+    "meaning": "How much of reported accounting profit actually shows up as operating cash.",
+    "good_looks_like": "Around or above 1.0x; persistently below 0.8x suggests earnings quality concerns (e.g. working-capital buildup)."
+  },
+  "capex_intensity": {
+    "label": "Capex intensity",
+    "formula": "Capex ÷ Revenue",
+    "meaning": "How much of every rupee of sales is being reinvested into fixed assets.",
+    "good_looks_like": "Context-dependent -- compare against the sector and against the company's own growth stage."
+  },
+  "nim": {
+    "label": "Net Interest Margin (NIM, proxy)",
+    "formula": "Net interest income ÷ Average interest-earning assets (proxied by average total assets)",
+    "meaning": "The spread a bank/NBFC earns between interest income and interest expense, relative to its asset base.",
+    "good_looks_like": "Higher and stable; a proxy here since this app doesn't have a true interest-earning-assets breakdown."
+  },
+  "cost_to_income": {
+    "label": "Cost-to-income ratio",
+    "formula": "Non-interest expense ÷ (Net interest income + Non-interest income)",
+    "meaning": "How much of a bank/NBFC's income is consumed by operating costs.",
+    "good_looks_like": "Lower is more efficient; under ~50% is typically considered good for Indian banks."
+  },
+  "nii_growth": {
+    "label": "NII growth",
+    "formula": "YoY % change in net interest income",
+    "meaning": "Growth in a bank/NBFC's core lending spread income.",
+    "good_looks_like": "Positive and in line with or ahead of loan-book growth."
+  },
+  "premium_growth": {
+    "label": "Premium growth",
+    "formula": "YoY % change in premiums earned",
+    "meaning": "Growth in an insurer's core underwriting top line.",
+    "good_looks_like": "Positive and consistent, ideally ahead of industry premium growth."
+  },
+  "revenue_growth": {
+    "label": "Revenue growth",
+    "formula": "YoY % change in revenue",
+    "meaning": "Top-line growth versus the prior comparable period.",
+    "good_looks_like": "Positive and, ideally, ahead of sector peers."
+  },
+  "ebitda_growth": {
+    "label": "EBITDA growth",
+    "formula": "YoY % change in EBITDA",
+    "meaning": "Growth in core operating profit before financing/tax/non-cash items.",
+    "good_looks_like": "Growing faster than revenue implies margin expansion."
+  },
+  "pat_growth": {
+    "label": "PAT growth",
+    "formula": "YoY % change in net income",
+    "meaning": "Growth in bottom-line profit.",
+    "good_looks_like": "Positive; shown as \"n.m.\" rather than a percentage when the prior period was a loss, since a sign-crossing swing isn't a meaningful growth rate."
+  },
+  "revenue_cagr_3y": {
+    "label": "Revenue CAGR",
+    "formula": "(Latest revenue ÷ Earliest comparable revenue)^(1/years) − 1",
+    "meaning": "Compounded annual revenue growth over the comparable history available (not always exactly 3 years -- see the span actually used).",
+    "good_looks_like": "Positive and steady; compare against the sector's own CAGR."
+  },
+  "pat_cagr_3y": {
+    "label": "PAT CAGR",
+    "formula": "(Latest net income ÷ Earliest comparable net income)^(1/years) − 1",
+    "meaning": "Compounded annual profit growth over the comparable history available.",
+    "good_looks_like": "Positive and steady, ideally tracking or exceeding revenue CAGR (margin expansion)."
+  },
+  "pe": {
+    "label": "P/E ratio",
+    "formula": "Price ÷ Earnings per share",
+    "meaning": "How much the market pays today for each rupee of current earnings.",
+    "good_looks_like": "Lower can mean cheaper (or lower growth expectations) -- always compare against the sector and the company's own history."
+  },
+  "pb": {
+    "label": "P/B ratio",
+    "formula": "Price ÷ Book value per share",
+    "meaning": "How much the market pays relative to the company's accounting net worth.",
+    "good_looks_like": "Lower can mean cheaper -- particularly relevant for banks/NBFCs/insurers, where book value is a core valuation anchor."
+  },
+  "ev_ebitda": {
+    "label": "EV / EBITDA",
+    "formula": "Enterprise value ÷ EBITDA",
+    "meaning": "Valuation multiple independent of capital structure -- compares total company value to core operating profit.",
+    "good_looks_like": "Lower can mean cheaper; useful for comparing companies with different debt levels."
+  },
+  "altman_z_score": {
+    "label": "Altman Z-Score",
+    "formula": "Weighted combination of working capital, retained earnings, EBIT, market cap and revenue, each scaled by total assets/liabilities",
+    "meaning": "A bankruptcy-risk score for non-financial companies.",
+    "good_looks_like": "Above ~2.99 is the \"safe\" zone; 1.8-2.99 is a \"grey\" zone; below 1.8 signals distress risk."
+  },
+  "piotroski_f_score": {
+    "label": "Piotroski F-Score",
+    "formula": "Count of 9 pass/fail fundamental tests across profitability, leverage/liquidity and operating efficiency",
+    "meaning": "A 0-9 score of fundamental financial strength, higher is stronger.",
+    "good_looks_like": "8-9 is considered strong; 0-2 is considered weak. Not applicable to bank/NBFC/insurance templates."
+  }
+}

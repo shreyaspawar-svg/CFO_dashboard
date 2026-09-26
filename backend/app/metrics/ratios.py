@@ -12,6 +12,7 @@ are returned as that multiple (e.g. `1.8` for a 1.8x P/B), not a percentage.
 from __future__ import annotations
 
 import math
+from typing import TypedDict
 
 DAYS_PER_YEAR = 365.0
 
@@ -39,12 +40,37 @@ def average_of(a: float | None, b: float | None) -> float | None:
 
 
 def yoy_growth(current: float | None, previous: float | None) -> float | None:
-    """Year-over-year growth, as a percentage. Undefined (None) if the prior
-    period's value is zero (division by zero) -- a negative prior value is
-    allowed through (e.g. a loss shrinking is a real, meaningful "growth")."""
-    if current is None or previous is None or previous == 0:
+    """Year-over-year growth, as a percentage. `None` when the prior
+    period's value is missing or non-positive.
+
+    PLAN.md "Phase 4.2 review": growth from a non-positive base isn't a
+    meaningful percentage, even when it's computable -- INDIGO's PAT
+    swinging from -Rs306 Cr to +Rs8,172 Cr isn't "+2,673% growth", it's a
+    sign change a percentage can't honestly describe. An earlier version
+    of this function let a negative-previous case through (reasoning that
+    "a loss shrinking is meaningful growth"), but that conflates two
+    different things: a same-sign move (-200 -> -100, still a loss, arguably
+    describable as "improved") and a sign-crossing move (-306 -> +8,172,
+    not a "growth rate" in any normal sense). Rather than special-case the
+    same-sign case, the accepted product decision is simpler and safer: any
+    non-positive prior value makes the percentage not meaningful, full
+    stop. Use `growth_reason` to distinguish this from a genuinely missing
+    input for display purposes ("n.m." vs "—")."""
+    if current is None or previous is None or previous <= 0:
         return None
-    return (current - previous) / abs(previous) * 100
+    return (current - previous) / previous * 100
+
+
+def growth_reason(current: float | None, previous: float | None) -> str | None:
+    """Why `yoy_growth(current, previous)` returned `None`, or `None` if it
+    returned a real value. `"missing"`: an input is genuinely absent.
+    `"not_meaningful"`: both inputs are present but the prior value is
+    non-positive (PLAN.md "Phase 4.2 review")."""
+    if current is None or previous is None:
+        return "missing"
+    if previous <= 0:
+        return "not_meaningful"
+    return None
 
 
 def cagr(begin_value: float | None, end_value: float | None, years: float | None) -> float | None:
@@ -56,6 +82,20 @@ def cagr(begin_value: float | None, end_value: float | None, years: float | None
     if begin_value <= 0 or end_value <= 0 or years <= 0:
         return None
     return ((end_value / begin_value) ** (1 / years) - 1) * 100
+
+
+def cagr_reason(begin_value: float | None, end_value: float | None, years: float | None) -> str | None:
+    """Why `cagr(begin_value, end_value, years)` returned `None`, or `None`
+    if it returned a real value. `"missing"`: an input is absent or `years`
+    isn't positive (no valid span to compute over). `"not_meaningful"`:
+    both endpoints are present and `years` is valid, but an endpoint is
+    non-positive -- a fractional power of a negative base isn't a real
+    CAGR (PLAN.md "Phase 4.2 review", same principle as `growth_reason`)."""
+    if begin_value is None or end_value is None or years is None or years <= 0:
+        return "missing"
+    if begin_value <= 0 or end_value <= 0:
+        return "not_meaningful"
+    return None
 
 
 # --------------------------------------------------------------------------
@@ -159,6 +199,31 @@ def dupont_decomposition(
         "net_margin_pct": net_margin * 100 if net_margin is not None else None,
         "asset_turnover": asset_turnover_,
         "equity_multiplier": equity_multiplier,
+        "roe_check_pct": roe_check,
+    }
+
+
+def dupont_bank(
+    net_income: float | None,
+    avg_total_assets: float | None,
+    avg_equity: float | None,
+) -> dict[str, float | None]:
+    """2-step DuPont for bank/NBFC templates (PLAN.md §4.3): ROE = ROA x
+    Leverage (Assets/Equity). A bank's "revenue" (interest + non-interest
+    income) doesn't decompose into a margin/turnover split the way a
+    general company's sales do, so this shows the 2 factors a bank's
+    profitability is actually framed around, not a 3-step split that
+    forces a general-company shape onto a business model it doesn't fit."""
+    roa = _safe_div(net_income, avg_total_assets)
+    leverage = _safe_div(avg_total_assets, avg_equity)
+
+    roe_check = None
+    if roa is not None and leverage is not None:
+        roe_check = roa * leverage * 100
+
+    return {
+        "roa_pct": roa * 100 if roa is not None else None,
+        "leverage": leverage,
         "roe_check_pct": roe_check,
     }
 
@@ -509,3 +574,141 @@ def piotroski_f_score(current: dict, prior: dict) -> tuple[int, int]:
     )
 
     return points_earned, points_possible
+
+
+class AltmanZComponent(TypedDict):
+    label: str
+    value: float | None
+
+
+class AltmanZDetail(TypedDict):
+    score: float | None
+    zone: str | None
+    components: list[AltmanZComponent]
+
+
+def altman_z_score_detailed(
+    working_capital: float | None,
+    retained_earnings: float | None,
+    ebit: float | None,
+    market_cap: float | None,
+    total_liabilities: float | None,
+    revenue: float | None,
+    total_assets: float | None,
+) -> AltmanZDetail:
+    """Same 5-factor Altman Z as `altman_z_score`, plus each labelled
+    component and the distress zone (PLAN.md §4.3 item 6) -- kept as a
+    separate function rather than changing `altman_z_score`'s return type,
+    since `metrics_engine.py`'s flat `metrics` dict needs a plain float."""
+    a = _safe_div(working_capital, total_assets)
+    b = _safe_div(retained_earnings, total_assets)
+    c = _safe_div(ebit, total_assets)
+    d = _safe_div(market_cap, total_liabilities)
+    e = _safe_div(revenue, total_assets)
+    components = [
+        {"label": "Working capital / Total assets", "value": a},
+        {"label": "Retained earnings / Total assets", "value": b},
+        {"label": "EBIT / Total assets", "value": c},
+        {"label": "Market cap / Total liabilities", "value": d},
+        {"label": "Revenue / Total assets", "value": e},
+    ]
+    if any(component is None for component in (a, b, c, d, e)):
+        return {"score": None, "zone": None, "components": components}
+    score = 1.2 * a + 1.4 * b + 3.3 * c + 0.6 * d + 1.0 * e
+    if score >= 2.99:
+        zone = "safe"
+    elif score >= 1.8:
+        zone = "grey"
+    else:
+        zone = "distress"
+    return {"score": score, "zone": zone, "components": components}
+
+
+class PiotroskiTest(TypedDict):
+    label: str
+    passed: bool | None
+
+
+class PiotroskiDetail(TypedDict):
+    earned: int
+    possible: int
+    tests: list[PiotroskiTest]
+
+
+def piotroski_f_score_detailed(current: dict, prior: dict) -> PiotroskiDetail:
+    """Same 9-point Piotroski F-score as `piotroski_f_score`, plus a
+    labelled pass/fail checklist (PLAN.md §4.3 item 6)."""
+    tests: list[PiotroskiTest] = []
+    earned = 0
+    possible = 0
+
+    def _test(label: str, condition_value: bool | None) -> None:
+        nonlocal earned, possible
+        tests.append({"label": label, "passed": condition_value})
+        if condition_value is None:
+            return
+        possible += 1
+        if condition_value:
+            earned += 1
+
+    curr_roa = return_on_assets(current.get("net_income"), current.get("total_assets"))
+    prior_roa = return_on_assets(prior.get("net_income"), prior.get("total_assets"))
+
+    _test("Positive ROA", curr_roa > 0 if curr_roa is not None else None)
+    _test(
+        "Positive operating cash flow",
+        current.get("cfo") > 0 if current.get("cfo") is not None else None,
+    )
+    _test(
+        "ROA improved vs prior year",
+        curr_roa > prior_roa if curr_roa is not None and prior_roa is not None else None,
+    )
+    _test(
+        "Operating cash flow exceeds net income (earnings quality)",
+        current.get("cfo") > current.get("net_income")
+        if current.get("cfo") is not None and current.get("net_income") is not None
+        else None,
+    )
+
+    curr_leverage = debt_to_assets(current.get("total_debt"), current.get("total_assets"))
+    prior_leverage = debt_to_assets(prior.get("total_debt"), prior.get("total_assets"))
+    _test(
+        "Leverage (Debt/Assets) decreased",
+        curr_leverage < prior_leverage if curr_leverage is not None and prior_leverage is not None else None,
+    )
+
+    curr_current_ratio = current_ratio(current.get("current_assets"), current.get("current_liabilities"))
+    prior_current_ratio = current_ratio(prior.get("current_assets"), prior.get("current_liabilities"))
+    _test(
+        "Current ratio improved",
+        curr_current_ratio > prior_current_ratio
+        if curr_current_ratio is not None and prior_current_ratio is not None
+        else None,
+    )
+
+    curr_shares = current.get("shares_outstanding")
+    prior_shares = prior.get("shares_outstanding")
+    _test(
+        "No new shares issued (non-dilutive)",
+        curr_shares <= prior_shares if curr_shares is not None and prior_shares is not None else None,
+    )
+
+    curr_gross_margin = margin(current.get("gross_profit"), current.get("revenue"))
+    prior_gross_margin = margin(prior.get("gross_profit"), prior.get("revenue"))
+    _test(
+        "Gross margin improved",
+        curr_gross_margin > prior_gross_margin
+        if curr_gross_margin is not None and prior_gross_margin is not None
+        else None,
+    )
+
+    curr_asset_turnover = asset_turnover(current.get("revenue"), current.get("total_assets"))
+    prior_asset_turnover = asset_turnover(prior.get("revenue"), prior.get("total_assets"))
+    _test(
+        "Asset turnover improved",
+        curr_asset_turnover > prior_asset_turnover
+        if curr_asset_turnover is not None and prior_asset_turnover is not None
+        else None,
+    )
+
+    return {"earned": earned, "possible": possible, "tests": tests}

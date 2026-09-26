@@ -31,12 +31,17 @@ export function ChartCard({
   option,
   csv,
   height = 320,
+  onEvents,
 }: {
   title: string;
   subtitle?: string;
   option: EChartsOption;
   csv?: ChartCsvSpec;
   height?: number;
+  /** Optional ECharts event handlers (e.g. `{ click: (params) => ... }`) --
+   * used by the peer strip plot so clicking a dot can navigate (PLAN.md
+   * §4.3 item 5). Passed straight through to `echarts-for-react`. */
+  onEvents?: Record<string, (params: unknown) => void>;
 }) {
   const { resolvedTheme } = useTheme();
   const chartRef = useRef<ReactECharts | null>(null);
@@ -78,6 +83,7 @@ export function ChartCard({
         style={{ height }}
         notMerge
         opts={{ renderer: "svg" }}
+        onEvents={onEvents}
       />
     </div>
   );

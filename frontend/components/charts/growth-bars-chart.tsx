@@ -35,6 +35,11 @@ export function GrowthBarsChart({
       revenue: revenue.map((r) => r.growthPct),
       ebitda: ebitda.map((r) => r.growthPct),
       netIncome: netIncome.map((r) => r.growthPct),
+      // A gap is already the right visual for both "missing" and "not
+      // meaningful" (there's no bar to show either way) -- kept only for
+      // the CSV export, so a "n.m." reader isn't left thinking it's just
+      // absent data.
+      netIncomeReason: netIncome.map((r) => r.reason),
     };
   }, [periods, comparableFrom]);
 
@@ -69,8 +74,14 @@ export function GrowthBarsChart({
       height={260}
       csv={{
         filename: `${symbol}_growth.csv`,
-        headers: ["Period", "Revenue growth %", "EBITDA growth %", "Net income growth %"],
-        rows: series.labels.map((label, i) => [label, series.revenue[i], series.ebitda[i], series.netIncome[i]]),
+        headers: ["Period", "Revenue growth %", "EBITDA growth %", "Net income growth %", "Net income growth note"],
+        rows: series.labels.map((label, i) => [
+          label,
+          series.revenue[i],
+          series.ebitda[i],
+          series.netIncome[i],
+          series.netIncomeReason[i] === "not_meaningful" ? "n.m. (prior period <= 0)" : "",
+        ]),
       }}
     />
   );

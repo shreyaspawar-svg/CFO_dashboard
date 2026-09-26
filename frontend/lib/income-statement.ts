@@ -17,9 +17,19 @@ export function marginPct(
   return (numerator / denominator) * 100;
 }
 
+/** Why a growth/CAGR figure is `null`, mirroring the backend's
+ * `RatioValue.reason` exactly (PLAN.md "Phase 4.2 review"): `"missing"` an
+ * input was genuinely absent (or the span straddles a corporate-action
+ * cutoff -- the pre-cutoff side is effectively a different, absent
+ * metric). `"not_meaningful"` both inputs are present but the prior value
+ * is non-positive, so the percentage itself isn't meaningful. `null` when
+ * the value itself is real. */
+export type Reason = "missing" | "not_meaningful" | null;
+
 export interface GrowthPoint {
   label: string;
   growthPct: number | null;
+  reason: Reason;
 }
 
 /** True if `prevPeriodEnd` and `currPeriodEnd` sit on opposite sides of a
@@ -35,37 +45,41 @@ function straddlesCutoff(prevPeriodEnd: string, currPeriodEnd: string, comparabl
 
 /** YoY/QoQ growth for one line item across consecutive periods (oldest
  * first, matching `/api/financials`' own ordering). The first period has
- * no prior point to compare against (`growthPct: null`), as does any pair
- * whose prior value is missing, zero, or that straddles a comparable_from
- * cutoff. */
+ * no prior point to compare against (`reason: "missing"`), as does any
+ * pair whose prior value is missing or that straddles a comparable_from
+ * cutoff. A pair whose prior value is non-positive gets `reason:
+ * "not_meaningful"` instead -- see the `Reason` docstring. */
 export function computeGrowthSeries(
   periods: FinancialPeriodLite[],
   key: string,
   comparableFrom: string | null
 ): GrowthPoint[] {
   return periods.map((period, i) => {
-    if (i === 0) return { label: period.fiscal_year, growthPct: null };
+    if (i === 0) return { label: period.fiscal_year, growthPct: null, reason: "missing" };
     const prev = periods[i - 1];
     const prevValue = prev.line_items[key];
     const currValue = period.line_items[key];
-    if (
-      prevValue === null ||
-      prevValue === undefined ||
-      currValue === null ||
-      currValue === undefined ||
-      // A growth % from a non-positive base isn't meaningful, not just
-      // visually extreme: swinging from -300 to +8,000 is a sign change,
-      // not "+2,600% growth" -- the formula's sign flips backwards for a
-      // negative base (a move from -100 to -50 is really an improvement,
-      // but the raw formula reports -50%). Standard analyst convention is
-      // "n/m" (not meaningful) here, same principle as this app's own
-      // P/E-from-near-zero-EPS plausibility guard (backend/docs/data-notes.md).
-      prevValue <= 0 ||
-      straddlesCutoff(prev.period_end, period.period_end, comparableFrom)
-    ) {
-      return { label: period.fiscal_year, growthPct: null };
+    if (prevValue === null || prevValue === undefined || currValue === null || currValue === undefined) {
+      return { label: period.fiscal_year, growthPct: null, reason: "missing" };
     }
-    return { label: period.fiscal_year, growthPct: ((currValue - prevValue) / prevValue) * 100 };
+    if (straddlesCutoff(prev.period_end, period.period_end, comparableFrom)) {
+      return { label: period.fiscal_year, growthPct: null, reason: "missing" };
+    }
+    // A growth % from a non-positive base isn't meaningful, not just
+    // visually extreme: swinging from -300 to +8,000 is a sign change,
+    // not "+2,600% growth" -- the formula's sign flips backwards for a
+    // negative base (a move from -100 to -50 is really an improvement,
+    // but the raw formula reports -50%). Standard analyst convention is
+    // "n.m." (not meaningful) here, same principle as this app's own
+    // P/E-from-near-zero-EPS plausibility guard (backend/docs/data-notes.md).
+    if (prevValue <= 0) {
+      return { label: period.fiscal_year, growthPct: null, reason: "not_meaningful" };
+    }
+    return {
+      label: period.fiscal_year,
+      growthPct: ((currValue - prevValue) / prevValue) * 100,
+      reason: null,
+    };
   });
 }
 
@@ -75,33 +89,34 @@ export function computeGrowthSeries(
  * actually covers (PLAN.md "Phase 1.5 review" item 4: don't imply a 5-year
  * CAGR from 3 years of data). Returns `null` for a sub-1-year span, same
  * guard as `computeReturnsTable`. */
+export interface CagrResult {
+  value: number | null;
+  reason: Reason;
+}
+
 export function computeSeriesCagr(
   periods: FinancialPeriodLite[],
   key: string,
   comparableFrom: string | null
-): number | null {
+): CagrResult {
   const comparable = comparableFrom
     ? periods.filter((p) => p.period_end >= comparableFrom)
     : periods;
-  if (comparable.length < 2) return null;
+  if (comparable.length < 2) return { value: null, reason: "missing" };
   const first = comparable[0];
   const last = comparable[comparable.length - 1];
   const firstValue = first.line_items[key];
   const lastValue = last.line_items[key];
-  if (
-    firstValue === null ||
-    firstValue === undefined ||
-    lastValue === null ||
-    lastValue === undefined ||
-    firstValue <= 0 ||
-    lastValue <= 0
-  ) {
-    return null;
+  if (firstValue === null || firstValue === undefined || lastValue === null || lastValue === undefined) {
+    return { value: null, reason: "missing" };
   }
   const years =
     (new Date(last.period_end).getTime() - new Date(first.period_end).getTime()) / (365.25 * 24 * 60 * 60 * 1000);
-  if (years < 0.95) return null;
-  return (Math.pow(lastValue / firstValue, 1 / years) - 1) * 100;
+  if (years < 0.95) return { value: null, reason: "missing" };
+  // A fractional power of a non-positive base isn't a real CAGR -- same
+  // principle as computeGrowthSeries's non-positive-base guard.
+  if (firstValue <= 0 || lastValue <= 0) return { value: null, reason: "not_meaningful" };
+  return { value: (Math.pow(lastValue / firstValue, 1 / years) - 1) * 100, reason: null };
 }
 
 export interface WaterfallStep {

@@ -74,6 +74,138 @@ def _ttm_sum(quarterly_periods: list[dict], key: str) -> float | None:
     return sum(values)
 
 
+def _align_periods_by_end(
+    income_periods: list[dict], balance_periods: list[dict], cashflow_periods: list[dict]
+) -> list[tuple[dict, dict, dict]]:
+    """Inner-join the three statements by `period_end`, sorted ascending.
+    They usually share the same annual reporting dates, but aren't
+    guaranteed to (a missing balance-sheet period shouldn't silently
+    misalign income/cashflow by position) -- so this joins explicitly by
+    date rather than assuming the three lists line up index-for-index."""
+    balance_by_end = {p["period_end"]: p for p in balance_periods}
+    cashflow_by_end = {p["period_end"]: p for p in cashflow_periods}
+    aligned = [
+        (inc, balance_by_end[inc["period_end"]], cashflow_by_end[inc["period_end"]])
+        for inc in income_periods
+        if inc["period_end"] in balance_by_end and inc["period_end"] in cashflow_by_end
+    ]
+    return sorted(aligned, key=lambda t: t[0]["period_end"])
+
+
+def compute_ratio_history(
+    income_periods: list[dict], balance_periods: list[dict], cashflow_periods: list[dict]
+) -> dict[str, list[dict[str, Any]]]:
+    """Per-fiscal-year values for the ratios PLAN.md §4.3 needs a sparkline
+    and a strengths/watch-outs trend for -- computed once here so both can
+    share it rather than each re-deriving history their own way.
+
+    Deliberately scoped to metrics computable from a single period (plus,
+    where needed, its immediate predecessor for an average or a growth
+    rate) -- TTM-blended metrics (ROE/ROA's own-vs-Yahoo preference, the
+    equity-basis-oscillation fix) stay "latest point only" concerns for the
+    KPI card, not something this per-period history reconstructs. P/B is
+    excluded entirely: a meaningful historical P/B needs the share price
+    AT each period-end, which this app doesn't fetch -- shown as "—" for
+    every year rather than approximated from today's price.
+    """
+    aligned = _align_periods_by_end(income_periods, balance_periods, cashflow_periods)
+    history: dict[str, list[dict[str, Any]]] = {}
+
+    def _append(key: str, fiscal_year: str, period_end: str, value: float | None) -> None:
+        history.setdefault(key, []).append(
+            {"fiscal_year": fiscal_year, "period_end": period_end, "value": value}
+        )
+
+    for i, (inc, bal, cf) in enumerate(aligned):
+        li, bl, cl = inc["line_items"], bal["line_items"], cf["line_items"]
+        fy = inc["fiscal_year"]
+        period_end = inc["period_end"]
+        prior_li = aligned[i - 1][0]["line_items"] if i > 0 else {}
+        prior_bl = aligned[i - 1][1]["line_items"] if i > 0 else {}
+
+        avg_equity = (
+            r.average_of(bl.get("total_equity"), prior_bl.get("total_equity"))
+            if i > 0
+            else bl.get("total_equity")
+        )
+        avg_assets = (
+            r.average_of(bl.get("total_assets"), prior_bl.get("total_assets"))
+            if i > 0
+            else bl.get("total_assets")
+        )
+
+        _append("ebitda_margin", fy, period_end, r.margin(li.get("ebitda"), li.get("revenue")))
+        _append("pat_margin", fy, period_end, r.margin(li.get("net_income"), li.get("revenue")))
+        _append("net_income", fy, period_end, li.get("net_income"))
+        _append("gross_margin", fy, period_end, r.margin(li.get("gross_profit"), li.get("revenue")))
+        _append("roe", fy, period_end, r.return_on_equity(li.get("net_income"), avg_equity))
+        _append("roa", fy, period_end, r.return_on_assets(li.get("net_income"), avg_assets))
+        cap_employed = r.capital_employed(bl.get("total_assets"), bl.get("current_liabilities"))
+        _append("roce", fy, period_end, r.return_on_capital_employed(li.get("ebit"), cap_employed))
+        _append(
+            "debt_to_equity", fy, period_end, r.debt_to_equity(bl.get("total_debt"), bl.get("total_equity"))
+        )
+        _append(
+            "current_ratio",
+            fy,
+            period_end,
+            r.current_ratio(bl.get("current_assets"), bl.get("current_liabilities")),
+        )
+        _append(
+            "quick_ratio",
+            fy,
+            period_end,
+            r.quick_ratio(bl.get("current_assets"), bl.get("inventory"), bl.get("current_liabilities")),
+        )
+        _append(
+            "interest_coverage", fy, period_end, r.interest_coverage(li.get("ebit"), li.get("interest_expense"))
+        )
+        _append("asset_turnover", fy, period_end, r.asset_turnover(li.get("revenue"), avg_assets))
+        # Same ratio (Assets/Equity), tracked under one name for history --
+        # the general 3-step DuPont calls it "equity multiplier", the bank
+        # 2-step calls it "leverage" (PLAN.md §4.3 item 3); both read this.
+        equity_multiplier = (
+            avg_assets / avg_equity if avg_assets is not None and avg_equity not in (None, 0) else None
+        )
+        _append("equity_multiplier", fy, period_end, equity_multiplier)
+        _append("cfo_to_pat", fy, period_end, r.cfo_to_pat(cl.get("cfo"), li.get("net_income")))
+        _append("nim", fy, period_end, r.net_interest_margin(li.get("net_interest_income"), avg_assets))
+        _append(
+            "cost_to_income",
+            fy,
+            period_end,
+            r.cost_to_income(
+                li.get("non_interest_expense"), li.get("net_interest_income"), li.get("non_interest_income")
+            ),
+        )
+        _append(
+            "revenue_growth",
+            fy,
+            period_end,
+            r.yoy_growth(li.get("revenue"), prior_li.get("revenue")) if i > 0 else None,
+        )
+        _append(
+            "ebitda_growth",
+            fy,
+            period_end,
+            r.yoy_growth(li.get("ebitda"), prior_li.get("ebitda")) if i > 0 else None,
+        )
+        _append(
+            "pat_growth",
+            fy,
+            period_end,
+            r.yoy_growth(li.get("net_income"), prior_li.get("net_income")) if i > 0 else None,
+        )
+        _append(
+            "premium_growth",
+            fy,
+            period_end,
+            r.yoy_growth(li.get("premiums_earned"), prior_li.get("premiums_earned")) if i > 0 else None,
+        )
+
+    return history
+
+
 async def _ttm_dividend_per_share(yf_ticker: str) -> float | None:
     data_source = get_data_source()
     try:
@@ -162,6 +294,11 @@ async def compute_symbol_metrics(symbol: str) -> dict[str, Any]:
     # item 1). Distinct from `method`: a badged metric can still be
     # "computed", just computed from data flagged as shaky.
     data_quality: dict[str, str] = {}
+    # Metric key -> "missing" | "not_meaningful", set only when the metric's
+    # value is None, so the UI can show "n.m." (a real-but-not-meaningful
+    # case, e.g. growth from a non-positive base) instead of "—" (genuinely
+    # absent data) -- PLAN.md "Phase 4.2 review".
+    reasons: dict[str, str] = {}
     comparable_annual_years = 0
 
     if not income_periods:
@@ -171,6 +308,11 @@ async def compute_symbol_metrics(symbol: str) -> dict[str, Any]:
             "metrics": metrics,
             "method": method,
             "data_quality": data_quality,
+            "reasons": reasons,
+            "dupont_kind": None,
+            "dupont_reconciliation_gap_pp": None,
+            "history": {},
+            "quality_scores": None,
             "latest_income": {},
             "latest_balance": {},
             "latest_cashflow": {},
@@ -198,6 +340,7 @@ async def compute_symbol_metrics(symbol: str) -> dict[str, Any]:
     ttm_net_income = _ttm_sum(quarterly_income_periods, "net_income")
     ttm_ebit = _ttm_sum(quarterly_income_periods, "ebit")
     ttm_eps_diluted = _ttm_sum(quarterly_income_periods, "eps_diluted")
+    ttm_revenue = _ttm_sum(quarterly_income_periods, "revenue")
     if ttm_net_income is None:
         ttm_net_income = latest_income.get("net_income")
         warnings.append("TTM net income unavailable (<4 comparable quarters) -- used latest annual instead")
@@ -205,28 +348,41 @@ async def compute_symbol_metrics(symbol: str) -> dict[str, Any]:
         ttm_ebit = latest_income.get("ebit")
     if ttm_eps_diluted is None:
         ttm_eps_diluted = latest_income.get("eps_diluted") or latest_income.get("eps_basic")
+    if ttm_revenue is None:
+        ttm_revenue = latest_income.get("revenue")
 
     # --- Growth -----------------------------------------------------------
-    metrics["revenue_growth"] = r.yoy_growth(latest_income.get("revenue"), prior_income.get("revenue"))
-    metrics["ebitda_growth"] = r.yoy_growth(latest_income.get("ebitda"), prior_income.get("ebitda"))
-    metrics["pat_growth"] = r.yoy_growth(latest_income.get("net_income"), prior_income.get("net_income"))
-    metrics["nii_growth"] = r.yoy_growth(
-        latest_income.get("net_interest_income"), prior_income.get("net_interest_income")
+    def _growth(key: str, current: float | None, previous: float | None) -> None:
+        metrics[key] = r.yoy_growth(current, previous)
+        if metrics[key] is None:
+            reason = r.growth_reason(current, previous)
+            if reason is not None:
+                reasons[key] = reason
+
+    _growth("revenue_growth", latest_income.get("revenue"), prior_income.get("revenue"))
+    _growth("ebitda_growth", latest_income.get("ebitda"), prior_income.get("ebitda"))
+    _growth("pat_growth", latest_income.get("net_income"), prior_income.get("net_income"))
+    _growth(
+        "nii_growth", latest_income.get("net_interest_income"), prior_income.get("net_interest_income")
     )
-    metrics["premium_growth"] = r.yoy_growth(
-        latest_income.get("premiums_earned"), prior_income.get("premiums_earned")
+    _growth(
+        "premium_growth", latest_income.get("premiums_earned"), prior_income.get("premiums_earned")
     )
     years_span = (
         _years_between(income_periods[0]["period_end"], income_periods[-1]["period_end"])
         if len(income_periods) >= 2
         else None
     )
-    metrics["revenue_cagr_3y"] = r.cagr(
-        earliest_income.get("revenue"), latest_income.get("revenue"), years_span
-    )
-    metrics["pat_cagr_3y"] = r.cagr(
-        earliest_income.get("net_income"), latest_income.get("net_income"), years_span
-    )
+
+    def _cagr(key: str, begin_value: float | None, end_value: float | None, years: float | None) -> None:
+        metrics[key] = r.cagr(begin_value, end_value, years)
+        if metrics[key] is None:
+            reason = r.cagr_reason(begin_value, end_value, years)
+            if reason is not None:
+                reasons[key] = reason
+
+    _cagr("revenue_cagr_3y", earliest_income.get("revenue"), latest_income.get("revenue"), years_span)
+    _cagr("pat_cagr_3y", earliest_income.get("net_income"), latest_income.get("net_income"), years_span)
 
     # --- Margins ------------------------------------------------------------
     metrics["gross_margin"] = r.margin(latest_income.get("gross_profit"), latest_income.get("revenue"))
@@ -287,13 +443,46 @@ async def compute_symbol_metrics(symbol: str) -> dict[str, Any]:
     )
     metrics["roic"] = r.return_on_invested_capital(ttm_ebit, tax_rate, inv_capital)
 
-    dupont = r.dupont_decomposition(
-        latest_income.get("net_income"), latest_income.get("revenue"), avg_assets, avg_equity
-    )
-    metrics["dupont_net_margin_pct"] = dupont["net_margin_pct"]
-    metrics["dupont_asset_turnover"] = dupont["asset_turnover"]
-    metrics["dupont_equity_multiplier"] = dupont["equity_multiplier"]
-    metrics["dupont_roe_check_pct"] = dupont["roe_check_pct"]
+    # DuPont uses the exact same net_income_for_returns (and avg_assets/
+    # avg_equity) as own_roe/own_roa above -- not latest_income's raw
+    # annual figure -- so the decomposition is an algebraic identity that
+    # reconciles to metrics["roe"] EXACTLY whenever the KPI card is showing
+    # our own "computed" figure (the only case where a gap would appear is
+    # method == "yahoo_fallback", where the card shows a Yahoo snapshot
+    # this decomposition can't reproduce -- PLAN.md §4.3 item 3).
+    if company.template in ("bank", "nbfc"):
+        dupont = r.dupont_bank(net_income_for_returns, avg_assets, avg_equity)
+        metrics["dupont_roa_pct"] = dupont["roa_pct"]
+        metrics["dupont_leverage"] = dupont["leverage"]
+        metrics["dupont_roe_check_pct"] = dupont["roe_check_pct"]
+        dupont_kind = "bank"
+    else:
+        dupont = r.dupont_decomposition(net_income_for_returns, ttm_revenue, avg_assets, avg_equity)
+        metrics["dupont_net_margin_pct"] = dupont["net_margin_pct"]
+        metrics["dupont_asset_turnover"] = dupont["asset_turnover"]
+        metrics["dupont_equity_multiplier"] = dupont["equity_multiplier"]
+        metrics["dupont_roe_check_pct"] = dupont["roe_check_pct"]
+        dupont_kind = "general"
+
+    dupont_reconciliation_gap_pp: float | None = None
+    if dupont["roe_check_pct"] is not None and metrics["roe"] is not None:
+        dupont_reconciliation_gap_pp = abs(dupont["roe_check_pct"] - metrics["roe"])
+        if dupont_reconciliation_gap_pp > 0.5:
+            if method.get("roe") == "yahoo_fallback":
+                dupont_note = (
+                    f"DuPont ROE ({dupont['roe_check_pct']:.2f}%) doesn't match the ROE card "
+                    f"({metrics['roe']:.2f}%) because the card is showing Yahoo's cross-check "
+                    "figure (our own calculation was unavailable), which this decomposition "
+                    "can't reproduce."
+                )
+            else:
+                dupont_note = (
+                    f"DuPont ROE ({dupont['roe_check_pct']:.2f}%) vs card ROE "
+                    f"({metrics['roe']:.2f}%): gap likely reflects average-vs-closing balance "
+                    "timing."
+                )
+            warnings.append(dupont_note)
+            data_quality.setdefault("dupont_roe_check_pct", dupont_note)
 
     # --- Leverage ---------------------------------------------------------
     metrics["debt_to_equity"] = r.debt_to_equity(latest_balance.get("total_debt"), latest_balance.get("total_equity"))
@@ -419,6 +608,7 @@ async def compute_symbol_metrics(symbol: str) -> dict[str, Any]:
     )
 
     # --- Quality flags (non-financial templates only, per PLAN.md §2) -----
+    quality_scores: dict[str, Any] | None = None
     if company.template in ("general", "exchange"):
         working_capital = None
         if latest_balance.get("current_assets") is not None and latest_balance.get("current_liabilities") is not None:
@@ -432,6 +622,16 @@ async def compute_symbol_metrics(symbol: str) -> dict[str, Any]:
             latest_income.get("revenue"),
             latest_balance.get("total_assets"),
         )
+        altman_detail = r.altman_z_score_detailed(
+            working_capital,
+            latest_balance.get("retained_earnings"),
+            latest_income.get("ebit"),
+            market_cap,
+            latest_balance.get("total_liabilities"),
+            latest_income.get("revenue"),
+            latest_balance.get("total_assets"),
+        )
+        quality_scores = {"altman": altman_detail, "piotroski": None}
 
         if len(income_periods) >= 2 and len(balance_periods) >= 2:
             curr = {
@@ -460,6 +660,7 @@ async def compute_symbol_metrics(symbol: str) -> dict[str, Any]:
             earned, possible = r.piotroski_f_score(curr, prior)
             metrics["piotroski_f_score"] = float(earned)
             metrics["piotroski_f_score_possible"] = float(possible)
+            quality_scores["piotroski"] = r.piotroski_f_score_detailed(curr, prior)
 
     for divergence in cross_check_divergences:
         warnings.append(
@@ -475,12 +676,24 @@ async def compute_symbol_metrics(symbol: str) -> dict[str, Any]:
         if key not in method:
             method[key] = METHOD_COMPUTED if value is not None else METHOD_UNAVAILABLE
 
+    # Full (not comparability-filtered) periods, so a sparkline can show the
+    # pre-corporate-action years too -- with a break marker at
+    # `comparable_from`, the same "show it, mark the discontinuity" pattern
+    # as the price/income-statement charts, rather than silently excluding
+    # them the way a growth/CAGR figure must (PLAN.md §4.3 item 2).
+    history = compute_ratio_history(income_raw, balance_raw, cashflow_raw)
+
     return {
         "company": company,
         "quote": quote,
         "metrics": metrics,
         "method": method,
         "data_quality": data_quality,
+        "reasons": reasons,
+        "dupont_kind": dupont_kind,
+        "dupont_reconciliation_gap_pp": dupont_reconciliation_gap_pp,
+        "history": history,
+        "quality_scores": quality_scores,
         "latest_income": latest_income,
         "latest_balance": latest_balance,
         "latest_cashflow": latest_cashflow,

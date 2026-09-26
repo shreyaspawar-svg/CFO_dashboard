@@ -174,6 +174,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/glossary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Glossary */
+        get: operations["get_glossary_api_glossary_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/health": {
         parameters: {
             query?: never;
@@ -195,6 +212,22 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** AltmanZComponentOut */
+        AltmanZComponentOut: {
+            /** Label */
+            label: string;
+            /** Value */
+            value: number | null;
+        };
+        /** AltmanZDetailOut */
+        AltmanZDetailOut: {
+            /** Score */
+            score: number | null;
+            /** Zone */
+            zone: ("safe" | "grey" | "distress") | null;
+            /** Components */
+            components: components["schemas"]["AltmanZComponentOut"][];
+        };
         /** AxisComponent */
         AxisComponent: {
             /** Metric */
@@ -297,6 +330,24 @@ export interface components {
             comparable_from?: string | null;
             /** Comparable From Label */
             comparable_from_label?: string | null;
+        };
+        /** GlossaryEntry */
+        GlossaryEntry: {
+            /** Label */
+            label: string;
+            /** Formula */
+            formula: string;
+            /** Meaning */
+            meaning: string;
+            /** Good Looks Like */
+            good_looks_like: string;
+        };
+        /** GlossaryResponse */
+        GlossaryResponse: {
+            /** Entries */
+            entries: {
+                [key: string]: components["schemas"]["GlossaryEntry"];
+            };
         };
         /** HTTPValidationError */
         HTTPValidationError: {
@@ -416,6 +467,27 @@ export interface components {
             /** Warnings */
             warnings?: string[];
         };
+        /** PiotroskiDetailOut */
+        PiotroskiDetailOut: {
+            /** Earned */
+            earned: number;
+            /** Possible */
+            possible: number;
+            /** Tests */
+            tests: components["schemas"]["PiotroskiTestOut"][];
+        };
+        /** PiotroskiTestOut */
+        PiotroskiTestOut: {
+            /** Label */
+            label: string;
+            /** Passed */
+            passed: boolean | null;
+        };
+        /** QualityScores */
+        QualityScores: {
+            altman: components["schemas"]["AltmanZDetailOut"];
+            piotroski?: components["schemas"]["PiotroskiDetailOut"] | null;
+        };
         /** QuoteResponse */
         QuoteResponse: {
             /** Symbol */
@@ -460,12 +532,25 @@ export interface components {
             /** Warnings */
             warnings?: string[];
         };
+        /** RatioHistoryPoint */
+        RatioHistoryPoint: {
+            /** Fiscal Year */
+            fiscal_year: string;
+            /** Period End */
+            period_end: string;
+            /** Value */
+            value: number | null;
+        };
         /** RatioValue */
         RatioValue: {
             /** Value */
             value: number | null;
             /** Peer Median */
             peer_median: number | null;
+            /** Peer Min */
+            peer_min?: number | null;
+            /** Peer Max */
+            peer_max?: number | null;
             /** Percentile */
             percentile: number | null;
             /**
@@ -482,6 +567,14 @@ export interface components {
             data_quality: "ok" | "inconsistent";
             /** Data Quality Reason */
             data_quality_reason?: string | null;
+            /** Reason */
+            reason?: ("missing" | "not_meaningful") | null;
+            /**
+             * Direction
+             * @default higher_better
+             * @enum {string}
+             */
+            direction: "higher_better" | "lower_better" | "neutral";
         };
         /** RatiosResponse */
         RatiosResponse: {
@@ -511,6 +604,17 @@ export interface components {
             health_radar: {
                 [key: string]: components["schemas"]["AxisResult"];
             };
+            /** History */
+            history?: {
+                [key: string]: components["schemas"]["RatioHistoryPoint"][];
+            };
+            /** Dupont Kind */
+            dupont_kind?: ("general" | "bank") | null;
+            /** Dupont Reconciliation Gap Pp */
+            dupont_reconciliation_gap_pp?: number | null;
+            /** Signals */
+            signals?: components["schemas"]["Signal"][];
+            quality_scores?: components["schemas"]["QualityScores"] | null;
             /** Source */
             source: string;
             /**
@@ -527,6 +631,22 @@ export interface components {
             name: string;
             /** Companies */
             companies: components["schemas"]["CompanyRef"][];
+        };
+        /** Signal */
+        Signal: {
+            /**
+             * Type
+             * @enum {string}
+             */
+            type: "strength" | "watch";
+            /** Rule */
+            rule: string;
+            /** Message */
+            message: string;
+            /** Values */
+            values: {
+                [key: string]: number | null;
+            };
         };
         /** SplitEvent */
         SplitEvent: {
@@ -909,6 +1029,26 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_glossary_api_glossary_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GlossaryResponse"];
                 };
             };
         };

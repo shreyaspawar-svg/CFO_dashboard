@@ -24,14 +24,31 @@ def test_yoy_growth_zero_previous_is_none():
     assert r.yoy_growth(100, 0) is None
 
 
-def test_yoy_growth_negative_previous_uses_abs_denominator():
-    # Loss shrinking from -100 to -50 is a real "50% improvement".
-    assert r.yoy_growth(-50, -100) == pytest.approx(50.0)
+def test_yoy_growth_negative_previous_is_none_not_meaningful():
+    # PLAN.md "Phase 4.2 review": a non-positive base makes the percentage
+    # not meaningful, even for a same-sign "loss shrinking" case -- this
+    # superseded an earlier version of the function that let this through.
+    assert r.yoy_growth(-50, -100) is None
+    assert r.growth_reason(-50, -100) == "not_meaningful"
+
+
+def test_yoy_growth_sign_crossing_negative_to_positive_is_none_not_meaningful():
+    # INDIGO's real PAT: FY23 -Rs305.79 Cr -> FY24 +Rs8,172.50 Cr. The raw
+    # formula would give a nonsensical "+2,673%"; this must be None instead.
+    assert r.yoy_growth(8172.50, -305.79) is None
+    assert r.growth_reason(8172.50, -305.79) == "not_meaningful"
 
 
 def test_yoy_growth_none_inputs():
     assert r.yoy_growth(None, 100) is None
     assert r.yoy_growth(100, None) is None
+
+
+def test_growth_reason_missing_vs_not_meaningful():
+    assert r.growth_reason(None, 100) == "missing"
+    assert r.growth_reason(100, None) == "missing"
+    assert r.growth_reason(100, 0) == "not_meaningful"  # non-positive, not "missing"
+    assert r.growth_reason(110, 100) is None  # a real value, no reason needed
 
 
 def test_cagr_basic():
@@ -48,6 +65,15 @@ def test_cagr_negative_begin_or_end_is_none():
 def test_cagr_nonpositive_years_is_none():
     assert r.cagr(100, 200, 0) is None
     assert r.cagr(100, 200, -1) is None
+
+
+def test_cagr_reason_missing_vs_not_meaningful():
+    assert r.cagr_reason(None, 200, 3) == "missing"
+    assert r.cagr_reason(100, 200, None) == "missing"
+    assert r.cagr_reason(100, 200, 0) == "missing"  # no valid span
+    assert r.cagr_reason(-100, 200, 3) == "not_meaningful"
+    assert r.cagr_reason(100, -200, 3) == "not_meaningful"
+    assert r.cagr_reason(100, 200, 3) is None  # a real value, no reason needed
 
 
 # --------------------------------------------------------------------------
@@ -138,6 +164,23 @@ def test_dupont_decomposition_missing_input_leaves_roe_check_none():
     assert components["asset_turnover"] is None
     assert components["roe_check_pct"] is None
     assert components["net_margin_pct"] == pytest.approx(5.0)
+
+
+def test_dupont_bank_product_matches_direct_roe():
+    # PLAN.md §4.3: bank/NBFC 2-step (ROA x Leverage) is an exact algebraic
+    # identity, not an approximation -- ROA x (Assets/Equity) = NI/Equity.
+    components = r.dupont_bank(net_income=50, avg_total_assets=800, avg_equity=400)
+    direct_roe = r.return_on_equity(50, 400)
+    assert components["roe_check_pct"] == pytest.approx(direct_roe)
+    assert components["roa_pct"] == pytest.approx(6.25)
+    assert components["leverage"] == pytest.approx(2.0)
+
+
+def test_dupont_bank_missing_input_leaves_roe_check_none():
+    components = r.dupont_bank(50, None, 400)
+    assert components["leverage"] is None
+    assert components["roe_check_pct"] is None
+    assert components["roa_pct"] is None
 
 
 # --------------------------------------------------------------------------
@@ -413,3 +456,74 @@ def test_piotroski_f_score_partial_data_scores_out_of_fewer_points():
 def test_piotroski_f_score_all_missing_scores_zero_of_zero():
     earned, possible = r.piotroski_f_score({}, {})
     assert (earned, possible) == (0, 0)
+
+
+def test_altman_z_score_detailed_matches_aggregate_and_labels_5_components():
+    detail = r.altman_z_score_detailed(
+        working_capital=200,
+        retained_earnings=300,
+        ebit=150,
+        market_cap=1500,
+        total_liabilities=1000,
+        revenue=800,
+        total_assets=1000,
+    )
+    aggregate = r.altman_z_score(200, 300, 150, 1500, 1000, 800, 1000)
+    assert detail["score"] == pytest.approx(aggregate)
+    assert len(detail["components"]) == 5
+    assert detail["components"][0]["value"] == pytest.approx(0.2)
+
+
+def test_altman_z_score_detailed_zone_boundaries():
+    # score >= 2.99 -> safe; the hand-computed fixture above scores ~2.55
+    safe = r.altman_z_score_detailed(1000, 1000, 1000, 5000, 500, 1000, 500)
+    assert safe["zone"] == "safe"
+    distress = r.altman_z_score_detailed(-500, -500, -200, 100, 2000, 500, 1000)
+    assert distress["zone"] == "distress"
+
+
+def test_altman_z_score_detailed_missing_component_has_no_score_or_zone():
+    detail = r.altman_z_score_detailed(200, None, 150, 1500, 1000, 800, 1000)
+    assert detail["score"] is None
+    assert detail["zone"] is None
+    assert len(detail["components"]) == 5  # still reports what it could
+
+
+def test_piotroski_f_score_detailed_matches_aggregate_and_labels_9_tests():
+    current = {
+        "net_income": 100,
+        "total_assets": 1000,
+        "cfo": 150,
+        "total_debt": 200,
+        "current_assets": 500,
+        "current_liabilities": 250,
+        "shares_outstanding": 100,
+        "gross_profit": 400,
+        "revenue": 1050,
+    }
+    prior = {
+        "net_income": 50,
+        "total_assets": 900,
+        "cfo": 40,
+        "total_debt": 300,
+        "current_assets": 400,
+        "current_liabilities": 300,
+        "shares_outstanding": 100,
+        "gross_profit": 300,
+        "revenue": 900,
+    }
+    detail = r.piotroski_f_score_detailed(current, prior)
+    earned, possible = r.piotroski_f_score(current, prior)
+    assert (detail["earned"], detail["possible"]) == (earned, possible)
+    assert len(detail["tests"]) == 9
+    assert all(t["passed"] is True for t in detail["tests"])
+
+
+def test_piotroski_f_score_detailed_excludes_missing_tests_not_fails_them():
+    current = {"net_income": 100, "total_assets": 1000, "cfo": 150, "total_debt": 200, "shares_outstanding": 100, "revenue": 1050}
+    prior = {"net_income": 50, "total_assets": 900, "cfo": 40, "total_debt": 300, "shares_outstanding": 100, "revenue": 900}
+    detail = r.piotroski_f_score_detailed(current, prior)
+    assert len(detail["tests"]) == 9  # every test is still listed
+    none_tests = [t for t in detail["tests"] if t["passed"] is None]
+    assert len(none_tests) == 2  # current ratio + gross margin, data missing
+    assert detail["possible"] == 7

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { formatCrore, formatPercent, formatRupees } from "@/lib/format";
+import { formatCrore, formatPercent, formatRupees, NOT_MEANINGFUL_PLACEHOLDER } from "@/lib/format";
 import { computeSeriesCagr, type FinancialPeriodLite } from "@/lib/income-statement";
 
 interface RowDef {
@@ -95,7 +95,13 @@ export function IncomeStatementTable({
                       {fmt(p.line_items[row.key] ?? null)}
                     </td>
                   ))}
-                  <td className="py-1.5 pl-2 text-right tabular-nums-fixed text-muted">{formatPercent(cagr, 1)}</td>
+                  <td className="py-1.5 pl-2 text-right tabular-nums-fixed text-muted">
+                    {cagr.reason === "not_meaningful" ? (
+                      <span title="Not meaningful: an endpoint value is ≤ 0">{NOT_MEANINGFUL_PLACEHOLDER}</span>
+                    ) : (
+                      formatPercent(cagr.value, 1)
+                    )}
+                  </td>
                 </tr>
               );
             })}
