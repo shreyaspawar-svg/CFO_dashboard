@@ -1,0 +1,22 @@
+# Render Blueprint (Phase 8 Step A): New + -> Blueprint -> connect this repo.
+# Render reads this file automatically and provisions the service below.
+services:
+  - type: web
+    name: nifty50-cfo-api
+    env: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    region: singapore
+    healthCheckPath: /api/health
+    envVars:
+      # Free plan has no persistent disk -- the SQLite cache in
+      # backend/.cache is ephemeral and just rebuilds on next request
+      # after a restart/redeploy. Nothing to configure for that.
+      #
+      # Replace with the real Vercel URL once Step 3 (frontend deploy)
+      # gives you one, then update this in the Render dashboard (Settings
+      # -> Environment) -- must be a JSON array of origin strings, since
+      # `cors_origins: list[str]` is parsed by pydantic-settings.
+      - key: CORS_ORIGINS
+        value: '["https://REPLACE-with-your-vercel-url.vercel.app"]'
