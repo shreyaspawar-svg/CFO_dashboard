@@ -20,3 +20,9 @@ services:
       # `cors_origins: list[str]` is parsed by pydantic-settings.
       - key: CORS_ORIGINS
         value: '["https://REPLACE-with-your-vercel-url.vercel.app"]'
+      # Shared secret for POST /api/admin/refresh (Step 2/4) -- Render
+      # generates a random value at deploy time; it's never in the repo.
+      # Copy it from the dashboard (Environment tab) into the GitHub
+      # Actions secret the cron workflow reads (see .github/workflows).
+      - key: ADMIN_REFRESH_SECRET
+        generateValue: true

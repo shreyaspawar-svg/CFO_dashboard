@@ -13,6 +13,11 @@ class Settings(BaseSettings):
 
     cors_origins: list[str] = ["http://localhost:3000"]
 
+    # Shared secret for POST /api/admin/refresh (PLAN.md Phase 8 Step 2/4).
+    # Empty (the default) disables the endpoint entirely -- set via the
+    # ADMIN_REFRESH_SECRET env var on the deployed host, never committed.
+    admin_refresh_secret: str = ""
+
     # Cache TTLs, in seconds
     ttl_universe: int = 24 * 3600
     ttl_quote_market_hours: int = 30

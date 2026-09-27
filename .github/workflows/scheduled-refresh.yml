@@ -1,0 +1,25 @@
+name: Scheduled backend refresh
+
+# PLAN.md Phase 8 Step 4: keeps the deployed backend's cache warm and
+# (best-effort -- NSE often 403s cloud IPs, including Render's) tries to
+# refresh the NIFTY 50 constituent list, daily at 06:00 IST.
+on:
+  schedule:
+    - cron: "30 0 * * *" # 00:30 UTC = 06:00 IST
+  workflow_dispatch: {} # manual "Run workflow" button for on-demand testing
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call /api/admin/refresh
+        run: |
+          status=$(curl -s -o /tmp/response.json -w "%{http_code}" \
+            -X POST "${{ vars.BACKEND_URL }}/api/admin/refresh" \
+            -H "X-Refresh-Secret: ${{ secrets.ADMIN_REFRESH_SECRET }}")
+          echo "HTTP status: $status"
+          cat /tmp/response.json
+          if [ "$status" -ge 300 ]; then
+            echo "::error::Refresh endpoint returned $status"
+            exit 1
+          fi

@@ -47,3 +47,6 @@ next-env.d.ts
 
 # screenshots are per-review artifacts, regenerated each phase, not durable repo content
 /screenshots/
+
+.vercel
+.env*
