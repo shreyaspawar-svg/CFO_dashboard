@@ -1,25 +1,26 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import type { EChartsOption } from "echarts";
 import { useTheme } from "next-themes";
 import { ChartCard, breakMarkerEntry } from "@/components/charts/chart-card";
 import { chartThemeFor } from "@/lib/chart-theme";
-import { simpleMovingAverage } from "@/lib/technical";
+import { simpleMovingAverage, thinnedTickInterval } from "@/lib/technical";
 import { useHistory, useEvents, useFinancials } from "@/lib/queries";
 import { formatRupees } from "@/lib/format";
 import { cn } from "@/lib/utils";
+import { CHART_RANGE_OPTIONS, type ChartRangeKey } from "@/lib/chart-ranges";
 
-const RANGE_OPTIONS = {
-  "1D": { range: "1d", interval: "5m", livePoll: true },
-  "1Y": { range: "1y", interval: "1d", livePoll: false },
-  "5Y": { range: "5y", interval: "1d", livePoll: false },
-} as const;
-type RangeKey = keyof typeof RANGE_OPTIONS;
-
-export function PriceChart({ symbol }: { symbol: string }) {
-  const [rangeKey, setRangeKey] = useState<RangeKey>("5Y");
-  const { range, interval, livePoll } = RANGE_OPTIONS[rangeKey];
+export function PriceChart({
+  symbol,
+  rangeKey,
+  onRangeKeyChange,
+}: {
+  symbol: string;
+  rangeKey: ChartRangeKey;
+  onRangeKeyChange: (key: ChartRangeKey) => void;
+}) {
+  const { range, interval, livePoll } = CHART_RANGE_OPTIONS[rangeKey];
   // Same `<ReactECharts>` instance stays mounted across polls (PLAN.md
   // Phase 5 §B.3): each new 1D tick just hands the chart a refreshed
   // `data` array through the existing `option` prop -- echarts-for-react
@@ -67,13 +68,19 @@ export function PriceChart({ symbol }: { symbol: string }) {
 
   const option = useMemo<EChartsOption | null>(() => {
     if (!series) return null;
+    // Fixed ~6-8 evenly spaced tick labels regardless of range (PLAN.md
+    // Phase 5.1 item 1) -- ECharts' own `interval: 'auto'` was leaving
+    // 5Y's ~1250 daily points overlapping/illegible; this replaces
+    // guessed pixel-width spacing with an explicit, testable tick count,
+    // without rotating labels into illegibility either.
+    const tickInterval = thinnedTickInterval(series.dates.length);
     return {
-      grid: { left: 56, right: 16, top: 16, bottom: 40 },
+      grid: { left: 56, right: 16, top: isIntraday ? 16 : 48, bottom: 40 },
       xAxis: {
         type: "category",
         data: series.dates,
         boundaryGap: false,
-        axisLabel: { color: theme.muted, show: !isIntraday },
+        axisLabel: { color: theme.muted, show: !isIntraday, interval: tickInterval },
       },
       yAxis: {
         type: "value",
@@ -81,7 +88,12 @@ export function PriceChart({ symbol }: { symbol: string }) {
         axisLabel: { color: theme.muted, formatter: (v: number) => formatRupees(v, 0) },
         splitLine: { lineStyle: { color: theme.border } },
       },
-      legend: isIntraday ? undefined : { data: ["Price", "SMA 50", "SMA 200"] },
+      // Explicit top/left (PLAN.md Phase 5.1 item 1 follow-up): without
+      // it, this defaulted to a position that collided with the x-axis
+      // date labels at the bottom of the plot -- invisible before the
+      // tick-thinning fix only because the un-thinned labels were already
+      // an illegible mass there.
+      legend: isIntraday ? undefined : { top: 0, left: "center", data: ["Price", "SMA 50", "SMA 200"] },
       series: [
         {
           name: "Price",
@@ -128,12 +140,12 @@ export function PriceChart({ symbol }: { symbol: string }) {
   return (
     <div className="space-y-2">
       <div className="flex items-center gap-1" role="tablist" aria-label="Price chart range">
-        {(Object.keys(RANGE_OPTIONS) as RangeKey[]).map((key) => (
+        {(Object.keys(CHART_RANGE_OPTIONS) as ChartRangeKey[]).map((key) => (
           <button
             key={key}
             role="tab"
             aria-selected={rangeKey === key}
-            onClick={() => setRangeKey(key)}
+            onClick={() => onRangeKeyChange(key)}
             className={cn(
               "rounded-md border px-2.5 py-1 text-xs transition-colors",
               rangeKey === key ? "border-accent bg-accent/10 text-accent" : "border-border text-muted hover:text-foreground"

@@ -7,7 +7,8 @@ import { ChartCard } from "@/components/charts/chart-card";
 import { chartThemeFor } from "@/lib/chart-theme";
 import { useHistory } from "@/lib/queries";
 import { formatPercent } from "@/lib/format";
-import { alignByDate } from "@/lib/technical";
+import { alignByDate, thinnedTickInterval } from "@/lib/technical";
+import { CHART_RANGE_OPTIONS, type ChartRangeKey } from "@/lib/chart-ranges";
 
 /** Rebases a close-price series to 100 at its first non-null point, so two
  * series with very different price levels (e.g. a ₹2,000 stock vs a
@@ -18,8 +19,11 @@ function rebaseTo100(closes: (number | null)[]): (number | null)[] {
   return closes.map((c) => (c === null ? null : (c / base) * 100));
 }
 
-export function PerformanceChart({ symbol }: { symbol: string }) {
-  const { data: history, isLoading } = useHistory(symbol, "1y", "1d");
+// Synced to the Price chart's own range toggle (PLAN.md Phase 5.1 item 2)
+// -- both charts must show the same window, not independently-fixed ones.
+export function PerformanceChart({ symbol, rangeKey }: { symbol: string; rangeKey: ChartRangeKey }) {
+  const { range, interval, livePoll } = CHART_RANGE_OPTIONS[rangeKey];
+  const { data: history, isLoading } = useHistory(symbol, range, interval, { livePoll });
   const { resolvedTheme } = useTheme();
   const theme = chartThemeFor(resolvedTheme);
 
@@ -38,13 +42,16 @@ export function PerformanceChart({ symbol }: { symbol: string }) {
 
   const option = useMemo<EChartsOption | null>(() => {
     if (!indexed) return null;
+    // Same fixed evenly-spaced tick count as the Price chart (PLAN.md
+    // Phase 5.1 item 1), not ECharts' own overlap-prone 'auto' interval.
+    const tickInterval = thinnedTickInterval(indexed.dates.length);
     return {
-      grid: { left: 48, right: 16, top: 16, bottom: 40 },
+      grid: { left: 48, right: 16, top: 48, bottom: 40 },
       xAxis: {
         type: "category",
         data: indexed.dates,
         boundaryGap: false,
-        axisLabel: { color: theme.muted },
+        axisLabel: { color: theme.muted, interval: tickInterval },
       },
       yAxis: {
         type: "value",
@@ -52,7 +59,10 @@ export function PerformanceChart({ symbol }: { symbol: string }) {
         axisLabel: { color: theme.muted, formatter: (v: number) => `${(v - 100).toFixed(0)}%` },
         splitLine: { lineStyle: { color: theme.border } },
       },
-      legend: { data: [symbol, "NIFTY 50"] },
+      // Explicit top/left, same reasoning as the Price chart: an
+      // unpositioned legend defaulted to overlapping the x-axis date
+      // labels at the bottom of the plot.
+      legend: { top: 0, left: "center", data: [symbol, "NIFTY 50"] },
       series: [
         {
           name: symbol,
@@ -91,7 +101,7 @@ export function PerformanceChart({ symbol }: { symbol: string }) {
       title="Performance vs NIFTY 50"
       subtitle={
         relative !== null
-          ? `1Y relative: ${relative >= 0 ? "+" : ""}${formatPercent(relative, 1)}`
+          ? `${rangeKey} relative: ${relative >= 0 ? "+" : ""}${formatPercent(relative, 1)}`
           : undefined
       }
       option={option}

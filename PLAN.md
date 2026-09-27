@@ -795,6 +795,8 @@ Acceptance
 
 Phase 5 (live-price polling/single-flight/stale fallback, 1D intraday chart, 50x8-tab QA crawl clean, Lighthouse, README) — done, see tag `v1.0`.
 
+Phase 5.1 (Overview tab: date-tick thinning, synced price/performance range, Revenue&PAT-vs-KPI-duplicate fix, Returns table NIFTY/sector/alpha) — done, see tag `v1.0.1`.
+
 ---
 
 ### Phase 5 — Live data layer

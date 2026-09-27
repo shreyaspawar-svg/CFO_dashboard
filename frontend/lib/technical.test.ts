@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { alignByDate, computeReturnsTable, simpleMovingAverage } from "./technical";
+import {
+  alignByDate,
+  computeReturnsTable,
+  pickEvenTickIndices,
+  simpleMovingAverage,
+  thinnedTickInterval,
+} from "./technical";
 
 describe("simpleMovingAverage", () => {
   it("computes a basic SMA", () => {
@@ -91,5 +97,56 @@ describe("alignByDate", () => {
     expect(aligned.dates).toEqual(["2026-01-01"]);
     expect(aligned.a).toEqual([100]);
     expect(aligned.b).toEqual([200]);
+  });
+});
+
+describe("pickEvenTickIndices", () => {
+  it("returns every index when length is at or below the target count", () => {
+    expect(pickEvenTickIndices(5, 7)).toEqual([0, 1, 2, 3, 4]);
+    expect(pickEvenTickIndices(7, 7)).toEqual([0, 1, 2, 3, 4, 5, 6]);
+  });
+
+  it("always includes the first and last index for a long series", () => {
+    const indices = pickEvenTickIndices(1250, 7);
+    expect(indices[0]).toBe(0);
+    expect(indices[indices.length - 1]).toBe(1249);
+  });
+
+  it("thins a long series down to roughly the target count, evenly spaced", () => {
+    const indices = pickEvenTickIndices(1250, 7);
+    expect(indices.length).toBeLessThanOrEqual(7);
+    expect(indices.length).toBeGreaterThanOrEqual(5);
+    // Roughly even spacing: no two consecutive gaps differ by more than
+    // a handful of points (rounding is the only source of variance).
+    const gaps = indices.slice(1).map((v, i) => v - indices[i]);
+    const maxGap = Math.max(...gaps);
+    const minGap = Math.min(...gaps);
+    expect(maxGap - minGap).toBeLessThanOrEqual(2);
+  });
+
+  it("handles a zero-length axis without throwing", () => {
+    expect(pickEvenTickIndices(0, 7)).toEqual([]);
+  });
+
+  it("de-duplicates when rounding collides for a short-but-over-target series", () => {
+    const indices = pickEvenTickIndices(8, 7);
+    expect(new Set(indices).size).toBe(indices.length); // no duplicates
+    expect(indices[0]).toBe(0);
+    expect(indices[indices.length - 1]).toBe(7);
+  });
+});
+
+describe("thinnedTickInterval", () => {
+  it("shows only the picked indices, hiding everything else", () => {
+    const shouldShow = thinnedTickInterval(1250, 7);
+    const shownCount = Array.from({ length: 1250 }, (_, i) => i).filter(shouldShow).length;
+    expect(shownCount).toBeLessThanOrEqual(7);
+    expect(shouldShow(0)).toBe(true);
+    expect(shouldShow(1249)).toBe(true);
+  });
+
+  it("shows every label when the series is shorter than the target count", () => {
+    const shouldShow = thinnedTickInterval(4, 7);
+    expect([0, 1, 2, 3].every(shouldShow)).toBe(true);
   });
 });

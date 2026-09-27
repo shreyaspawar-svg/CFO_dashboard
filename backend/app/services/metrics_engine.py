@@ -402,6 +402,19 @@ async def compute_symbol_metrics(symbol: str) -> dict[str, Any]:
     metrics["ebit_margin"] = r.margin(latest_income.get("ebit"), latest_income.get("revenue"))
     metrics["pat_margin"] = r.margin(latest_income.get("net_income"), latest_income.get("revenue"))
 
+    # Absolute TTM figures (PLAN.md Phase 5.1 "Financial snapshot" chart):
+    # already-computed above for margin/DuPont purposes, just not
+    # previously exposed on `metrics`. Same TTM-with-annual-fallback
+    # reasoning as `ttm_revenue`/`ttm_net_income` themselves.
+    metrics["ttm_revenue"] = ttm_revenue
+    metrics["ttm_net_income"] = ttm_net_income
+    metrics["ttm_net_interest_income"] = _ttm_sum(quarterly_income_periods, "net_interest_income") or latest_income.get(
+        "net_interest_income"
+    )
+    metrics["ttm_premiums_earned"] = _ttm_sum(quarterly_income_periods, "premiums_earned") or latest_income.get(
+        "premiums_earned"
+    )
+
     # --- Returns (TTM earnings over the latest annual balance sheet -- our
     # own calculation is authoritative whenever it succeeds, so a KPI card
     # and an ROE-over-time chart are guaranteed to agree at the latest

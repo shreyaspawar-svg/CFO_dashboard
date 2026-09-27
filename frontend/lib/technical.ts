@@ -77,6 +77,31 @@ export function computeReturnsTable(
   });
 }
 
+/** Evenly spaced indices into a `length`-long axis, always including the
+ * first and last, for thinning a category axis's date labels down to
+ * ~`targetCount` (PLAN.md Phase 5.1 item 1) -- a 5Y daily price series has
+ * ~1250 points, and letting ECharts' own `interval: 'auto'` guess at
+ * spacing produced overlapping/illegible labels rather than a clean,
+ * fixed tick count regardless of range. Returns fewer than `targetCount`
+ * only when `length` itself is smaller. */
+export function pickEvenTickIndices(length: number, targetCount = 7): number[] {
+  if (length <= 0) return [];
+  if (length <= targetCount) return Array.from({ length }, (_, i) => i);
+  const step = (length - 1) / (targetCount - 1);
+  const indices = new Set<number>();
+  for (let i = 0; i < targetCount; i++) {
+    indices.add(Math.round(i * step));
+  }
+  return [...indices].sort((a, b) => a - b);
+}
+
+/** An ECharts category-axis `axisLabel.interval` function that shows only
+ * the labels at `pickEvenTickIndices(length, targetCount)`. */
+export function thinnedTickInterval(length: number, targetCount = 7): (index: number) => boolean {
+  const shown = new Set(pickEvenTickIndices(length, targetCount));
+  return (index: number) => shown.has(index);
+}
+
 /** Aligns two bar series onto one shared date axis by DATE, not array
  * position. Two independently-fetched series (e.g. a stock's bars and the
  * `^NSEI` benchmark's bars from the same `/api/history` response) can have
