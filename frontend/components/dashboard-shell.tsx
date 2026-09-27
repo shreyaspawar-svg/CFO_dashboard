@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useSelection } from "@/hooks/use-selection";
 import { TopBar } from "@/components/top-bar";
 import { CompanyHeader } from "@/components/company-header";
@@ -10,6 +11,15 @@ import { CompanyHeaderSkeleton, KpiRowSkeleton, TabsShellSkeleton } from "@/comp
 
 export function DashboardShell() {
   const { isLoading, currentSectorName, currentCompany } = useSelection();
+
+  // Client-side only (PLAN.md Phase 5 §C.2): this is a single-page app --
+  // there's no per-company server route to carry a per-page <title>, so
+  // the selected company's name is reflected into the tab title here.
+  useEffect(() => {
+    document.title = currentCompany
+      ? `${currentCompany.name} · NIFTY 50 CFO Dashboard`
+      : "NIFTY 50 CFO Dashboard";
+  }, [currentCompany]);
 
   return (
     <div className="flex min-h-screen flex-col">

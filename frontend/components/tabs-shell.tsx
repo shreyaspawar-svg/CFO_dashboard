@@ -1,15 +1,29 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import { cn } from "@/lib/utils";
 import { OverviewTab } from "@/components/tabs/overview-tab";
-import { IncomeStatementTab } from "@/components/tabs/income-statement-tab";
-import { RatiosTab } from "@/components/tabs/ratios-tab";
-import { BalanceSheetTab } from "@/components/tabs/balance-sheet-tab";
-import { CashFlowTab } from "@/components/tabs/cash-flow-tab";
-import { ValuationTab } from "@/components/tabs/valuation-tab";
-import { PeersTab } from "@/components/tabs/peers-tab";
-import { ShareholdingEventsTab } from "@/components/tabs/shareholding-events-tab";
+
+// Code-split every tab but the default-active Overview (Lighthouse/PLAN.md
+// Phase 5 §C.3): each of these pulls in its own echarts-heavy chart
+// components, and bundling all 8 tabs' worth of JS into the initial page
+// load pushed LCP past 5s for no benefit, since only one tab is visible at
+// a time. `ssr: false` is safe here -- every tab is itself a "use client"
+// component with no meaningful non-JS content.
+const IncomeStatementTab = dynamic(() =>
+  import("@/components/tabs/income-statement-tab").then((m) => m.IncomeStatementTab)
+);
+const RatiosTab = dynamic(() => import("@/components/tabs/ratios-tab").then((m) => m.RatiosTab));
+const BalanceSheetTab = dynamic(() =>
+  import("@/components/tabs/balance-sheet-tab").then((m) => m.BalanceSheetTab)
+);
+const CashFlowTab = dynamic(() => import("@/components/tabs/cash-flow-tab").then((m) => m.CashFlowTab));
+const ValuationTab = dynamic(() => import("@/components/tabs/valuation-tab").then((m) => m.ValuationTab));
+const PeersTab = dynamic(() => import("@/components/tabs/peers-tab").then((m) => m.PeersTab));
+const ShareholdingEventsTab = dynamic(() =>
+  import("@/components/tabs/shareholding-events-tab").then((m) => m.ShareholdingEventsTab)
+);
 
 const TABS = [
   "Overview",

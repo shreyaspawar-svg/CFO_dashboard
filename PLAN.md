@@ -793,6 +793,8 @@ Acceptance
 
 4.6 Valuation tab, 4.7 Peers tab, 4.8 Shareholding & Events tab, plus INFY multiple-plausibility and negative-balance-sheet-bucket fixes — done, see commit `phase-4`.
 
+Phase 5 (live-price polling/single-flight/stale fallback, 1D intraday chart, 50x8-tab QA crawl clean, Lighthouse, README) — done, see tag `v1.0`.
+
 ---
 
 ### Phase 5 — Live data layer

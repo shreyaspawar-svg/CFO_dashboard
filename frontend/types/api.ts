@@ -615,6 +615,11 @@ export interface components {
              * @enum {string}
              */
             market_status: "open" | "closed" | "pre_open";
+            /**
+             * Stale
+             * @default false
+             */
+            stale: boolean;
             /** Source */
             source: string;
             /**

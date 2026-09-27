@@ -18,4 +18,7 @@ backend/.env
 
 # OS
 .DS_Store
+
+# Local Claude Code session state
+.claude/
 Thumbs.db

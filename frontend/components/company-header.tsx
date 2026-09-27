@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { AlertTriangle } from "lucide-react";
 import { useQuote, useFinancials } from "@/lib/queries";
 import { CompanyAvatar } from "@/components/company-combobox";
 import { RangeBar } from "@/components/range-bar";
@@ -11,15 +13,27 @@ import { useSelectionStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 import type { CompanyRef } from "@/lib/api";
 
+const STALE_AFTER_MS = 5 * 60 * 1000;
+
 export function CompanyHeader({ company, sectorName }: { company: CompanyRef; sectorName: string }) {
   const { data: quote, isLoading } = useQuote(company.symbol);
   const { data: financials } = useFinancials(company.symbol, "annual");
   const unit = useSelectionStore((s) => s.unit);
   const flash = useFlashOnChange(quote?.last_price);
 
+  // Re-checked every 30s (PLAN.md Phase 5 §B.4) so the badge can appear
+  // between polls, not just when a new quote happens to arrive.
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    const id = setInterval(() => setNow(Date.now()), 30_000);
+    return () => clearInterval(id);
+  }, []);
+
   if (isLoading || !quote) return <CompanyHeaderSkeleton />;
 
   const direction = changeDirection(quote.change_pct);
+  const ageMs = now - new Date(quote.as_of).getTime();
+  const isStale = quote.stale || (quote.market_status === "open" && ageMs > STALE_AFTER_MS);
 
   return (
     <div className="space-y-3">
@@ -38,6 +52,14 @@ export function CompanyHeader({ company, sectorName }: { company: CompanyRef; se
           </div>
 
           <div className="ml-auto text-right">
+            {isStale && (
+              <div
+                className="mb-1 inline-flex items-center gap-1 rounded-full border border-amber-500/40 bg-amber-500/10 px-2 py-0.5 text-xs text-amber-500"
+                title={quote.stale ? "Live fetch failed; showing the last known quote" : "Quote is more than 5 minutes old"}
+              >
+                <AlertTriangle size={12} /> Stale
+              </div>
+            )}
             <div
               className={cn(
                 "inline-block rounded px-1.5 tabular-nums-fixed text-xl font-semibold transition-colors",

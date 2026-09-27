@@ -1,5 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
-import { api } from "@/lib/api";
+import { useQuery, type Query } from "@tanstack/react-query";
+import { api, type QuoteResponse } from "@/lib/api";
 
 // staleTime values mirror the backend's own cache TTLs (see
 // backend/app/config.py) so the frontend doesn't poll faster than the data
@@ -16,6 +16,18 @@ const STALE_TIME = {
   glossary: 24 * 60 * 60 * 1000,
 } as const;
 
+// Live-price polling (PLAN.md Phase 5 §B.1): only poll while the BACKEND's
+// own market_status (not the viewer's clock) says the market is open, and
+// only at these intervals -- React Query's `refetchIntervalInBackground`
+// defaults to false, so this already pauses on its own the moment the
+// browser tab is hidden, with no extra code needed here.
+const QUOTE_POLL_MS = 15_000;
+const BATCH_POLL_MS = 60_000;
+
+function marketIsOpen(quote: QuoteResponse | null | undefined): boolean {
+  return quote?.market_status === "open";
+}
+
 export function useUniverse() {
   return useQuery({
     queryKey: ["universe"],
@@ -30,6 +42,7 @@ export function useQuote(symbol: string | null) {
     queryFn: () => api.quote(symbol as string),
     enabled: !!symbol,
     staleTime: STALE_TIME.quote,
+    refetchInterval: (query: Query<QuoteResponse>) => (marketIsOpen(query.state.data) ? QUOTE_POLL_MS : false),
   });
 }
 
@@ -39,15 +52,27 @@ export function useQuotes(symbols: string[]) {
     queryFn: () => api.quotes(symbols),
     enabled: symbols.length > 0,
     staleTime: STALE_TIME.quote,
+    refetchInterval: (query: Query<QuoteResponse[]>) =>
+      marketIsOpen(query.state.data?.[0]) ? BATCH_POLL_MS : false,
   });
 }
 
-export function useHistory(symbol: string | null, range = "1y", interval = "1d") {
+export function useHistory(
+  symbol: string | null,
+  range = "1y",
+  interval = "1d",
+  opts?: { livePoll?: boolean }
+) {
+  // Shares the cache with any other `useQuote(symbol)` mounted elsewhere
+  // (e.g. CompanyHeader) -- no extra network request just to read
+  // market_status for the polling gate below.
+  const { data: quote } = useQuote(opts?.livePoll ? symbol : null);
   return useQuery({
     queryKey: ["history", symbol, range, interval],
     queryFn: () => api.history(symbol as string, range, interval),
     enabled: !!symbol,
     staleTime: STALE_TIME.history,
+    refetchInterval: opts?.livePoll ? () => (marketIsOpen(quote) ? BATCH_POLL_MS : false) : undefined,
   });
 }
 
@@ -70,11 +95,17 @@ export function useRatios(symbol: string | null) {
 }
 
 export function usePeers(symbol: string | null) {
+  // Shares the cache with any other `useQuote(symbol)` mounted elsewhere
+  // (e.g. CompanyHeader) -- React Query dedupes identical query keys, so
+  // this never issues its own extra network request just to read
+  // market_status for the polling gate below.
+  const { data: quote } = useQuote(symbol);
   return useQuery({
     queryKey: ["peers", symbol],
     queryFn: () => api.peers(symbol as string),
     enabled: !!symbol,
     staleTime: STALE_TIME.peers,
+    refetchInterval: () => (marketIsOpen(quote) ? BATCH_POLL_MS : false),
   });
 }
 

@@ -12,26 +12,14 @@ from app.services.universe import get_company
 
 router = APIRouter(prefix="/api", tags=["quote"])
 
+# How long a last-known-good quote is kept around purely as a fallback for
+# when a live fetch fails (PLAN.md Phase 5 §B.4) -- much longer than the
+# quote's own normal TTL, since its only job is to survive an outage longer
+# than a few polling cycles, not to ever be considered "fresh".
+_LAST_KNOWN_GOOD_TTL_SECONDS = 30 * 24 * 60 * 60
 
-async def _build_quote(symbol: str) -> QuoteResponse:
-    company = get_company(symbol)
-    if company is None:
-        raise HTTPException(status_code=404, detail=f"Unknown symbol: {symbol}")
 
-    settings = get_settings()
-    status = market_status()
-    ttl = (
-        settings.ttl_quote_market_hours
-        if status == "open"
-        else settings.ttl_quote_closed
-    )
-
-    cache = get_cache()
-    cache_key = f"quote:{company.symbol}"
-    cached = cache.get(cache_key)
-    if cached is not None:
-        return QuoteResponse(**cached)
-
+async def _fetch_quote_live(company, status: str) -> QuoteResponse:
     data_source = get_data_source()
     warnings: list[str] = []
     try:
@@ -58,7 +46,7 @@ async def _build_quote(symbol: str) -> QuoteResponse:
         )
     market_cap = clean_numeric(market_cap_raw)
 
-    response = QuoteResponse(
+    return QuoteResponse(
         symbol=company.symbol,
         yf_ticker=company.yf_ticker,
         last_price=last_price,
@@ -77,7 +65,59 @@ async def _build_quote(symbol: str) -> QuoteResponse:
         as_of=datetime.now(timezone.utc),
         warnings=warnings,
     )
-    cache.set(cache_key, response.model_dump(mode="json"), ttl)
+
+
+async def _build_quote(symbol: str) -> QuoteResponse:
+    company = get_company(symbol)
+    if company is None:
+        raise HTTPException(status_code=404, detail=f"Unknown symbol: {symbol}")
+
+    settings = get_settings()
+    status = market_status()
+    ttl = (
+        settings.ttl_quote_market_hours
+        if status == "open"
+        else settings.ttl_quote_closed
+    )
+
+    cache = get_cache()
+    cache_key = f"quote:{company.symbol}"
+    stale_key = f"{cache_key}:last_known_good"
+
+    cached = cache.get(cache_key)
+    if cached is not None:
+        return QuoteResponse(**cached)
+
+    # Single-flight: concurrent requests for this symbol -- several
+    # browser tabs polling at the same 15s tick, or the ticker tape's
+    # batch request landing at the same moment as a company page's own
+    # quote -- share one upstream call rather than each firing its own.
+    # Retries with exponential backoff on a 429 already happen one level
+    # down, inside `services.yahoo`'s `_run_throttled` (tenacity
+    # `wait_exponential`).
+    response = await cache.single_flight(cache_key, lambda: _fetch_quote_live(company, status))
+
+    if response.last_price is not None:
+        cache.set(cache_key, response.model_dump(mode="json"), ttl)
+        # Also keep it as the fallback for the next time upstream fails.
+        cache.set(stale_key, response.model_dump(mode="json"), _LAST_KNOWN_GOOD_TTL_SECONDS)
+        return response
+
+    # Upstream failed just now (no last_price) -- deliberately NOT cached
+    # under `cache_key`, so the next request retries immediately instead of
+    # being stuck with a null result for the rest of the TTL window. Never
+    # show a broken/empty card if we have something real to fall back on.
+    last_known = cache.get(stale_key)
+    if last_known is not None:
+        stale_response = QuoteResponse(**last_known)
+        stale_response.stale = True
+        stale_response.market_status = status
+        stale_response.warnings = [
+            *stale_response.warnings,
+            f"Live quote fetch failed just now; showing the last known quote from {stale_response.as_of.isoformat()}.",
+        ]
+        return stale_response
+
     return response
 
 

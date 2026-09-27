@@ -42,6 +42,11 @@ class QuoteResponse(BaseModel):
     week52_low: float | None = None
     market_cap: float | None = None
     market_status: Literal["open", "closed", "pre_open"] = "closed"
+    # True only when this is a last-known-good quote served because the
+    # live upstream fetch failed just now (PLAN.md Phase 5 §B.4) -- the
+    # frontend's own "older than 5 min during market hours" badge is a
+    # separate, always-on staleness check based on `as_of` alone.
+    stale: bool = False
     source: str
     as_of: datetime
     warnings: list[str] = Field(default_factory=list)
