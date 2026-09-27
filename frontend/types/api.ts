@@ -269,6 +269,17 @@ export interface components {
             /** Bvps */
             bvps: number | null;
         };
+        /** BandSummary */
+        BandSummary: {
+            /** Min */
+            min: number | null;
+            /** Median */
+            median: number | null;
+            /** Max */
+            max: number | null;
+            /** Current */
+            current: number | null;
+        };
         /** CashFlowPeriodDetail */
         CashFlowPeriodDetail: {
             /** Fiscal Year */
@@ -322,6 +333,8 @@ export interface components {
             date: string;
             /** Amount */
             amount: number;
+            /** Yield Pct */
+            yield_pct?: number | null;
         };
         /** EventsResponse */
         EventsResponse: {
@@ -333,6 +346,10 @@ export interface components {
             splits: components["schemas"]["SplitEvent"][];
             /** News */
             news: Record<string, never>[];
+            /** Shareholding */
+            shareholding?: Record<string, never>[] | null;
+            /** Next Earnings Date */
+            next_earnings_date?: string | null;
             /** Source */
             source: string;
             /**
@@ -435,6 +452,15 @@ export interface components {
             /** Warnings */
             warnings?: string[];
         };
+        /** MultipleDetail */
+        MultipleDetail: {
+            /** Value */
+            value: number | null;
+            /** Peer Median */
+            peer_median: number | null;
+            /** Percentile */
+            percentile: number | null;
+        };
         /** OHLCVBar */
         OHLCVBar: {
             /** Date */
@@ -504,6 +530,10 @@ export interface components {
             metrics: {
                 [key: string]: number | null;
             };
+            /** Percentiles */
+            percentiles?: {
+                [key: string]: number | null;
+            };
         };
         /** PeersResponse */
         PeersResponse: {
@@ -516,6 +546,10 @@ export interface components {
             peer_basis: "sector" | "template" | "none";
             /** Peers */
             peers: components["schemas"]["PeerRow"][];
+            /** Peer Medians */
+            peer_medians?: {
+                [key: string]: number | null;
+            };
             /** Source */
             source: string;
             /**
@@ -691,6 +725,15 @@ export interface components {
             /** Companies */
             companies: components["schemas"]["CompanyRef"][];
         };
+        /** SensitivityTable */
+        SensitivityTable: {
+            /** Wacc Values Pct */
+            wacc_values_pct: number[];
+            /** Terminal Growth Values Pct */
+            terminal_growth_values_pct: number[];
+            /** Values */
+            values: (number | null)[][];
+        };
         /** Signal */
         Signal: {
             /**
@@ -742,13 +785,31 @@ export interface components {
             /** Error Type */
             type: string;
         };
+        /** ValuationBandPoint */
+        ValuationBandPoint: {
+            /** Date */
+            date: string;
+            /** Pe */
+            pe: number | null;
+            /** Pb */
+            pb: number | null;
+        };
         /** ValuationResponse */
         ValuationResponse: {
             /** Symbol */
             symbol: string;
+            /**
+             * Template
+             * @enum {string}
+             */
+            template: "bank" | "nbfc" | "insurance" | "exchange" | "general";
             /** Multiples */
             multiples: {
                 [key: string]: number | null;
+            };
+            /** Multiples Detail */
+            multiples_detail: {
+                [key: string]: components["schemas"]["MultipleDetail"];
             };
             /** Dcf */
             dcf: {
@@ -758,8 +819,17 @@ export interface components {
             dcf_inputs: {
                 [key: string]: number | null;
             };
+            /** Dcf Applicable */
+            dcf_applicable: boolean;
+            sensitivity_table?: components["schemas"]["SensitivityTable"] | null;
             /** Reverse Dcf Implied Growth Pct */
             reverse_dcf_implied_growth_pct: number | null;
+            /** Pe Band */
+            pe_band?: components["schemas"]["ValuationBandPoint"][];
+            /** Pb Band */
+            pb_band?: components["schemas"]["ValuationBandPoint"][];
+            pe_band_summary?: components["schemas"]["BandSummary"] | null;
+            pb_band_summary?: components["schemas"]["BandSummary"] | null;
             /** Source */
             source: string;
             /**

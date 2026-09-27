@@ -255,23 +255,58 @@ class PeerRow(BaseModel):
     last_price: float | None
     market_cap: float | None
     metrics: dict[str, float | None]
+    percentiles: dict[str, float | None] = Field(default_factory=dict)
 
 
 class PeersResponse(BaseModel):
     symbol: str
     peer_basis: PeerBasis
     peers: list[PeerRow]
+    peer_medians: dict[str, float | None] = Field(default_factory=dict)
     source: str
     as_of: datetime
     warnings: list[str] = Field(default_factory=list)
 
 
+class MultipleDetail(BaseModel):
+    value: float | None
+    peer_median: float | None
+    percentile: float | None
+
+
+class ValuationBandPoint(BaseModel):
+    date: str
+    pe: float | None
+    pb: float | None
+
+
+class BandSummary(BaseModel):
+    min: float | None
+    median: float | None
+    max: float | None
+    current: float | None
+
+
+class SensitivityTable(BaseModel):
+    wacc_values_pct: list[float]
+    terminal_growth_values_pct: list[float]
+    values: list[list[float | None]]
+
+
 class ValuationResponse(BaseModel):
     symbol: str
+    template: Template
     multiples: dict[str, float | None]
+    multiples_detail: dict[str, MultipleDetail]
     dcf: dict[str, float | None]
     dcf_inputs: dict[str, float | None]
+    dcf_applicable: bool
+    sensitivity_table: SensitivityTable | None = None
     reverse_dcf_implied_growth_pct: float | None
+    pe_band: list[ValuationBandPoint] = Field(default_factory=list)
+    pb_band: list[ValuationBandPoint] = Field(default_factory=list)
+    pe_band_summary: BandSummary | None = None
+    pb_band_summary: BandSummary | None = None
     source: str
     as_of: datetime
     warnings: list[str] = Field(default_factory=list)
@@ -280,6 +315,11 @@ class ValuationResponse(BaseModel):
 class DividendEvent(BaseModel):
     date: str
     amount: float
+    # Approximate: dividend amount / CURRENT price, not the price on `date`
+    # (a true point-in-time yield needs the daily-price join the Valuation
+    # tab's P/E-P/B band already does; this is a simpler, clearly-labelled
+    # approximation for a bar+line chart, not a precise historical figure).
+    yield_pct: float | None = None
 
 
 class SplitEvent(BaseModel):
@@ -311,6 +351,8 @@ class EventsResponse(BaseModel):
     dividends: list[DividendEvent]
     splits: list[SplitEvent]
     news: list[dict]
+    shareholding: list[dict] | None = None
+    next_earnings_date: str | None = None
     source: str
     as_of: datetime
     warnings: list[str] = Field(default_factory=list)

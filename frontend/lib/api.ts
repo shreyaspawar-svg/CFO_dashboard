@@ -66,8 +66,18 @@ export const api = {
     apiFetch<FinancialsResponse>(`/api/financials/${encodeURIComponent(symbol)}?period=${period}`),
   ratios: (symbol: string) => apiFetch<RatiosResponse>(`/api/ratios/${encodeURIComponent(symbol)}`),
   peers: (symbol: string) => apiFetch<PeersResponse>(`/api/peers/${encodeURIComponent(symbol)}`),
-  valuation: (symbol: string) =>
-    apiFetch<ValuationResponse>(`/api/valuation/${encodeURIComponent(symbol)}`),
+  valuation: (
+    symbol: string,
+    params?: { growthRatePct?: number; waccPct?: number; terminalGrowthPct?: number; forecastYears?: number }
+  ) => {
+    const query = new URLSearchParams();
+    if (params?.growthRatePct != null) query.set("growth_rate_pct", String(params.growthRatePct));
+    if (params?.waccPct != null) query.set("wacc_pct", String(params.waccPct));
+    if (params?.terminalGrowthPct != null) query.set("terminal_growth_pct", String(params.terminalGrowthPct));
+    if (params?.forecastYears != null) query.set("forecast_years", String(params.forecastYears));
+    const qs = query.toString();
+    return apiFetch<ValuationResponse>(`/api/valuation/${encodeURIComponent(symbol)}${qs ? `?${qs}` : ""}`);
+  },
   events: (symbol: string) => apiFetch<EventsResponse>(`/api/events/${encodeURIComponent(symbol)}`),
   overview: (symbol: string) =>
     apiFetch<OverviewResponse>(`/api/overview/${encodeURIComponent(symbol)}`),

@@ -2,6 +2,7 @@ from app.metrics.plausibility import (
     book_value_per_share_is_plausible,
     eps_price_ratio_is_plausible,
     market_cap_matches_price_times_shares,
+    multiple_is_plausible,
     pe_is_plausible,
 )
 
@@ -75,3 +76,36 @@ def test_pe_is_plausible_catches_scale_mismatch():
 
 def test_pe_is_plausible_none_is_plausible():
     assert pe_is_plausible(None) is True
+
+
+def test_multiple_is_plausible_real_values():
+    assert multiple_is_plausible("pe", 14.92) is True
+    assert multiple_is_plausible("pb", 7.02) is True
+    assert multiple_is_plausible("ev_ebitda", 10.51) is True
+    assert multiple_is_plausible("ev_sales", 2.84) is True
+    assert multiple_is_plausible("dividend_yield", 5.33) is True
+    assert multiple_is_plausible("dividend_yield", 0.0) is True  # zero yield is real, not missing
+
+
+def test_multiple_is_plausible_catches_infy_regression():
+    # INFY's income statement (revenue/EBITDA/net income) and own book
+    # value per share are each individually ~80-100x too small (see
+    # docs/data-notes.md) -- the narrower per-input checks don't catch it,
+    # but the resulting multiples obviously aren't plausible for a NIFTY
+    # 50 constituent. These are INFY's actual (buggy) computed values.
+    assert multiple_is_plausible("pb", 413.6266298960148) is False
+    assert multiple_is_plausible("ev_ebitda", 793.1705661434281) is False
+
+
+def test_multiple_is_plausible_boundaries_are_exclusive_except_dividend_yield():
+    assert multiple_is_plausible("pe", 0.0) is False
+    assert multiple_is_plausible("pe", 300.0) is False
+    assert multiple_is_plausible("ev_ebitda", 100.0) is False
+    assert multiple_is_plausible("ev_sales", 50.0) is False
+    assert multiple_is_plausible("pb", 100.0) is False
+    assert multiple_is_plausible("dividend_yield", 20.0) is False
+
+
+def test_multiple_is_plausible_none_and_unknown_key_is_plausible():
+    assert multiple_is_plausible("pe", None) is True
+    assert multiple_is_plausible("peg", 999.0) is True  # not a gated key

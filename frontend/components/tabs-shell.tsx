@@ -7,6 +7,9 @@ import { IncomeStatementTab } from "@/components/tabs/income-statement-tab";
 import { RatiosTab } from "@/components/tabs/ratios-tab";
 import { BalanceSheetTab } from "@/components/tabs/balance-sheet-tab";
 import { CashFlowTab } from "@/components/tabs/cash-flow-tab";
+import { ValuationTab } from "@/components/tabs/valuation-tab";
+import { PeersTab } from "@/components/tabs/peers-tab";
+import { ShareholdingEventsTab } from "@/components/tabs/shareholding-events-tab";
 
 const TABS = [
   "Overview",
@@ -64,11 +67,12 @@ export function TabsShell({ symbol, template }: { symbol: string; template: stri
           <BalanceSheetTab symbol={symbol} template={template} />
         ) : active === "Cash Flow" ? (
           <CashFlowTab symbol={symbol} template={template} />
+        ) : active === "Valuation" ? (
+          <ValuationTab symbol={symbol} template={template} />
+        ) : active === "Peers" ? (
+          <PeersTab symbol={symbol} template={template} />
         ) : (
-          <div className="p-2 text-sm text-muted">
-            <p className="font-medium text-foreground">{active}</p>
-            <p className="mt-1">Coming in Phase 4.</p>
-          </div>
+          <ShareholdingEventsTab symbol={symbol} template={template} />
         )}
       </div>
     </div>

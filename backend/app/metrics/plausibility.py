@@ -76,3 +76,32 @@ def pe_is_plausible(pe: float | None, pe_min: float = _PE_MIN, pe_max: float = _
     if pe is None:
         return True
     return pe_min <= pe <= pe_max
+
+
+# A tighter, final-value check across every valuation multiple (PLAN.md
+# Phase 4 Task A.1): `book_value_per_share_is_plausible`'s wide band (only
+# meant to catch a ~1e7x scale error) is too permissive to catch INFY's
+# ~80-100x income-statement/equity scale mismatch (see docs/data-notes.md)
+# -- its own book value per share (~2.42) and income-statement figures
+# (revenue/EBITDA/net income, all ~80x too small) each individually clear
+# that wide band, but the RATIO built from them (P/B ~413x, EV/EBITDA
+# ~793x) is obviously wrong for a NIFTY 50 constituent. Checking the
+# multiple itself catches a scale error in EITHER the numerator or the
+# denominator, whichever one is actually broken, without needing to know
+# which -- (low, high, low_inclusive); dividend yield alone allows 0.
+_MULTIPLE_BOUNDS: dict[str, tuple[float, float, bool]] = {
+    "pe": (0.0, 300.0, False),
+    "ev_ebitda": (0.0, 100.0, False),
+    "ev_sales": (0.0, 50.0, False),
+    "pb": (0.0, 100.0, False),
+    "dividend_yield": (0.0, 20.0, True),
+}
+
+
+def multiple_is_plausible(key: str, value: float | None) -> bool:
+    if value is None or key not in _MULTIPLE_BOUNDS:
+        return True
+    low, high, low_inclusive = _MULTIPLE_BOUNDS[key]
+    if low_inclusive:
+        return low <= value < high
+    return low < value < high

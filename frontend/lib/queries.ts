@@ -78,10 +78,13 @@ export function usePeers(symbol: string | null) {
   });
 }
 
-export function useValuation(symbol: string | null) {
+export function useValuation(
+  symbol: string | null,
+  params?: { growthRatePct?: number; waccPct?: number; terminalGrowthPct?: number; forecastYears?: number }
+) {
   return useQuery({
-    queryKey: ["valuation", symbol],
-    queryFn: () => api.valuation(symbol as string),
+    queryKey: ["valuation", symbol, params ?? null],
+    queryFn: () => api.valuation(symbol as string, params),
     enabled: !!symbol,
     staleTime: STALE_TIME.valuation,
   });

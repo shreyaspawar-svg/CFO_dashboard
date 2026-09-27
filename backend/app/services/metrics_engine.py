@@ -16,7 +16,7 @@ from typing import Any
 from app.metrics import ratios as r
 from app.metrics.basis_consistency import equity_basis_oscillation_detected
 from app.metrics.comparability import comparable_periods
-from app.metrics.plausibility import book_value_per_share_is_plausible, pe_is_plausible
+from app.metrics.plausibility import book_value_per_share_is_plausible, multiple_is_plausible, pe_is_plausible
 from app.metrics.units import Crore, Shares, per_share_value
 from app.services.datasource import get_data_source
 from app.services.universe import get_company
@@ -603,11 +603,41 @@ async def compute_symbol_metrics(symbol: str) -> dict[str, Any]:
     )
     metrics["ev_ebitda"] = r.ev_to_ebitda(ev, latest_income.get("ebitda"))
     metrics["ev_sales"] = r.ev_to_sales(ev, latest_income.get("revenue"))
+
+    # Final-value plausibility gate (PLAN.md Phase 4 Task A.1): catches a
+    # scale error in EITHER side of the ratio -- e.g. INFY's income
+    # statement (revenue/EBITDA/net income) and own book value per share
+    # are each individually ~80-100x too small (see docs/data-notes.md),
+    # which the narrower per-input checks above don't catch, but the
+    # resulting P/B (~413x) and EV/EBITDA (~793x) obviously are not
+    # plausible for a NIFTY 50 constituent. Nulled with a reason, not
+    # displayed, same as any other implausible-own-value case.
+    for multiple_key in ("pe", "pb", "ev_ebitda", "ev_sales"):
+        if not multiple_is_plausible(multiple_key, metrics.get(multiple_key)):
+            reason = (
+                f"{multiple_key} of {metrics[multiple_key]:.1f} is outside a plausible range for a "
+                "NIFTY 50 constituent -- likely an income-statement/balance-sheet scale mismatch "
+                "(see docs/data-notes.md). Treated as unavailable, not displayed."
+            )
+            warnings.append(reason)
+            data_quality[multiple_key] = reason
+            metrics[multiple_key] = None
+            method[multiple_key] = METHOD_UNAVAILABLE
+
     metrics["earnings_yield"] = r.earnings_yield(eps_final, price)
     metrics["peg"] = r.peg_ratio(metrics["pe"], metrics["pat_growth"])
 
     dividend_per_share = await _ttm_dividend_per_share(company.yf_ticker)
     metrics["dividend_yield"] = r.dividend_yield(dividend_per_share, price)
+    if not multiple_is_plausible("dividend_yield", metrics.get("dividend_yield")):
+        reason = (
+            f"dividend_yield of {metrics['dividend_yield']:.1f}% is outside a plausible range for a "
+            "NIFTY 50 constituent -- likely a scale mismatch. Treated as unavailable, not displayed."
+        )
+        warnings.append(reason)
+        data_quality["dividend_yield"] = reason
+        metrics["dividend_yield"] = None
+        method["dividend_yield"] = METHOD_UNAVAILABLE
     metrics["payout_ratio"] = r.payout_ratio(dividend_per_share, eps_final)
     method["payout_ratio"] = method["pe"]
 

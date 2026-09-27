@@ -57,7 +57,7 @@ def test_missing_fields_empty_periods_returns_everything_missing():
     assert missing == set(INCOME_STATEMENT_MAP.values())
 
 
-def test_multiple_investment_keys_sum_into_one_investments_field():
+def test_multiple_investment_sub_keys_sum_into_investments_subs_sum():
     records = [
         {
             "index": "2024-03-31",
@@ -66,9 +66,40 @@ def test_multiple_investment_keys_sum_into_one_investments_field():
         }
     ]
     periods = normalize_balance_sheet(records)
-    assert periods[0]["line_items"]["investments"] == 8.0
+    assert periods[0]["line_items"]["investments_subs_sum"] == 8.0
 
 
-def test_investments_field_stays_none_when_no_candidate_key_present():
+def test_investment_parent_key_stays_separate_from_subs_sum():
+    records = [
+        {
+            "index": "2024-03-31",
+            "InvestmentinFinancialAssets": 10 * CRORE,
+            "AvailableForSaleSecurities": 5 * CRORE,
+        }
+    ]
+    periods = normalize_balance_sheet(records)
+    assert periods[0]["line_items"]["investments_parent"] == 10.0
+    assert periods[0]["line_items"]["investments_subs_sum"] == 5.0
+
+
+def test_duplicate_aliased_investment_keys_are_not_double_counted():
+    # ICICIBANK-shaped regression: "InvestmentsAndAdvances" and
+    # "AvailableForSaleSecurities" reported the exact same figure for the
+    # same period (an alias, not two separate amounts) -- summing both
+    # would double the real investments total.
+    records = [
+        {
+            "index": "2024-03-31",
+            "InvestmentsAndAdvances": 100 * CRORE,
+            "AvailableForSaleSecurities": 100 * CRORE,
+            "LongTermEquityInvestment": 20 * CRORE,
+        }
+    ]
+    periods = normalize_balance_sheet(records)
+    assert periods[0]["line_items"]["investments_subs_sum"] == 120.0
+
+
+def test_investments_fields_stay_none_when_no_candidate_key_present():
     periods = normalize_balance_sheet([{"index": "2024-03-31", "TotalAssets": 100 * CRORE}])
-    assert periods[0]["line_items"]["investments"] is None
+    assert periods[0]["line_items"]["investments_subs_sum"] is None
+    assert periods[0]["line_items"]["investments_parent"] is None

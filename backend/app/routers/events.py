@@ -3,9 +3,11 @@ from datetime import datetime, timezone
 from fastapi import APIRouter, HTTPException
 
 from app.config import get_settings
+from app.metrics.ratios import dividend_yield
 from app.models.schemas import DividendEvent, EventsResponse, SplitEvent
 from app.services.cache import get_cache
 from app.services.datasource import get_data_source
+from app.services.nse import fetch_shareholding_pattern
 from app.services.universe import get_company
 
 router = APIRouter(prefix="/api", tags=["events"])
@@ -45,18 +47,34 @@ async def get_events(symbol: str) -> EventsResponse:
         news_raw = []
         warnings.append(f"News fetch failed: {exc}")
 
+    try:
+        fast_info = await data_source.get_fast_info(company.yf_ticker)
+        current_price = fast_info.get("last_price")
+    except Exception:  # noqa: BLE001
+        current_price = None
+
+    # PLAN.md §4 Task D.5: one attempt at NSE's public shareholding-pattern
+    # endpoint (see app/services/nse.py) -- NSE blocks this deployment's IP
+    # on every /api/ data endpoint tried (403 Access Denied), same as the
+    # already-documented block on other NSE endpoints.
+    shareholding = await fetch_shareholding_pattern(company.symbol)
+    if shareholding is None:
+        warnings.append("Shareholding (promoter/FII/DII) not available from free sources (NSE blocks this deployment's IP)")
+
     # Not available from this free data source (PLAN.md §3 "Shareholding &
-    # Events" calls for promoter/FII/DII trend and the next earnings date;
-    # NSE would supply the former but blocks datacenter IPs with a 403, and
-    # the latter needs a crumb-gated Yahoo endpoint we don't rely on).
-    warnings.append("Shareholding (promoter/FII/DII) unavailable: NSE blocks this deployment's IP")
+    # Events" calls for the next earnings date; it needs a crumb-gated
+    # Yahoo endpoint we don't rely on).
     warnings.append("Upcoming earnings date unavailable: requires a Yahoo crumb we don't rely on")
 
     response = EventsResponse(
         symbol=company.symbol,
-        dividends=[DividendEvent(**d) for d in dividends_raw],
+        dividends=[
+            DividendEvent(**d, yield_pct=dividend_yield(d.get("amount"), current_price)) for d in dividends_raw
+        ],
         splits=[SplitEvent(**s) for s in splits_raw],
-        news=news_raw,
+        news=news_raw[:10],
+        shareholding=shareholding,
+        next_earnings_date=None,
         source="yahoo",
         as_of=datetime.now(timezone.utc),
         warnings=warnings,

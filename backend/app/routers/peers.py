@@ -1,9 +1,11 @@
 import asyncio
+import statistics
 from datetime import datetime, timezone
 
 from fastapi import APIRouter, HTTPException
 
 from app.config import get_settings
+from app.metrics.scoring import METRIC_HIGHER_IS_BETTER, percentile_rank
 from app.models.schemas import PeerRow, PeersResponse
 from app.services.cache import get_cache
 from app.services.metrics_engine import compute_symbol_metrics
@@ -32,11 +34,29 @@ async def get_peers(symbol: str) -> PeersResponse:
         *(compute_symbol_metrics(c.symbol) for c in peer_companies)
     )
 
+    # Same percentile/median approach as the Ratios tab (app/routers/ratios.py):
+    # gather every peer's value per metric, then rank/median against that list.
+    peer_values: dict[str, list[float | None]] = {}
+    for result in results:
+        for key, value in result["metrics"].items():
+            peer_values.setdefault(key, []).append(value)
+
+    peer_medians: dict[str, float | None] = {}
+    for key, values in peer_values.items():
+        valid = [v for v in values if v is not None]
+        peer_medians[key] = statistics.median(valid) if valid else None
+
     rows: list[PeerRow] = []
     for peer_company, result in zip(peer_companies, results):
         quote = result.get("quote")
         last_price = quote.last_price if quote is not None else None
         market_cap = quote.market_cap if quote is not None else None
+        metrics = result["metrics"]
+
+        percentiles = {
+            key: percentile_rank(value, peer_values.get(key, []), METRIC_HIGHER_IS_BETTER.get(key, True))
+            for key, value in metrics.items()
+        }
 
         rows.append(
             PeerRow(
@@ -45,7 +65,8 @@ async def get_peers(symbol: str) -> PeersResponse:
                 template=peer_company.template,
                 last_price=last_price,
                 market_cap=market_cap,
-                metrics=result["metrics"],
+                metrics=metrics,
+                percentiles=percentiles,
             )
         )
         warnings.extend(f"{peer_company.symbol}: {w}" for w in result["warnings"])
@@ -54,6 +75,7 @@ async def get_peers(symbol: str) -> PeersResponse:
         symbol=company.symbol,
         peer_basis=basis,
         peers=rows,
+        peer_medians=peer_medians,
         source="yahoo",
         as_of=datetime.now(timezone.utc),
         warnings=warnings,

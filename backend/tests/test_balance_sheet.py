@@ -85,6 +85,38 @@ def test_other_current_and_non_current_split_out_when_reported():
     assert result["assets"]["Other"] == pytest_approx(1000 - (300 + 200 + 50 + 30))
 
 
+def test_investments_uses_parent_only_when_subs_exceed_it():
+    # RELIANCE-shaped regression: sub-keys (AFS/short-term/long-term-equity)
+    # sum to ~3x the InvestmentinFinancialAssets rollup for the same period
+    # -- they overlap the parent rather than sitting alongside it, so
+    # summing everything double-counts and can even push "Other" negative.
+    li = {
+        "total_assets": 5000,
+        "investments_parent": 1391,
+        "investments_subs_sum": 2738,  # 1177 + 1399 + 162, all real RELIANCE FY26 values
+        "net_ppe": 2000,
+        "cash_and_equivalents": 500,
+    }
+    result = compute_balance_sheet_period("FY26", "2026-03-31", li, "general")
+    assert result["assets"]["Investments"] == 1391
+    assert result["assets"]["Other"] >= 0
+
+
+def test_investments_uses_subs_sum_when_it_does_not_exceed_parent():
+    li = {"investments_parent": 1000, "investments_subs_sum": 400}
+    result = compute_balance_sheet_period("FY26", "2026-03-31", li, "general")
+    assert result["assets"]["Investments"] == 400
+
+
+def test_investments_falls_back_to_whichever_side_is_present():
+    assert compute_balance_sheet_period("FY26", "2026-03-31", {"investments_parent": 500}, "general")["assets"][
+        "Investments"
+    ] == 500
+    assert compute_balance_sheet_period("FY26", "2026-03-31", {"investments_subs_sum": 300}, "general")["assets"][
+        "Investments"
+    ] == 300
+
+
 def pytest_approx(x):
     import pytest
 

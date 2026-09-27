@@ -17,6 +17,21 @@ def _sum_known(parts: dict[str, float | None]) -> float:
     return sum(v for v in parts.values() if v is not None)
 
 
+def _resolve_investments(li: dict[str, float | None]) -> float | None:
+    """`investments_parent` (InvestmentinFinancialAssets) is a rollup total
+    that can itself overlap `investments_subs_sum` (AFS/HTM/short-term/
+    long-term-equity investments) rather than sit alongside it -- live data
+    showed RELIANCE's sub-keys summing to ~3x its parent for the same
+    period. If the subs exceed the parent, the parent alone is the sane
+    total (PLAN.md Phase 4 Task A.2); otherwise the more granular subs sum
+    is used, same as before."""
+    parent = li.get("investments_parent")
+    subs_sum = li.get("investments_subs_sum")
+    if parent is not None and subs_sum is not None and subs_sum > parent:
+        return parent
+    return subs_sum if subs_sum is not None else parent
+
+
 def compute_balance_sheet_period(
     fiscal_year: str, period_end: str, line_items: dict[str, float | None], template: str
 ) -> dict:
@@ -38,7 +53,7 @@ def compute_balance_sheet_period(
     if template in _FINANCIAL_TEMPLATES:
         assets: dict[str, float | None] = {
             "Cash & equivalents": li.get("cash_and_equivalents"),
-            "Investments": li.get("investments"),
+            "Investments": _resolve_investments(li),
             "Loans": li.get("loans"),
             "Fixed assets": li.get("net_ppe"),
         }
@@ -52,7 +67,7 @@ def compute_balance_sheet_period(
         assets = {
             "PP&E": li.get("net_ppe"),
             "Goodwill & intangibles": li.get("goodwill_intangibles"),
-            "Investments": li.get("investments"),
+            "Investments": _resolve_investments(li),
             "Inventory": li.get("inventory"),
             "Receivables": li.get("receivables"),
             "Cash & equivalents": li.get("cash_and_equivalents"),

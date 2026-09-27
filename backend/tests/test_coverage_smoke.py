@@ -16,10 +16,12 @@ import pytest
 from app.config import BASE_DIR
 from app.metrics.plausibility import (
     book_value_per_share_is_plausible,
+    multiple_is_plausible,
     market_cap_matches_price_times_shares,
     pe_is_plausible,
 )
 from app.services import yahoo
+from app.services.balance_sheet import compute_balance_sheet_detail
 from app.services.corporate_actions import notes_for_symbol
 from app.services.metrics_engine import compute_symbol_metrics
 from app.services.normalize import (
@@ -98,6 +100,40 @@ async def _check_symbol(symbol: str) -> dict:
     result["missing_balance"] = sorted(missing_fields(balance, BALANCE_SHEET_MAP))
     result["missing_cashflow"] = sorted(missing_fields(cashflow, CASH_FLOW_MAP))
 
+    # Phase 4 Task A.2: the buckets THIS APP COMPUTES (rather than passing
+    # through a single already-signed reported line item) should never be
+    # negative -- "Investments" (resolved from overlapping parent/sub
+    # keys) and the residual "Other" (total minus every mapped bucket) are
+    # both supposed to represent a real, non-negative amount of assets or
+    # liabilities+equity; a negative value there means a mapped sub-item
+    # double-counted past its own total (RELIANCE's/ICICIBANK's investments
+    # overlap was exactly this -- see app.services.balance_sheet). This is
+    # the across-all-50-symbols regression guard for that class of bug.
+    # Every OTHER bucket here (Equity, Minority interest, "Other current",
+    # "Other non-current", etc.) is a direct pass-through of one Yahoo
+    # field and can be legitimately negative in real filings (e.g.
+    # INDIGO's reported negative equity, or a small reported contra-liability
+    # under "OtherNonCurrentLiabilities") -- not checked here.
+    # A materiality floor, not a hard zero: "Other" reconciles by
+    # construction (sum of a side's buckets always equals its reported
+    # total), so a *tiny* negative Other reflects ordinary free-data-source
+    # noise in the OTHER mapped buckets (e.g. BAJAJ-AUTO: "Other current
+    # liabilities" overlapping ~0.66% into "Payables"), not the same class
+    # of bug as a large one (e.g. the pre-fix ICICIBANK case, ~12-18% of
+    # total assets) -- flag only the latter.
+    _COMPUTED_BUCKETS = {"Investments", "Other"}
+    _MATERIALITY_PCT = 1.0
+    negative_buckets: list[str] = []
+    for period in compute_balance_sheet_detail(balance, company.template):
+        for side_name, side in (("assets", period["assets"]), ("liabilities_equity", period["liabilities_equity"])):
+            side_total = sum(v for v in side.values() if v is not None)
+            for bucket_name, value in side.items():
+                if bucket_name not in _COMPUTED_BUCKETS or value is None or value >= 0:
+                    continue
+                if side_total and abs(value) / abs(side_total) * 100 > _MATERIALITY_PCT:
+                    negative_buckets.append(f"{period['fiscal_year']} {side_name}.{bucket_name}={value}")
+    result["negative_balance_sheet_buckets"] = negative_buckets
+
     required = TEMPLATE_REQUIRED_FIELDS.get(company.template, [])
     missing_required = [f for f in required if f in result["missing_income"]]
     result["template_inputs_ok"] = not missing_required
@@ -145,6 +181,15 @@ async def _check_symbol(symbol: str) -> dict:
 
         if not pe_is_plausible(pe):
             plausibility_failures.append(f"pe={pe}")
+
+        # Phase 4 Task A.1: the final-value check on every valuation
+        # multiple, not just P/E -- catches a scale error on EITHER side of
+        # the ratio (e.g. INFY: income statement AND book value per share
+        # each individually ~80-100x too small, blowing up P/B/EV/EBITDA).
+        for multiple_key in ("pe", "pb", "ev_ebitda", "ev_sales", "dividend_yield"):
+            multiple_value = metrics_result["metrics"].get(multiple_key)
+            if not multiple_is_plausible(multiple_key, multiple_value):
+                plausibility_failures.append(f"{multiple_key}={multiple_value}")
 
     result["plausibility_failures"] = plausibility_failures
 
@@ -388,6 +433,13 @@ def test_coverage_report_all_symbols():
     # Phase 2.2 gate: the plausibility check must pass for all 50 symbols.
     implausible = {r["symbol"]: r["plausibility_failures"] for r in results if r["plausibility_failures"]}
     assert not implausible, f"Symbols failing a plausibility check: {implausible}"
+
+    # Phase 4 Task A.2 gate: no balance-sheet composition bucket may be
+    # negative for any of the 50 symbols.
+    negative_buckets = {
+        r["symbol"]: r["negative_balance_sheet_buckets"] for r in results if r["negative_balance_sheet_buckets"]
+    }
+    assert not negative_buckets, f"Symbols with a negative balance-sheet bucket: {negative_buckets}"
 
 
 @pytest.mark.smoke

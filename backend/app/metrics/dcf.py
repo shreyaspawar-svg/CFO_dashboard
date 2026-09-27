@@ -87,6 +87,36 @@ def dcf_intrinsic_value(
     }
 
 
+def dcf_sensitivity_table(
+    base_fcff: float | None,
+    growth_rate_pct: float | None,
+    wacc_values_pct: list[float],
+    terminal_growth_values_pct: list[float],
+    net_debt: float | None,
+    shares_outstanding: float | None,
+    forecast_years: int = DEFAULT_FORECAST_YEARS,
+) -> dict:
+    """Intrinsic value/share for every (WACC, terminal growth) pair in the
+    grid -- monotonically decreasing in WACC and increasing in terminal
+    growth, holding the other axis fixed (each column/row's contents are
+    just a fixed-terminal-growth or fixed-WACC slice of `dcf_intrinsic_value`,
+    which is itself monotonic in each of those two inputs)."""
+    values: list[list[float | None]] = []
+    for wacc_pct in wacc_values_pct:
+        row = []
+        for terminal_growth_pct in terminal_growth_values_pct:
+            result = dcf_intrinsic_value(
+                base_fcff, growth_rate_pct, wacc_pct, terminal_growth_pct, net_debt, shares_outstanding, forecast_years
+            )
+            row.append(result["intrinsic_value_per_share"])
+        values.append(row)
+    return {
+        "wacc_values_pct": wacc_values_pct,
+        "terminal_growth_values_pct": terminal_growth_values_pct,
+        "values": values,
+    }
+
+
 def reverse_dcf_implied_growth(
     base_fcff: float | None,
     current_price: float | None,
