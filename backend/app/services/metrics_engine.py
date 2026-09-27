@@ -169,6 +169,18 @@ def compute_ratio_history(
         )
         _append("equity_multiplier", fy, period_end, equity_multiplier)
         _append("cfo_to_pat", fy, period_end, r.cfo_to_pat(cl.get("cfo"), li.get("net_income")))
+        debtor_days_ = r.debtor_days(bl.get("receivables"), li.get("revenue"))
+        inventory_days_ = r.inventory_days(bl.get("inventory"), li.get("cogs"))
+        payable_days_ = r.payable_days(bl.get("payables"), li.get("cogs"))
+        _append("debtor_days", fy, period_end, debtor_days_)
+        _append("inventory_days", fy, period_end, inventory_days_)
+        _append("payable_days", fy, period_end, payable_days_)
+        _append(
+            "cash_conversion_cycle",
+            fy,
+            period_end,
+            r.cash_conversion_cycle(debtor_days_, inventory_days_, payable_days_),
+        )
         _append("nim", fy, period_end, r.net_interest_margin(li.get("net_interest_income"), avg_assets))
         _append(
             "cost_to_income",

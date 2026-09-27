@@ -789,6 +789,8 @@ Acceptance
 
 4.3 fixes (materiality floors, template-aware signals, DuPont labelling) — done, see commit `phase-4.3`.
 
+4.5 fixes (investments/loan/deposit mapping, minority-interest balance check, FX-aware Sankey) — done but gate not met (TCS/RELIANCE "Other" still >15%); not committed, see report.
+
 ---
 
 ### Phase 5 — Live data layer

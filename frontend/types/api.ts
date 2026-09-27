@@ -248,6 +248,60 @@ export interface components {
             /** Components */
             components: components["schemas"]["AxisComponent"][];
         };
+        /** BalanceSheetPeriodDetail */
+        BalanceSheetPeriodDetail: {
+            /** Fiscal Year */
+            fiscal_year: string;
+            /** Period End */
+            period_end: string;
+            /** Assets */
+            assets: {
+                [key: string]: number | null;
+            };
+            /** Liabilities Equity */
+            liabilities_equity: {
+                [key: string]: number | null;
+            };
+            /** Balance Check Pct */
+            balance_check_pct: number | null;
+            /** Net Debt */
+            net_debt: number | null;
+            /** Bvps */
+            bvps: number | null;
+        };
+        /** CashFlowPeriodDetail */
+        CashFlowPeriodDetail: {
+            /** Fiscal Year */
+            fiscal_year: string;
+            /** Period End */
+            period_end: string;
+            /** Cfo To Ebitda */
+            cfo_to_ebitda: number | null;
+            /** Cfo To Pat */
+            cfo_to_pat: number | null;
+            /** Fcf Margin Pct */
+            fcf_margin_pct: number | null;
+        };
+        /** CashFlowSankey */
+        CashFlowSankey: {
+            /** Links */
+            links: components["schemas"]["CashFlowSankeyLink"][];
+            /** Computed Change In Cash */
+            computed_change_in_cash: number | null;
+            /** Reported Change In Cash */
+            reported_change_in_cash: number | null;
+            /** Gap */
+            gap: number | null;
+        };
+        /** CashFlowSankeyLink */
+        CashFlowSankeyLink: {
+            /** Source */
+            source: string;
+            /** Target */
+            target: string;
+            /** Value */
+            value: number;
+        };
         /** CompanyRef */
         CompanyRef: {
             /** Symbol */
@@ -330,6 +384,11 @@ export interface components {
             comparable_from?: string | null;
             /** Comparable From Label */
             comparable_from_label?: string | null;
+            /** Balance Sheet Detail */
+            balance_sheet_detail?: components["schemas"]["BalanceSheetPeriodDetail"][];
+            /** Cash Flow Detail */
+            cash_flow_detail?: components["schemas"]["CashFlowPeriodDetail"][];
+            cash_flow_sankey?: components["schemas"]["CashFlowSankey"] | null;
         };
         /** GlossaryEntry */
         GlossaryEntry: {

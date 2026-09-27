@@ -73,6 +73,37 @@ class FinancialPeriod(BaseModel):
     line_items: dict[str, float | None]
 
 
+class BalanceSheetPeriodDetail(BaseModel):
+    fiscal_year: str
+    period_end: str
+    assets: dict[str, float | None]
+    liabilities_equity: dict[str, float | None]
+    balance_check_pct: float | None
+    net_debt: float | None
+    bvps: float | None
+
+
+class CashFlowPeriodDetail(BaseModel):
+    fiscal_year: str
+    period_end: str
+    cfo_to_ebitda: float | None
+    cfo_to_pat: float | None
+    fcf_margin_pct: float | None
+
+
+class CashFlowSankeyLink(BaseModel):
+    source: str
+    target: str
+    value: float
+
+
+class CashFlowSankey(BaseModel):
+    links: list[CashFlowSankeyLink]
+    computed_change_in_cash: float | None
+    reported_change_in_cash: float | None
+    gap: float | None
+
+
 class FinancialsResponse(BaseModel):
     symbol: str
     period: Literal["annual", "quarterly"]
@@ -92,6 +123,12 @@ class FinancialsResponse(BaseModel):
     # recorded corporate action.
     comparable_from: str | None = None
     comparable_from_label: str | None = None
+    # Server-computed detail for the Balance Sheet / Cash Flow tabs (PLAN.md
+    # §4.4/§4.5) -- empty when there are no periods to compute from (e.g. a
+    # fetch failure already reflected in `warnings`).
+    balance_sheet_detail: list[BalanceSheetPeriodDetail] = Field(default_factory=list)
+    cash_flow_detail: list[CashFlowPeriodDetail] = Field(default_factory=list)
+    cash_flow_sankey: CashFlowSankey | None = None
 
 
 PeerBasis = Literal["sector", "template", "none"]

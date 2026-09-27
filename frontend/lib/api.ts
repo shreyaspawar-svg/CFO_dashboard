@@ -25,6 +25,9 @@ export type RatioHistoryPoint = components["schemas"]["RatioHistoryPoint"];
 export type Signal = components["schemas"]["Signal"];
 export type PeerRow = components["schemas"]["PeerRow"];
 export type QualityScores = components["schemas"]["QualityScores"];
+export type BalanceSheetPeriodDetail = components["schemas"]["BalanceSheetPeriodDetail"];
+export type CashFlowPeriodDetail = components["schemas"]["CashFlowPeriodDetail"];
+export type CashFlowSankey = components["schemas"]["CashFlowSankey"];
 
 class ApiError extends Error {
   constructor(

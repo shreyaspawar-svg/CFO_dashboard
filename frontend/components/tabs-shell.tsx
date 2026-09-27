@@ -5,6 +5,8 @@ import { cn } from "@/lib/utils";
 import { OverviewTab } from "@/components/tabs/overview-tab";
 import { IncomeStatementTab } from "@/components/tabs/income-statement-tab";
 import { RatiosTab } from "@/components/tabs/ratios-tab";
+import { BalanceSheetTab } from "@/components/tabs/balance-sheet-tab";
+import { CashFlowTab } from "@/components/tabs/cash-flow-tab";
 
 const TABS = [
   "Overview",
@@ -58,6 +60,10 @@ export function TabsShell({ symbol, template }: { symbol: string; template: stri
           <IncomeStatementTab symbol={symbol} template={template} />
         ) : active === "Ratios" ? (
           <RatiosTab symbol={symbol} template={template} />
+        ) : active === "Balance Sheet" ? (
+          <BalanceSheetTab symbol={symbol} template={template} />
+        ) : active === "Cash Flow" ? (
+          <CashFlowTab symbol={symbol} template={template} />
         ) : (
           <div className="p-2 text-sm text-muted">
             <p className="font-medium text-foreground">{active}</p>

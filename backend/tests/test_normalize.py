@@ -6,6 +6,7 @@ from app.services.normalize import (
     _fiscal_year_label,
     clean_numeric,
     missing_fields,
+    normalize_balance_sheet,
     normalize_income_statement,
 )
 
@@ -54,3 +55,20 @@ def test_missing_fields_reports_fields_absent_in_every_period():
 def test_missing_fields_empty_periods_returns_everything_missing():
     missing = missing_fields([], INCOME_STATEMENT_MAP)
     assert missing == set(INCOME_STATEMENT_MAP.values())
+
+
+def test_multiple_investment_keys_sum_into_one_investments_field():
+    records = [
+        {
+            "index": "2024-03-31",
+            "AvailableForSaleSecurities": 5 * CRORE,
+            "HeldToMaturitySecurities": 3 * CRORE,
+        }
+    ]
+    periods = normalize_balance_sheet(records)
+    assert periods[0]["line_items"]["investments"] == 8.0
+
+
+def test_investments_field_stays_none_when_no_candidate_key_present():
+    periods = normalize_balance_sheet([{"index": "2024-03-31", "TotalAssets": 100 * CRORE}])
+    assert periods[0]["line_items"]["investments"] is None

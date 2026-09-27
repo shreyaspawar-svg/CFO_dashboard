@@ -64,6 +64,30 @@ BALANCE_SHEET_MAP: dict[str, str] = {
     # Not exposed as a KPI, just carried through for market-cap calculation
     # (price x shares) and future per-share metrics.
     "OrdinarySharesNumber": "shares_outstanding",
+    # Phase 4.5 fix: several non-overlapping investment classifications all
+    # map to one "investments" field and are SUMMED (see _normalize_statement)
+    # so a company reporting more than one of these doesn't lose the rest to
+    # "Other". A company only reports whichever subset applies to it; the
+    # others are simply absent (None), not zero.
+    "InvestmentsAndAdvances": "investments",
+    "LongTermEquityInvestment": "investments",
+    "OtherShortTermInvestments": "investments",
+    "AvailableForSaleSecurities": "investments",
+    "HeldToMaturitySecurities": "investments",
+    "InvestmentinFinancialAssets": "investments",
+    # Bank/NBFC balance-sheet composition (Phase 4.5): the canonical
+    # single reported lines, not the gross/before-provision or
+    # interest-vs-noninterest split disclosures.
+    "NetLoan": "loans",
+    "TotalDeposits": "deposits",
+    "GoodwillAndOtherIntangibleAssets": "goodwill_intangibles",
+    "OtherInvestments": "investments",
+    # Phase 4.5 fix: split the residual "Other" bucket where Yahoo does
+    # expose this much granularity, instead of leaving it fully lumped.
+    "OtherCurrentAssets": "other_current_assets",
+    "OtherNonCurrentAssets": "other_non_current_assets",
+    "OtherCurrentLiabilities": "other_current_liabilities",
+    "OtherNonCurrentLiabilities": "other_non_current_liabilities",
 }
 
 CASH_FLOW_MAP: dict[str, str] = {
@@ -72,6 +96,11 @@ CASH_FLOW_MAP: dict[str, str] = {
     "FinancingCashFlow": "cff",
     "CapitalExpenditure": "capex",
     "FreeCashFlow": "free_cash_flow",
+    # Phase 4.5 fix: reconcile the Sankey to the cash flow statement's own
+    # reported change in cash, not a derived balance-sheet delta.
+    "EndCashPosition": "end_cash_position",
+    "BeginningCashPosition": "beginning_cash_position",
+    "EffectOfExchangeRateChanges": "fx_effect",
 }
 
 # Fields expressed as a per-share value or a raw count in yfinance's data,
@@ -118,10 +147,16 @@ def _normalize_statement(
             if isinstance(period_end_raw, datetime)
             else datetime.fromisoformat(str(period_end_raw))
         )
-        line_items: dict[str, float | None] = {}
+        # A field can have more than one candidate raw key (e.g. "investments"
+        # covers several non-overlapping classifications) -- sum whichever
+        # are actually present; a field stays None only if none of them are.
+        raw_by_field: dict[str, list[float | None]] = {}
         for yahoo_key, field in field_map.items():
-            raw = record.get(yahoo_key)
-            value = clean_numeric(raw)
+            raw_by_field.setdefault(field, []).append(clean_numeric(record.get(yahoo_key)))
+        line_items: dict[str, float | None] = {}
+        for field, raws in raw_by_field.items():
+            present = [r for r in raws if r is not None]
+            value = sum(present) if present else None
             line_items[field] = _to_crore(value, field)
         periods.append(
             {
