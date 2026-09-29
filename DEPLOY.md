@@ -5,6 +5,18 @@
 - Frontend: https://nifty50-cfo-dashboard.vercel.app
 - Backend: https://nifty50-cfo-api.onrender.com (API docs: `/docs`, health: `/api/health`)
 
+## `deploy-v2` (2026-09-30)
+
+News/legend/P-E-band/shareholding fixes plus the "Editorial" visual
+redesign (see PLAN.md), merged from `ui-exploration` into `main`.
+Backend redeployed automatically from the `main` push (Render Blueprint
+is Git-connected); frontend redeployed manually (`npx vercel --prod`,
+same project -- Vercel still isn't Git-connected, see "Redeploying"
+below). Both verified live: `/api/events/TCS` returns real headlines,
+`/api/valuation/HDFCBANK`'s `pe_band` has non-null points, and an
+8-tab x 3-symbol Playwright crawl against the live URLs came back clean
+(0 console/page errors, 0 failed API calls).
+
 ## Why Render, not Fly.io
 
 Phase 8 originally targeted Fly.io, but Fly removed its card-free free
