@@ -100,13 +100,31 @@ body {
    independent of `data-theme` (next-themes' existing dark/light axis),
    so the two combine freely (e.g. Editorial + dark). Same layout and
    chart data everywhere; only these presentation tokens change. Remove
-   this whole block, the switcher, and the extra font before merging to
+   this whole block, the switcher, and the extra fonts before merging to
    main.
+
+   Each theme sets FOUR kinds of token, not just colour:
+     --font-body / --font-heading  (typeface)
+     --radius, --card-*            (shape: corners, border vs shadow vs rule)
+     --label-transform/-tracking   (how uppercase micro-labels read)
+     --background/--surface/etc.   (colour)
+   so switching themes visibly changes typography and shape, not just a
+   background swap.
    ============================================================ */
 
 :root {
+  --font-body: var(--font-sans);
   --font-heading: var(--font-sans);
   --card-shadow: none;
+  --card-border-width: 1px;
+  --card-border-style: solid;
+  --card-padding: 1rem;
+  --label-transform: uppercase;
+  --label-tracking: 0.05em;
+}
+
+body {
+  font-family: var(--font-body), var(--font-sans), Arial, Helvetica, sans-serif;
 }
 
 /* Card look, driven by the tokens each theme below sets -- matches the
@@ -116,27 +134,70 @@ body {
    `rounded-lg` itself already retheme via `--radius` -> `--radius-lg`
    in the `@theme inline` block above. */
 .border-border.bg-surface {
+  border-width: 0 0 var(--card-border-width) 0;
+  border-style: var(--card-border-style);
   box-shadow: var(--card-shadow);
+  padding: var(--card-padding);
 }
 
 h1,
 h2,
 h3,
-.hero-number {
+h4,
+.brand-title,
+.hero-number,
+[role="tab"] {
   font-family: var(--font-heading);
 }
 
-/* Theme A "Terminal" (default): the original dense dark look (see the
-   base :root / :root[data-theme="light"] tokens above), just with
-   monospace-leaning tabular numbers to lean into the "terminal" feel. */
-[data-visual-theme="terminal"] .tabular-nums-fixed {
-  font-family: var(--font-mono);
+/* The app's small uppercase-tracked micro-labels (KPI/ratio-card labels,
+   section headings like the "Valuation" h4 above a metric) -- themed as a
+   group via the Tailwind utilities they already carry. */
+.uppercase.tracking-wide {
+  text-transform: var(--label-transform);
+  letter-spacing: var(--label-tracking);
 }
 
-/* Theme B "Clean SaaS": light-first (with its own dark mode), soft
-   shadow elevation instead of hard borders, rounded corners, generous
-   padding, muted indigo accent. */
+/* ------------------------------------------------------------
+   Theme A "Terminal" (default): whole UI goes monospace, sharp
+   corners, full borders on every side (a real box, not a rule),
+   phosphor-green accent instead of blue -- the densest, most
+   "terminal" of the three rather than just "the current look".
+   ------------------------------------------------------------ */
+:root[data-visual-theme="terminal"] {
+  --font-body: var(--font-mono);
+  --font-heading: var(--font-mono);
+  --radius: 0.25rem;
+  --card-border-width: 1px;
+  --card-padding: 0.875rem;
+  --label-transform: uppercase;
+  --label-tracking: 0.08em;
+  --accent: #2fd67f;
+  --accent-foreground: #06130b;
+}
+:root[data-visual-theme="terminal"][data-theme="light"] {
+  --accent: #0a8f4f;
+  --accent-foreground: #ffffff;
+}
+[data-visual-theme="terminal"] .border-border.bg-surface {
+  border-width: 1px;
+}
+[data-visual-theme="terminal"] [role="tab"] {
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.8125rem;
+}
+
+/* ------------------------------------------------------------
+   Theme B "Clean SaaS": Inter body copy (distinct from Terminal's
+   mono and Editorial's serif headings), light-first with its own
+   dark mode, soft shadow elevation instead of hard borders, large
+   rounded corners, generous padding, micro-labels read as normal
+   sentence case instead of tracked uppercase, indigo accent.
+   ------------------------------------------------------------ */
 :root[data-visual-theme="clean-saas"] {
+  --font-body: var(--font-inter);
+  --font-heading: var(--font-inter);
   --background: #f8fafc;
   --foreground: #0f172a;
   --surface: #ffffff;
@@ -150,7 +211,11 @@ h3,
   --warning-bg: #fffbeb;
   --warning-border: #fde68a;
   --warning-foreground: #92400e;
-  --radius: 1rem;
+  --radius: 1.25rem;
+  --card-border-width: 0px;
+  --card-padding: 1.25rem;
+  --label-transform: none;
+  --label-tracking: normal;
   --card-shadow:
     0 1px 2px rgba(15, 23, 42, 0.04), 0 12px 28px rgba(15, 23, 42, 0.07);
 }
@@ -170,17 +235,31 @@ h3,
 :root[data-visual-theme="clean-saas"] .border-border.bg-surface {
   border-color: transparent;
 }
+:root[data-visual-theme="clean-saas"] body {
+  line-height: 1.6;
+}
+:root[data-visual-theme="clean-saas"] [role="tab"] {
+  font-weight: 500;
+}
+:root[data-visual-theme="clean-saas"] .tabular-nums-fixed {
+  font-family: var(--font-body);
+  font-weight: 600;
+}
 
-/* Theme C "Editorial": serif headings + sans body, oversized hero
-   numbers for key stats, navy / cream / burgundy palette, more
-   whitespace (tighter, squared-off radius reads more "print" than
-   "app"). */
+/* ------------------------------------------------------------
+   Theme C "Editorial": serif headings (Fraunces) over sans body
+   copy, oversized serif hero numbers with old-style figures, navy
+   / cream / burgundy palette, squared-off print-like corners, cards
+   read as a ruled column (bottom hairline only) instead of a boxed
+   card, more line-height/whitespace throughout.
+   ------------------------------------------------------------ */
 :root[data-visual-theme="editorial"] {
+  --font-heading: var(--font-serif-editorial);
   --background: #f6f1e6;
   --foreground: #1b2942;
   --surface: #fffdf8;
   --surface-raised: #fffdf8;
-  --border: #e2d7bf;
+  --border: #d8c9a3;
   --muted: #756c58;
   --accent: #8a2a3b;
   --accent-foreground: #fffdf8;
@@ -189,15 +268,19 @@ h3,
   --warning-bg: #f4e6c8;
   --warning-border: #d8bd82;
   --warning-foreground: #6b4a10;
-  --radius: 0.375rem;
-  --font-heading: var(--font-serif-editorial);
+  --radius: 0px;
+  --card-border-width: 2px;
+  --card-padding: 1.5rem;
+  --label-transform: uppercase;
+  --label-tracking: 0.12em;
+  --card-shadow: none;
 }
 :root[data-visual-theme="editorial"][data-theme="dark"] {
   --background: #16223b;
   --foreground: #f3ecdd;
   --surface: #1c2b4a;
   --surface-raised: #22335a;
-  --border: #2c3e63;
+  --border: #3c4c72;
   --muted: #a0a8bf;
   --accent: #e0798c;
   --accent-foreground: #16223b;
@@ -205,11 +288,30 @@ h3,
   --down: #e0798c;
 }
 :root[data-visual-theme="editorial"] .border-border.bg-surface {
-  border-color: transparent;
+  border-color: var(--border);
+}
+:root[data-visual-theme="editorial"] body {
+  line-height: 1.65;
+}
+:root[data-visual-theme="editorial"] h1,
+:root[data-visual-theme="editorial"] h2,
+:root[data-visual-theme="editorial"] h3,
+:root[data-visual-theme="editorial"] h4,
+:root[data-visual-theme="editorial"] .brand-title,
+:root[data-visual-theme="editorial"] [role="tab"] {
+  letter-spacing: 0.01em;
+}
+:root[data-visual-theme="editorial"] [role="tab"][aria-selected="true"] {
+  font-style: italic;
+}
+:root[data-visual-theme="editorial"] .tabular-nums-fixed {
+  font-family: var(--font-heading);
+  font-variant-numeric: oldstyle-nums tabular-nums;
 }
 :root[data-visual-theme="editorial"] .hero-number {
-  font-size: 2.5rem;
+  font-size: 2.75rem;
   line-height: 1.1;
   font-weight: 600;
   letter-spacing: -0.01em;
+  font-variant-numeric: lining-nums tabular-nums;
 }

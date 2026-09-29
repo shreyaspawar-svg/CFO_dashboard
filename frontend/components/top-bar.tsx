@@ -17,7 +17,7 @@ export function TopBar() {
   return (
     <div className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur">
       <div className="flex flex-wrap items-center gap-3 px-4 py-3">
-        <span className="mr-2 text-sm font-semibold tracking-tight">CFO Dashboard</span>
+        <span className="brand-title mr-2 text-sm font-semibold tracking-tight">CFO Dashboard</span>
 
         <SectorCombobox sectors={sectors} value={currentSectorName} onChange={selectSector} />
         <CompanyCombobox
