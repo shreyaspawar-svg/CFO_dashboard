@@ -95,6 +95,30 @@ async def _compute_pe_pb_band(company) -> list[dict]:
     eps_points = [{"period_end": p["period_end"], "eps_diluted": p["line_items"].get("eps_diluted")} for p in income_q]
     trailing_eps_points = trailing_eps_series(eps_points)
 
+    # Bank/NBFC/insurance quarterly fundamentals-timeseries only has ~3
+    # periods of EPS coverage from this free source (vs 6+ for a general
+    # company like TCS), so the 4-consecutive-quarter trailing sum above
+    # can never resolve for them -- the P/E band was permanently empty,
+    # while P/B (a single-quarter step-lookup, no trailing window) still
+    # rendered fine. Annual EPS is itself already a trailing-12-month
+    # figure and has full, gap-free coverage for every template tried
+    # (HDFCBANK/BAJFINANCE/HDFCLIFE/BSE), so it's merged in as a coarser
+    # fallback checkpoint series -- `_step_lookup` just uses whichever
+    # checkpoint (quarterly-trailing or annual) is the latest one <= a
+    # given date, so a symbol with good quarterly coverage still gets the
+    # finer-grained line.
+    try:
+        income_a_raw = await data_source.get_income_statement(company.yf_ticker, quarterly=False)
+        income_a = normalize_income_statement(income_a_raw)
+        annual_eps_points = [
+            {"period_end": p["period_end"], "trailing_eps": p["line_items"].get("eps_diluted")}
+            for p in income_a
+            if p["line_items"].get("eps_diluted") is not None
+        ]
+    except Exception:  # noqa: BLE001
+        annual_eps_points = []
+    trailing_eps_points = trailing_eps_points + annual_eps_points
+
     balance_detail_q = compute_balance_sheet_detail(balance_q, company.template)
     bvps_points = [{"period_end": p["period_end"], "bvps": p["bvps"]} for p in balance_detail_q]
 

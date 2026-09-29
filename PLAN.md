@@ -799,6 +799,8 @@ Phase 5.1 (Overview tab: date-tick thinning, synced price/performance range, Rev
 
 Phase 8 — done, see DEPLOY.md.
 
+UI-exploration branch (news/legend/P-E-band/shareholding-fallback fixes + Terminal/Clean SaaS/Editorial theme switcher) — see branch `ui-exploration`, not merged.
+
 ---
 
 ### Phase 5 — Live data layer

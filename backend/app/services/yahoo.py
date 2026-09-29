@@ -493,16 +493,72 @@ async def fetch_dividends(yf_ticker: str) -> list[dict[str, Any]]:
     return out
 
 
-async def fetch_news(yf_ticker: str) -> list[dict[str, Any]]:
-    """Best-effort headline search; returns [] on any failure rather than
-    raising, since news is a nice-to-have (Phase 4+ Events tab)."""
+_GOOGLE_NEWS_RSS_URL = "https://news.google.com/rss/search"
+
+
+def _google_news_rss_sync(company_name: str) -> list[dict[str, Any]]:
+    """Google News RSS filtered by company name -- no crumb/auth needed.
+    Fallback for the many NSE-listed symbols Yahoo's own search index has
+    little or no news for (a live check found it returns 0 results for a
+    literal ticker query, and for most company names too -- e.g. "Tata
+    Consultancy Services" -- while a few return only US-ADR-flavoured
+    global market chatter, not NSE-specific coverage)."""
+    from email.utils import parsedate_to_datetime
+    from xml.etree import ElementTree
+
+    session = _get_session()
+    params = {"q": company_name, "hl": "en-IN", "gl": "IN", "ceid": "IN:en"}
+    resp = session.get(_GOOGLE_NEWS_RSS_URL, params=params, timeout=15)
+    if resp.status_code != 200:
+        raise YahooError(f"Google News RSS {resp.status_code} for {company_name!r}")
+
+    root = ElementTree.fromstring(resp.text)
+    items: list[dict[str, Any]] = []
+    for item in root.findall("./channel/item")[:10]:
+        title_raw = (item.findtext("title") or "").strip()
+        link = (item.findtext("link") or "").strip()
+        if not title_raw or not link:
+            continue
+        source_el = item.find("source")
+        publisher = source_el.text.strip() if source_el is not None and source_el.text else None
+        # Google News titles are "<headline> - <publisher>"; strip the
+        # trailing publisher tag so it isn't shown twice in the UI.
+        title = title_raw
+        if publisher and title_raw.endswith(f" - {publisher}"):
+            title = title_raw[: -(len(publisher) + 3)].strip()
+        publish_time: int | None = None
+        pub_date_raw = item.findtext("pubDate")
+        if pub_date_raw:
+            try:
+                publish_time = int(parsedate_to_datetime(pub_date_raw).timestamp())
+            except (TypeError, ValueError):
+                publish_time = None
+        items.append(
+            {"title": title, "link": link, "publisher": publisher, "providerPublishTime": publish_time}
+        )
+    return items
+
+
+async def fetch_news(yf_ticker: str, company_name: str) -> list[dict[str, Any]]:
+    """Best-effort headline search: Yahoo's own search/news endpoint first
+    (same curl_cffi session as everything else, no crumb needed), falling
+    back to Google News RSS filtered by company name whenever Yahoo comes
+    back empty. Returns [] only if both sources fail/are empty -- news is
+    a nice-to-have (Phase 4+ Events tab), never worth raising over."""
     try:
         data = await _run_throttled(
-            _get_json_sync, _SEARCH_URL, {"q": yf_ticker, "newsCount": 10}
+            _get_json_sync, _SEARCH_URL, {"q": company_name, "newsCount": 10, "quotesCount": 0}
         )
-        return list(data.get("news") or [])
+        news = list(data.get("news") or [])
+        if news:
+            return news
     except Exception as exc:  # noqa: BLE001
-        logger.warning("news fetch failed for %s: %s", yf_ticker, exc)
+        logger.warning("Yahoo news search failed for %s: %s", yf_ticker, exc)
+
+    try:
+        return await _run_throttled(_google_news_rss_sync, company_name)
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("Google News RSS fallback failed for %s: %s", yf_ticker, exc)
         return []
 
 

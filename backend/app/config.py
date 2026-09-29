@@ -27,6 +27,7 @@ class Settings(BaseSettings):
     ttl_history_daily: int = 6 * 3600
     ttl_financials: int = 12 * 3600
     ttl_peer_stats: int = 6 * 3600
+    ttl_news: int = 25 * 60
 
     # Yahoo throttling
     yahoo_max_concurrency: int = 4

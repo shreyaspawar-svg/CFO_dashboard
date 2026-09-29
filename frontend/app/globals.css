@@ -93,3 +93,123 @@ body {
     animation: none;
   }
 }
+
+/* ============================================================
+   UI-exploration branch: 3 selectable visual themes, switched via
+   `data-visual-theme` on <html> (see lib/visual-theme.tsx) --
+   independent of `data-theme` (next-themes' existing dark/light axis),
+   so the two combine freely (e.g. Editorial + dark). Same layout and
+   chart data everywhere; only these presentation tokens change. Remove
+   this whole block, the switcher, and the extra font before merging to
+   main.
+   ============================================================ */
+
+:root {
+  --font-heading: var(--font-sans);
+  --card-shadow: none;
+}
+
+/* Card look, driven by the tokens each theme below sets -- matches the
+   exact utility combo every card in the app already uses
+   (`rounded-lg border border-border bg-surface p-4`), so all ~30 card
+   instances reskin from these tokens with no per-component changes.
+   `rounded-lg` itself already retheme via `--radius` -> `--radius-lg`
+   in the `@theme inline` block above. */
+.border-border.bg-surface {
+  box-shadow: var(--card-shadow);
+}
+
+h1,
+h2,
+h3,
+.hero-number {
+  font-family: var(--font-heading);
+}
+
+/* Theme A "Terminal" (default): the original dense dark look (see the
+   base :root / :root[data-theme="light"] tokens above), just with
+   monospace-leaning tabular numbers to lean into the "terminal" feel. */
+[data-visual-theme="terminal"] .tabular-nums-fixed {
+  font-family: var(--font-mono);
+}
+
+/* Theme B "Clean SaaS": light-first (with its own dark mode), soft
+   shadow elevation instead of hard borders, rounded corners, generous
+   padding, muted indigo accent. */
+:root[data-visual-theme="clean-saas"] {
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --surface: #ffffff;
+  --surface-raised: #ffffff;
+  --border: #e2e8f0;
+  --muted: #64748b;
+  --accent: #6366f1;
+  --accent-foreground: #ffffff;
+  --up: #059669;
+  --down: #dc2626;
+  --warning-bg: #fffbeb;
+  --warning-border: #fde68a;
+  --warning-foreground: #92400e;
+  --radius: 1rem;
+  --card-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.04), 0 12px 28px rgba(15, 23, 42, 0.07);
+}
+:root[data-visual-theme="clean-saas"][data-theme="dark"] {
+  --background: #0b1120;
+  --foreground: #e2e8f0;
+  --surface: #131b2e;
+  --surface-raised: #16203a;
+  --border: #1e293b;
+  --muted: #8b96ab;
+  --accent: #818cf8;
+  --accent-foreground: #0b1120;
+  --up: #34d399;
+  --down: #f87171;
+  --card-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 28px rgba(0, 0, 0, 0.35);
+}
+:root[data-visual-theme="clean-saas"] .border-border.bg-surface {
+  border-color: transparent;
+}
+
+/* Theme C "Editorial": serif headings + sans body, oversized hero
+   numbers for key stats, navy / cream / burgundy palette, more
+   whitespace (tighter, squared-off radius reads more "print" than
+   "app"). */
+:root[data-visual-theme="editorial"] {
+  --background: #f6f1e6;
+  --foreground: #1b2942;
+  --surface: #fffdf8;
+  --surface-raised: #fffdf8;
+  --border: #e2d7bf;
+  --muted: #756c58;
+  --accent: #8a2a3b;
+  --accent-foreground: #fffdf8;
+  --up: #2f6f4f;
+  --down: #8a2a3b;
+  --warning-bg: #f4e6c8;
+  --warning-border: #d8bd82;
+  --warning-foreground: #6b4a10;
+  --radius: 0.375rem;
+  --font-heading: var(--font-serif-editorial);
+}
+:root[data-visual-theme="editorial"][data-theme="dark"] {
+  --background: #16223b;
+  --foreground: #f3ecdd;
+  --surface: #1c2b4a;
+  --surface-raised: #22335a;
+  --border: #2c3e63;
+  --muted: #a0a8bf;
+  --accent: #e0798c;
+  --accent-foreground: #16223b;
+  --up: #6fbf95;
+  --down: #e0798c;
+}
+:root[data-visual-theme="editorial"] .border-border.bg-surface {
+  border-color: transparent;
+}
+:root[data-visual-theme="editorial"] .hero-number {
+  font-size: 2.5rem;
+  line-height: 1.1;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}

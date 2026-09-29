@@ -44,7 +44,7 @@ class MarketDataSource(Protocol):
 
     async def get_splits(self, yf_ticker: str) -> list[dict[str, Any]]: ...
 
-    async def get_news(self, yf_ticker: str) -> list[dict[str, Any]]: ...
+    async def get_news(self, yf_ticker: str, company_name: str) -> list[dict[str, Any]]: ...
 
 
 class YahooDataSource:
@@ -115,10 +115,10 @@ class YahooDataSource:
 
         return await yahoo.fetch_splits(yf_ticker)
 
-    async def get_news(self, yf_ticker: str) -> list[dict[str, Any]]:
+    async def get_news(self, yf_ticker: str, company_name: str) -> list[dict[str, Any]]:
         from app.services import yahoo
 
-        return await yahoo.fetch_news(yf_ticker)
+        return await yahoo.fetch_news(yf_ticker, company_name)
 
 
 _data_source: MarketDataSource | None = None
