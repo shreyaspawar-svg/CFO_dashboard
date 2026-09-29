@@ -18,24 +18,24 @@ export interface ChartTheme {
 
 export const DARK_CHART_THEME: ChartTheme = {
   background: "transparent",
-  foreground: "#e8eaed",
-  muted: "#8b93a1",
-  border: "#262b33",
-  accent: "#4f8dfd",
-  up: "#1fb15a",
-  down: "#e5484d",
-  series: ["#4f8dfd", "#f5c257", "#a78bfa", "#34d1c8", "#f472b6"],
+  foreground: "#f3ecdd",
+  muted: "#a0a8bf",
+  border: "#3c4c72",
+  accent: "#e0798c",
+  up: "#6fbf95",
+  down: "#e0798c",
+  series: ["#e0798c", "#d8bd82", "#8ea9c9", "#6fbf95", "#c9a0dc"],
 };
 
 export const LIGHT_CHART_THEME: ChartTheme = {
   background: "transparent",
-  foreground: "#14171c",
-  muted: "#5b6472",
-  border: "#e2e5ea",
-  accent: "#2563eb",
-  up: "#16813b",
-  down: "#c9302c",
-  series: ["#2563eb", "#b8860b", "#7c3aed", "#0d9488", "#db2777"],
+  foreground: "#1b2942",
+  muted: "#756c58",
+  border: "#d8c9a3",
+  accent: "#8a2a3b",
+  up: "#2f6f4f",
+  down: "#8a2a3b",
+  series: ["#8a2a3b", "#6b4a10", "#3c5a80", "#2f6f4f", "#8b5fa3"],
 };
 
 export function chartThemeFor(theme: string | undefined): ChartTheme {

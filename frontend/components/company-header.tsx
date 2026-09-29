@@ -62,7 +62,7 @@ export function CompanyHeader({ company, sectorName }: { company: CompanyRef; se
             )}
             <div
               className={cn(
-                "inline-block rounded px-1.5 tabular-nums-fixed text-xl font-semibold transition-colors",
+                "hero-number inline-block rounded px-1.5 tabular-nums-fixed text-xl font-semibold transition-colors",
                 flash === "up" && "price-flash-up",
                 flash === "down" && "price-flash-down"
               )}

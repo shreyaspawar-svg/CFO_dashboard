@@ -41,11 +41,15 @@ async def get_events(symbol: str) -> EventsResponse:
         splits_raw = []
         warnings.append(f"Splits fetch failed: {exc}")
 
-    try:
-        news_raw = await data_source.get_news(company.yf_ticker)
-    except Exception as exc:  # noqa: BLE001
-        news_raw = []
-        warnings.append(f"News fetch failed: {exc}")
+    news_cache_key = f"news:{company.symbol}"
+    news_raw = cache.get(news_cache_key)
+    if news_raw is None:
+        try:
+            news_raw = await data_source.get_news(company.yf_ticker, company.name)
+        except Exception as exc:  # noqa: BLE001
+            news_raw = []
+            warnings.append(f"News fetch failed: {exc}")
+        cache.set(news_cache_key, news_raw, settings.ttl_news)
 
     try:
         fast_info = await data_source.get_fast_info(company.yf_ticker)

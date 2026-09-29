@@ -40,7 +40,7 @@ function StackedComposition({
   }, [periods, keyOf]);
 
   const option: EChartsOption = {
-    grid: { left: 64, right: 16, top: 40, bottom: 40 },
+    grid: { left: 64, right: 16, top: 48, bottom: 40 },
     legend: { top: 0, left: "center", data: categories },
     xAxis: { type: "category", data: periods.map((p) => p.fiscal_year), axisLabel: { color: theme.muted } },
     yAxis: { type: "value", name: "₹ Cr", axisLabel: { color: theme.muted } },
@@ -208,7 +208,8 @@ export function BalanceSheetTab({ symbol, template }: { symbol: string; template
       <ChartCard
         title="Equity & book value per share"
         option={{
-          grid: { left: 64, right: 56, top: 16, bottom: 40 },
+          grid: { left: 64, right: 56, top: 40, bottom: 40 },
+          legend: { top: 0, left: "center", data: ["Equity", "BVPS"] },
           xAxis: { type: "category", data: periods.map((p) => p.fiscal_year), axisLabel: { color: theme.muted } },
           yAxis: [
             { type: "value", name: "₹ Cr", axisLabel: { color: theme.muted } },

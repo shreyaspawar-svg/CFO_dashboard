@@ -799,6 +799,8 @@ Phase 5.1 (Overview tab: date-tick thinning, synced price/performance range, Rev
 
 Phase 8 — done, see DEPLOY.md.
 
+UI redesign — news/legend/P-E-band/shareholding-fallback fixes plus a switch to the "Editorial" visual language (serif headings, navy/cream/burgundy) chosen from a 3-way exploration — merged to main, deployed as tag `deploy-v2`.
+
 ---
 
 ### Phase 5 — Live data layer

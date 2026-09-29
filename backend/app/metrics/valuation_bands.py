@@ -54,8 +54,15 @@ def compute_pe_pb_band(
     `None` whenever the price, the trailing EPS/BVPS as of that date, or
     the EPS/BVPS itself (loss-making or non-positive book value) doesn't
     support a meaningful ratio."""
-    eps_checkpoints = sorted((p["period_end"], p["trailing_eps"]) for p in trailing_eps_points)
-    bvps_checkpoints = sorted((p["period_end"], p["bvps"]) for p in bvps_points)
+    # Filter out null-valued points before sorting: a null checkpoint is a
+    # reporting gap, not a value to step to, and mixing null/non-null
+    # values at the same date (e.g. quarterly-trailing merged with an
+    # annual fallback -- see valuation.py) breaks tuple sort ordering
+    # (None isn't orderable against float).
+    eps_checkpoints = sorted(
+        (p["period_end"], p["trailing_eps"]) for p in trailing_eps_points if p["trailing_eps"] is not None
+    )
+    bvps_checkpoints = sorted((p["period_end"], p["bvps"]) for p in bvps_points if p["bvps"] is not None)
 
     out: list[dict] = []
     for bar in price_bars:

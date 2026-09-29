@@ -93,13 +93,46 @@ function mergeThemeDefaults(
   option: EChartsOption,
   theme: ReturnType<typeof chartThemeFor>
 ): EChartsOption {
+  // A chart opts out of the legend entirely with an explicit `legend:
+  // undefined` (e.g. the intraday price chart, which has only one
+  // series) -- that key literally exists on `option` with value
+  // `undefined`, which is indistinguishable from "not set" once spread
+  // into an object, so it's checked here rather than relying on spread
+  // order to preserve it.
+  const legendExplicitlyHidden = "legend" in option && option.legend === undefined;
+
   return {
     backgroundColor: theme.background,
     textStyle: { color: theme.foreground, fontFamily: "inherit" },
     color: theme.series,
-    tooltip: { trigger: "axis", ...option.tooltip },
-    legend: { textStyle: { color: theme.foreground }, ...option.legend },
+    // `...option` must come before the tooltip/legend merges below, not
+    // after: spreading `option` last (the previous order) let a chart's
+    // own `option.tooltip`/`option.legend` silently clobber these shared
+    // defaults wholesale, rather than merging into them, for every chart
+    // that set either key -- which is most of them.
     ...option,
+    tooltip: { trigger: "axis", ...option.tooltip },
+    // Shared legend defaults (UI-exploration branch bug fix): `type:
+    // "scroll"` keeps the legend to a single horizontal row with
+    // prev/next arrows once it runs out of width, instead of ECharts'
+    // default wrap-to-multiple-lines behaviour -- a wrapped 2nd line grew
+    // downward from `top` and collided with the plot area/axis labels
+    // whenever a chart had more than ~4 legend entries (seen on the
+    // balance-sheet Assets/Liabilities composition charts, whose category
+    // count is data-driven and can't be bounded at the call site). A
+    // scroll legend is always exactly one line tall, so every chart's
+    // `grid.top` only has to clear one row, regardless of item count.
+    legend: legendExplicitlyHidden
+      ? undefined
+      : {
+          type: "scroll",
+          itemGap: 16,
+          textStyle: { color: theme.foreground },
+          pageIconColor: theme.foreground,
+          pageIconInactiveColor: theme.muted,
+          pageTextStyle: { color: theme.foreground },
+          ...option.legend,
+        },
   };
 }
 

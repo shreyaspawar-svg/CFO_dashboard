@@ -1,39 +1,40 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0b0d10;
-  --foreground: #e8eaed;
-  --surface: #14171c;
-  --surface-raised: #1b1f26;
-  --border: #262b33;
-  --muted: #8b93a1;
-  --accent: #4f8dfd;
-  --accent-foreground: #ffffff;
-  --up: #1fb15a;
-  --down: #e5484d;
+  --background: #16223b;
+  --foreground: #f3ecdd;
+  --surface: #1c2b4a;
+  --surface-raised: #22335a;
+  --border: #3c4c72;
+  --muted: #a0a8bf;
+  --accent: #e0798c;
+  --accent-foreground: #16223b;
+  --up: #6fbf95;
+  --down: #e0798c;
   --warning-bg: #3a2a0f;
   --warning-border: #6b4d1a;
   --warning-foreground: #f5c257;
 
-  --radius: 0.625rem;
+  --radius: 0px;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-serif-editorial);
 }
 
 :root[data-theme="light"] {
-  --background: #f7f8fa;
-  --foreground: #14171c;
-  --surface: #ffffff;
-  --surface-raised: #ffffff;
-  --border: #e2e5ea;
-  --muted: #5b6472;
-  --accent: #2563eb;
-  --accent-foreground: #ffffff;
-  --up: #16813b;
-  --down: #c9302c;
-  --warning-bg: #fff6e0;
-  --warning-border: #f0d38a;
-  --warning-foreground: #7a5b06;
+  --background: #f6f1e6;
+  --foreground: #1b2942;
+  --surface: #fffdf8;
+  --surface-raised: #fffdf8;
+  --border: #d8c9a3;
+  --muted: #756c58;
+  --accent: #8a2a3b;
+  --accent-foreground: #fffdf8;
+  --up: #2f6f4f;
+  --down: #8a2a3b;
+  --warning-bg: #f4e6c8;
+  --warning-border: #d8bd82;
+  --warning-foreground: #6b4a10;
 }
 
 @theme inline {
@@ -59,6 +60,7 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  line-height: 1.65;
 }
 
 /* Numbers that update live (price, %change, KPI values) must never reflow
@@ -92,4 +94,63 @@ body {
   .price-flash-down {
     animation: none;
   }
+}
+
+/* ============================================================
+   "Editorial" visual language: serif headings (Fraunces) over sans
+   body copy, oversized serif hero numbers with old-style figures,
+   navy / cream / burgundy palette, squared-off print-like corners,
+   cards read as a ruled column (bottom hairline only) instead of a
+   boxed card. Chosen after an A/B/C exploration against a "Terminal"
+   (dense/mono) and "Clean SaaS" (light/rounded) alternative -- see
+   git history on the now-deleted `ui-exploration` branch for those.
+   ============================================================ */
+
+h1,
+h2,
+h3,
+h4,
+.brand-title,
+.hero-number,
+[role="tab"] {
+  font-family: var(--font-heading);
+  letter-spacing: 0.01em;
+}
+
+/* The app's small uppercase-tracked micro-labels (KPI/ratio-card labels,
+   section headings like the "Valuation" h4 above a metric). */
+.uppercase.tracking-wide {
+  letter-spacing: 0.12em;
+}
+
+[role="tab"][aria-selected="true"] {
+  font-style: italic;
+}
+
+/* Card look: matches the exact utility combo every card in the app
+   already uses (`rounded-lg border border-border bg-surface p-4`), so
+   all ~30 card instances read as a ruled column with no per-component
+   changes. `rounded-lg` itself already resolves to 0 via `--radius` ->
+   `--radius-lg` in the `@theme inline` block above. */
+.border-border.bg-surface {
+  border-width: 0 0 2px 0;
+  border-style: solid;
+  padding: 1.5rem;
+}
+
+/* Every KPI/ratio value in the app carries `.tabular-nums-fixed`, not
+   just the header price -- old-style figures read as more "editorial";
+   the oversized hero price below stays on lining figures instead, for
+   legibility at that size. */
+.tabular-nums-fixed {
+  font-family: var(--font-heading);
+  font-variant-numeric: oldstyle-nums tabular-nums;
+}
+
+.hero-number {
+  font-size: 2.75rem;
+  line-height: 1.1;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  font-variant-numeric: lining-nums tabular-nums;
 }
