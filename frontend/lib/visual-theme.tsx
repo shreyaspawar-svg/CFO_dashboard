@@ -12,9 +12,16 @@
  *
  * Remove this file and its usages before merging to main -- this switcher
  * exists only for side-by-side comparison on this branch.
+ *
+ * Also mirrored into a `?theme=` URL query param (same pattern as
+ * hooks/use-selection.ts's sector/symbol) so each theme is a shareable,
+ * bookmarkable URL, not just a client-side toggle -- e.g.
+ * `?theme=editorial&sector=...&symbol=...`. The query param wins on
+ * first load; localStorage is only the fallback for a bare URL.
  */
 
 import { createContext, useContext, useEffect, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 export type VisualTheme = "terminal" | "clean-saas" | "editorial";
 
@@ -25,6 +32,7 @@ export const VISUAL_THEMES: { value: VisualTheme; label: string }[] = [
 ];
 
 const STORAGE_KEY = "ui-exploration-visual-theme";
+const QUERY_PARAM = "theme";
 
 const VisualThemeContext = createContext<{
   visualTheme: VisualTheme;
@@ -36,14 +44,27 @@ function isVisualTheme(value: string | null): value is VisualTheme {
 }
 
 export function VisualThemeProvider({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const urlTheme = searchParams.get(QUERY_PARAM);
   const [visualTheme, setVisualThemeState] = useState<VisualTheme>("terminal");
 
   useEffect(() => {
+    if (isVisualTheme(urlTheme)) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setVisualThemeState(urlTheme);
+      window.localStorage.setItem(STORAGE_KEY, urlTheme);
+      return;
+    }
     const stored = window.localStorage.getItem(STORAGE_KEY);
     if (isVisualTheme(stored)) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setVisualThemeState(stored);
     }
+    // Only meant to resolve the initial value once; `setVisualTheme` below
+    // is what keeps the URL and state in sync after that.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -53,6 +74,9 @@ export function VisualThemeProvider({ children }: { children: React.ReactNode })
   const setVisualTheme = (theme: VisualTheme) => {
     setVisualThemeState(theme);
     window.localStorage.setItem(STORAGE_KEY, theme);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set(QUERY_PARAM, theme);
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
   return (
