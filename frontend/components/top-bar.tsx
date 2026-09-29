@@ -7,7 +7,6 @@ import { CommandSearch } from "@/components/command-search";
 import { MarketStatusPill } from "@/components/market-status-pill";
 import { UnitsToggle } from "@/components/units-toggle";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { VisualThemeSwitcher } from "@/components/visual-theme-switcher";
 import { TickerTape } from "@/components/ticker-tape";
 
 export function TopBar() {
@@ -31,7 +30,6 @@ export function TopBar() {
         <CommandSearch />
         <MarketStatusPill />
         <UnitsToggle />
-        <VisualThemeSwitcher />
         <ThemeToggle />
       </div>
       <TickerTape />

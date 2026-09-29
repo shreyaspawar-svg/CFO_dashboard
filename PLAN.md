@@ -799,7 +799,7 @@ Phase 5.1 (Overview tab: date-tick thinning, synced price/performance range, Rev
 
 Phase 8 — done, see DEPLOY.md.
 
-UI-exploration branch (news/legend/P-E-band/shareholding-fallback fixes + Terminal/Clean SaaS/Editorial theme switcher) — see branch `ui-exploration`, not merged.
+UI redesign — news/legend/P-E-band/shareholding-fallback fixes plus a switch to the "Editorial" visual language (serif headings, navy/cream/burgundy) chosen from a 3-way exploration — merged to main, deployed as tag `deploy-v2`.
 
 ---
 
