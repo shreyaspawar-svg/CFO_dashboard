@@ -28,6 +28,9 @@ export type QualityScores = components["schemas"]["QualityScores"];
 export type BalanceSheetPeriodDetail = components["schemas"]["BalanceSheetPeriodDetail"];
 export type CashFlowPeriodDetail = components["schemas"]["CashFlowPeriodDetail"];
 export type CashFlowSankey = components["schemas"]["CashFlowSankey"];
+export type KpiScorecardResponse = components["schemas"]["KpiScorecardResponse"];
+export type KpiScorecardGroup = components["schemas"]["KpiScorecardGroup"];
+export type KpiScorecardEntry = components["schemas"]["KpiScorecardEntry"];
 
 class ApiError extends Error {
   constructor(
@@ -82,6 +85,8 @@ export const api = {
   overview: (symbol: string) =>
     apiFetch<OverviewResponse>(`/api/overview/${encodeURIComponent(symbol)}`),
   glossary: () => apiFetch<GlossaryResponse>("/api/glossary"),
+  kpiScorecard: (symbol: string) =>
+    apiFetch<KpiScorecardResponse>(`/api/kpi-scorecard/${encodeURIComponent(symbol)}`),
 };
 
 export { ApiError };

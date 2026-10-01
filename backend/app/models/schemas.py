@@ -372,3 +372,35 @@ class GlossaryEntry(BaseModel):
 
 class GlossaryResponse(BaseModel):
     entries: dict[str, GlossaryEntry]
+
+
+class KpiScorecardEntry(BaseModel):
+    key: str
+    label: str
+    unit: Literal["pct", "pp", "inr_cr", "inr", "days", "x", "count", "text"]
+    value: float | None
+    prior_value: float | None
+    # Absolute change (same unit as `value`; percentage POINTS for a
+    # pct/pp-unit KPI) and, for level metrics only (never a margin/rate),
+    # the relative percentage change -- see KpiScorecardEntry's producer,
+    # `app.services.kpi_scorecard_engine`.
+    qoq_delta: float | None
+    qoq_delta_pct: float | None
+    method: Literal["computed", "unavailable"] = "unavailable"
+    reason: str | None = None
+    driver_note: str | None = None
+
+
+class KpiScorecardGroup(BaseModel):
+    name: str
+    entries: list[KpiScorecardEntry]
+
+
+class KpiScorecardResponse(BaseModel):
+    symbol: str
+    source: str
+    as_of: datetime
+    quarter_label: str | None = None
+    prior_quarter_label: str | None = None
+    warnings: list[str] = Field(default_factory=list)
+    groups: list[KpiScorecardGroup]
