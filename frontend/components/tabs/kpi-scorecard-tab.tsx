@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { AlertTriangle } from "lucide-react";
 import { useKpiScorecard } from "@/lib/queries";
 import { useSelectionStore } from "@/lib/store";
 import {
@@ -94,11 +93,6 @@ function KpiTile({ entry, unit }: { entry: KpiScorecardEntry; unit: Unit }) {
               {delta} {deltaPeriodLabel}
             </span>
           )}
-          {entry.reason && (
-            <p className="mt-1 flex items-start gap-1 text-[11px] leading-snug text-amber-600 dark:text-amber-400">
-              <AlertTriangle size={11} className="mt-0.5 shrink-0" /> {entry.reason}
-            </p>
-          )}
           {entry.driver_note && <p className="mt-1 text-[11px] leading-snug text-muted">{entry.driver_note}</p>}
         </>
       )}
@@ -166,14 +160,6 @@ export function KpiScorecardTab({ symbol }: { symbol: string; template: string }
           <span className="text-muted"> vs {data.prior_quarter_label}</span>
         )}
       </div>
-
-      {(data.warnings ?? []).length > 0 && (
-        <div className="rounded-lg border border-warning-border bg-warning-bg p-3 text-xs text-warning-foreground">
-          {(data.warnings ?? []).map((w, i) => (
-            <div key={i}>{w}</div>
-          ))}
-        </div>
-      )}
 
       {data.groups.map((group) => (
         <div key={group.name} className="rounded-lg border border-border bg-surface p-4">
