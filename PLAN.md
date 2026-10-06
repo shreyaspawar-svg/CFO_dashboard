@@ -801,6 +801,8 @@ Phase 8 — done, see DEPLOY.md.
 
 UI redesign — news/legend/P-E-band/shareholding-fallback fixes plus a switch to the "Editorial" visual language (serif headings, navy/cream/burgundy) chosen from a 3-way exploration — merged to main, deployed as tag `deploy-v2`.
 
+RIL single-company pivot — dashboard locked to Reliance Industries only (sector/company selector, ⌘K search, 50-symbol ticker tape removed; backend stays multi-company-capable), plus a new 9th "KPI Scorecard" tab (20 board-level KPIs, quarter-over-quarter, 15/20 computed from free data and 5/20 honestly marked unavailable -- see backend/app/services/kpi_scorecard_engine.py's docstring) — see branch `ril-single-company`, not merged to main/deployed.
+
 ---
 
 ### Phase 5 — Live data layer

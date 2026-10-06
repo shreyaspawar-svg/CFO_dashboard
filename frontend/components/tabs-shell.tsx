@@ -24,6 +24,9 @@ const PeersTab = dynamic(() => import("@/components/tabs/peers-tab").then((m) =>
 const ShareholdingEventsTab = dynamic(() =>
   import("@/components/tabs/shareholding-events-tab").then((m) => m.ShareholdingEventsTab)
 );
+const KpiScorecardTab = dynamic(() =>
+  import("@/components/tabs/kpi-scorecard-tab").then((m) => m.KpiScorecardTab)
+);
 
 const TABS = [
   "Overview",
@@ -34,6 +37,7 @@ const TABS = [
   "Valuation",
   "Peers",
   "Shareholding & Events",
+  "KPI Scorecard",
 ] as const;
 
 export function TabsShell({ symbol, template }: { symbol: string; template: string }) {
@@ -85,8 +89,10 @@ export function TabsShell({ symbol, template }: { symbol: string; template: stri
           <ValuationTab symbol={symbol} template={template} />
         ) : active === "Peers" ? (
           <PeersTab symbol={symbol} template={template} />
-        ) : (
+        ) : active === "Shareholding & Events" ? (
           <ShareholdingEventsTab symbol={symbol} template={template} />
+        ) : (
+          <KpiScorecardTab symbol={symbol} template={template} />
         )}
       </div>
     </div>

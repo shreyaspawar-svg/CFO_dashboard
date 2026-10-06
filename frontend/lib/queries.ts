@@ -14,6 +14,7 @@ const STALE_TIME = {
   valuation: 6 * 60 * 60 * 1000,
   events: 6 * 60 * 60 * 1000,
   glossary: 24 * 60 * 60 * 1000,
+  kpiScorecard: 12 * 60 * 60 * 1000,
 } as const;
 
 // Live-price polling (PLAN.md Phase 5 §B.1): only poll while the BACKEND's
@@ -136,6 +137,15 @@ export function useEvents(symbol: string | null) {
     queryFn: () => api.events(symbol as string),
     enabled: !!symbol,
     staleTime: STALE_TIME.events,
+  });
+}
+
+export function useKpiScorecard(symbol: string | null) {
+  return useQuery({
+    queryKey: ["kpi-scorecard", symbol],
+    queryFn: () => api.kpiScorecard(symbol as string),
+    enabled: !!symbol,
+    staleTime: STALE_TIME.kpiScorecard,
   });
 }
 

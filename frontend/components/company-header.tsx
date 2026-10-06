@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { AlertTriangle } from "lucide-react";
 import { useQuote, useFinancials } from "@/lib/queries";
-import { CompanyAvatar } from "@/components/company-combobox";
+import { CompanyAvatar } from "@/components/company-avatar";
 import { RangeBar } from "@/components/range-bar";
 import { WarningBanner } from "@/components/warning-banner";
 import { CompanyHeaderSkeleton } from "@/components/skeletons";

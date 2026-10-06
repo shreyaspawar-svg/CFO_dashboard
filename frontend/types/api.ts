@@ -191,6 +191,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Refresh */
+        post: operations["refresh_api_admin_refresh_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/kpi-scorecard/{symbol}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Kpi Scorecard */
+        get: operations["get_kpi_scorecard_api_kpi_scorecard__symbol__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/health": {
         parameters: {
             query?: never;
@@ -451,6 +485,63 @@ export interface components {
             as_of: string;
             /** Warnings */
             warnings?: string[];
+        };
+        /** KpiScorecardEntry */
+        KpiScorecardEntry: {
+            /** Key */
+            key: string;
+            /** Label */
+            label: string;
+            /**
+             * Unit
+             * @enum {string}
+             */
+            unit: "pct" | "pp" | "inr_cr" | "inr" | "days" | "x" | "count" | "text";
+            /** Value */
+            value: number | null;
+            /** Prior Value */
+            prior_value: number | null;
+            /** Qoq Delta */
+            qoq_delta: number | null;
+            /** Qoq Delta Pct */
+            qoq_delta_pct: number | null;
+            /**
+             * Method
+             * @default unavailable
+             * @enum {string}
+             */
+            method: "computed" | "unavailable";
+            /** Reason */
+            reason?: string | null;
+            /** Driver Note */
+            driver_note?: string | null;
+        };
+        /** KpiScorecardGroup */
+        KpiScorecardGroup: {
+            /** Name */
+            name: string;
+            /** Entries */
+            entries: components["schemas"]["KpiScorecardEntry"][];
+        };
+        /** KpiScorecardResponse */
+        KpiScorecardResponse: {
+            /** Symbol */
+            symbol: string;
+            /** Source */
+            source: string;
+            /**
+             * As Of
+             * Format: date-time
+             */
+            as_of: string;
+            /** Quarter Label */
+            quarter_label?: string | null;
+            /** Prior Quarter Label */
+            prior_quarter_label?: string | null;
+            /** Warnings */
+            warnings?: string[];
+            /** Groups */
+            groups: components["schemas"]["KpiScorecardGroup"][];
         };
         /** MultipleDetail */
         MultipleDetail: {
@@ -1183,6 +1274,68 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["GlossaryResponse"];
+                };
+            };
+        };
+    };
+    refresh_api_admin_refresh_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-refresh-secret"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_kpi_scorecard_api_kpi_scorecard__symbol__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                symbol: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["KpiScorecardResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
