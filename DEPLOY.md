@@ -124,3 +124,8 @@ secret. That endpoint (`backend/app/routers/admin.py`) does two things:
 backend: see the summary this deployment round reported for the result
 (console errors / failed API calls, or the CORS blocker if
 `CORS_ORIGINS` hadn't been updated yet at the time).
+
+## `deploy-v3` (2026-10-06)
+
+RIL-only dashboard + 20-KPI scorecard. Vercel is not Git-connected, and `BACKEND_INTERNAL_URL` is **not** a stored project env var -- it must be passed at build time or the `/api/*` rewrite falls back to `127.0.0.1:8000` and every API call 404s (`DNS_HOSTNAME_RESOLVED_PRIVATE`):
+`npx vercel --prod --yes --token <token> --build-env BACKEND_INTERNAL_URL=https://nifty50-cfo-api.onrender.com`
