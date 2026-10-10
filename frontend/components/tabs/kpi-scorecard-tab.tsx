@@ -26,6 +26,10 @@ const LOWER_IS_BETTER = new Set([
   "working_capital_days",
 ]);
 
+// Groups whose KPIs need internal plant/audit data that no public source
+// provides -- every tile in them is "Not available", so they are not shown.
+const HIDDEN_GROUPS = new Set(["Operational Excellence", "Risk, Compliance & Governance"]);
+
 function formatValue(entry: KpiScorecardEntry, unit: Unit): string {
   if (entry.value == null) return "—";
   switch (entry.unit) {
@@ -161,7 +165,7 @@ export function KpiScorecardTab({ symbol }: { symbol: string; template: string }
         )}
       </div>
 
-      {data.groups.map((group) => (
+      {data.groups.filter((g) => !HIDDEN_GROUPS.has(g.name)).map((group) => (
         <div key={group.name} className="rounded-lg border border-border bg-surface p-4">
           <h3 className="mb-2 text-sm font-medium">{group.name}</h3>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
